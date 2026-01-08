@@ -4,14 +4,23 @@ Blog pessoal usando o estilo Tufte CSS, inspirado nos livros de Edward Tufte sob
 
 ## Estrutura do Projeto
 
+Este site usa **Jekyll** para gerar páginas estáticas a partir de arquivos Markdown.
+
 ```
 .
-├── index.html              # Página inicial com introdução pessoal
-├── posts.html              # Página listando todos os posts
-├── sobre.html              # Página sobre
-├── posts/                  # Diretório com os posts do blog
-│   ├── exemplo-de-post.html
-│   └── _template.html      # Template para criar novos posts
+├── _config.yml              # Configuração do Jekyll
+├── _layouts/                # Layouts reutilizáveis
+│   ├── default.html         # Layout base
+│   └── post.html            # Layout para posts
+├── _includes/                # Componentes reutilizáveis
+│   └── navigation.html      # Menu de navegação
+├── _posts/                  # Posts do blog em Markdown
+│   ├── _template.md         # Template para novos posts
+│   └── YYYY-MM-DD-titulo.md # Posts (formato Jekyll)
+├── index.html               # Página inicial
+├── posts.html               # Página listando todos os posts
+├── sobre.html               # Página sobre
+├── Gemfile                  # Dependências Ruby/Jekyll
 └── README.md
 ```
 
@@ -19,17 +28,40 @@ Blog pessoal usando o estilo Tufte CSS, inspirado nos livros de Edward Tufte sob
 
 O site possui um menu de navegação presente em todas as páginas com links para:
 - **Início**: Página principal com uma breve introdução
-- **Posts**: Lista de todos os posts do blog
+- **Posts**: Lista de todos os posts do blog (gerada automaticamente)
 - **Sobre**: Informações sobre você
 
 ## Como Adicionar um Novo Post
 
-1. Copie o arquivo `posts/_template.html` para um novo arquivo com um nome descritivo (ex: `meu-primeiro-post.html`)
-2. Edite o novo arquivo:
-   - Substitua `TÍTULO_DO_POST` pelo título do seu post
-   - Substitua `DATA_DO_POST` pela data do post
-   - Adicione seu conteúdo na seção `<section>`
-3. Adicione o link para o novo post na página `posts.html` na lista de posts
+1. Copie o arquivo `_posts/_template.md` para um novo arquivo no diretório `_posts/`
+2. O nome do arquivo deve seguir o formato: `YYYY-MM-DD-titulo-do-post.md`
+   - Exemplo: `2024-01-15-meu-primeiro-post.md`
+3. Edite o front matter (cabeçalho YAML) do arquivo:
+   ```yaml
+   ---
+   layout: post
+   title: "Título do Post"
+   date: 2024-01-15
+   ---
+   ```
+4. Escreva seu conteúdo em Markdown abaixo do front matter
+5. Faça commit e push - o post aparecerá automaticamente na lista de posts!
+
+### Exemplo de Post
+
+```markdown
+---
+layout: post
+title: "Meu Primeiro Post"
+date: 2024-01-15
+---
+
+Este é o conteúdo do meu post em **Markdown**!
+
+## Seção 1
+
+Mais conteúdo aqui...
+```
 
 ## Características do Tufte CSS
 
@@ -40,15 +72,17 @@ O Tufte CSS oferece:
 - Figuras e tabelas bem formatadas
 - Design responsivo
 
-## Recursos Úteis
+## Tecnologias
 
-- [Tufte CSS no GitHub](https://github.com/edwardtufte/tufte-css)
-- [Documentação do Tufte CSS](https://edwardtufte.github.io/tufte-css/)
-- [GitHub Pages Documentation](https://docs.github.com/pages)
+- **Jekyll**: Gerador de sites estáticos
+- **Markdown**: Formato de escrita para posts
+- **Tufte CSS**: Framework CSS para estilo elegante
+- **GitHub Pages**: Hospedagem gratuita
+- **GitHub Actions**: Deploy automático
 
 ## Publicação com GitHub Actions
 
-O site usa GitHub Actions para publicação automática. O workflow está configurado em `.github/workflows/deploy.yml`.
+O site usa GitHub Actions para compilar o Jekyll e publicar automaticamente. O workflow está configurado em `.github/workflows/deploy.yml`.
 
 ### Configuração Inicial (apenas uma vez)
 
@@ -60,8 +94,9 @@ O site usa GitHub Actions para publicação automática. O workflow está config
 
 - **Automático**: Toda vez que você faz `git push` para o branch `main`, o GitHub Actions:
   1. Faz checkout do código
-  2. Faz upload dos arquivos
-  3. Publica automaticamente no GitHub Pages
+  2. Compila o Jekyll (converte Markdown para HTML)
+  3. Faz upload dos arquivos gerados
+  4. Publica automaticamente no GitHub Pages
 
 - **Manual**: Você também pode executar o workflow manualmente em **Actions** → **Deploy to GitHub Pages** → **Run workflow**
 
@@ -71,10 +106,34 @@ Após o deploy, seu site estará disponível em: `https://danilobortoli.github.i
 
 O workflow mostra o status do deploy na aba **Actions** do seu repositório.
 
+## Desenvolvimento Local
+
+Para testar o site localmente antes de publicar:
+
+1. Instale o Ruby e o Bundler (se ainda não tiver)
+2. Instale as dependências:
+   ```bash
+   bundle install
+   ```
+3. Execute o servidor local:
+   ```bash
+   bundle exec jekyll serve
+   ```
+4. Acesse `http://localhost:4000` no navegador
+
 ## Personalização
 
 Você pode personalizar:
 - A introdução pessoal na página `index.html`
 - As informações sobre você na página `sobre.html`
-- As cores e estilos adicionais através das tags `<style>` nos arquivos HTML
-- O menu de navegação está presente em todas as páginas e pode ser customizado
+- Os estilos CSS no layout `_layouts/default.html`
+- O menu de navegação em `_includes/navigation.html`
+- As configurações do Jekyll em `_config.yml`
+
+## Recursos Úteis
+
+- [Tufte CSS no GitHub](https://github.com/edwardtufte/tufte-css)
+- [Documentação do Tufte CSS](https://edwardtufte.github.io/tufte-css/)
+- [Jekyll Documentation](https://jekyllrb.com/docs/)
+- [GitHub Pages Documentation](https://docs.github.com/pages)
+- [Markdown Guide](https://www.markdownguide.org/)

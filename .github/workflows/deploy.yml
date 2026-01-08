@@ -34,10 +34,16 @@ jobs:
       - name: Configurar Pages
         uses: actions/configure-pages@v4
       
+      - name: Build com Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      
       - name: Fazer upload do site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: ./_site
       
       - name: Fazer deploy para GitHub Pages
         id: deployment

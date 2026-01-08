@@ -1,0 +1,22 @@
+title: Danilo Bortoli
+description: Um blog sobre tecnologia, ciência e outras coisas interessantes
+lang: pt-BR
+url: https://danilobortoli.github.io
+baseurl: ""
+
+# Jekyll settings
+markdown: kramdown
+highlighter: rouge
+
+# GitHub Pages plugins (whitelist)
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-relative-links
+
+# Exclude from processing
+exclude:
+  - README.md
+  - .git
+  - .github
+
