@@ -6,14 +6,30 @@
   <title>TÍTULO_DO_POST - Danilo Bortoli</title>
   <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
   <style>
-    .back-link {
-      display: inline-block;
-      margin-bottom: 2rem;
+    .navigation {
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    .navigation ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .navigation li {
+      margin: 0;
+    }
+    .navigation a {
       text-decoration: none;
       color: #666;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
+      transition: color 0.2s;
     }
-    .back-link:hover {
+    .navigation a:hover {
+      color: #000;
       text-decoration: underline;
     }
     .post-meta {
@@ -21,12 +37,19 @@
       color: #666;
       font-style: italic;
       margin-bottom: 2rem;
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
   <article>
-    <a href="../index.html" class="back-link">← Voltar ao blog</a>
+    <nav class="navigation">
+      <ul>
+        <li><a href="../index.html">Início</a></li>
+        <li><a href="../posts.html">Posts</a></li>
+        <li><a href="../sobre.html">Sobre</a></li>
+      </ul>
+    </nav>
     
     <h1>TÍTULO_DO_POST</h1>
     <p class="post-meta">DATA_DO_POST</p>

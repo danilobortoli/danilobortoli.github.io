@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posts - Danilo Bortoli</title>
+  <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
+  <style>
+    .navigation {
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    .navigation ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .navigation li {
+      margin: 0;
+    }
+    .navigation a {
+      text-decoration: none;
+      color: #666;
+      font-size: 1.4rem;
+      transition: color 0.2s;
+    }
+    .navigation a:hover {
+      color: #000;
+      text-decoration: underline;
+    }
+    .navigation a.active {
+      color: #000;
+      font-weight: bold;
+    }
+    .posts-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 2rem;
+    }
+    .posts-list li {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #eee;
+    }
+    .posts-list li:last-child {
+      border-bottom: none;
+    }
+    .post-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .post-link:hover .post-title {
+      text-decoration: underline;
+    }
+    .post-title {
+      font-size: 2.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-date {
+      font-size: 1.2rem;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+    .post-excerpt {
+      margin-top: 0.5rem;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <article>
+    <nav class="navigation">
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="posts.html" class="active">Posts</a></li>
+        <li><a href="sobre.html">Sobre</a></li>
+      </ul>
+    </nav>
+
+    <h1>Posts</h1>
+
+    <ul class="posts-list">
+      <li>
+        <a href="posts/exemplo-de-post.html" class="post-link">
+          <h2 class="post-title">Exemplo de Post</h2>
+          <p class="post-date">1 de Janeiro de 2024</p>
+          <p class="post-excerpt">Este é um exemplo de post do blog. Você pode usar este template como base para criar seus próprios posts.</p>
+        </a>
+      </li>
+    </ul>
+  </article>
+</body>
+</html>
+

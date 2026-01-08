@@ -1,0 +1,45 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Dispara quando há push no branch main
+  push:
+    branches:
+      - main
+  
+  # Permite executar manualmente
+  workflow_dispatch:
+
+# Permissões necessárias para fazer deploy
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permite apenas um deploy concorrente
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Fazer upload do site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      
+      - name: Fazer deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
