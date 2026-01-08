@@ -6,6 +6,69 @@
   <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
   <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
   <style>
+    /* Force light mode for better readability */
+    html {
+      color-scheme: light;
+    }
+    
+    body {
+      background-color: #fffff8 !important;
+      color: #111 !important;
+    }
+    
+    /* Override dark mode styles */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #fffff8 !important;
+        color: #111 !important;
+      }
+      
+      article {
+        background-color: #fffff8 !important;
+        color: #111 !important;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        color: #111 !important;
+      }
+      
+      p {
+        color: #111 !important;
+      }
+      
+      a {
+        color: #1a73e8 !important;
+      }
+      
+      a:hover {
+        color: #1557b0 !important;
+      }
+      
+      .navigation a {
+        color: #666 !important;
+      }
+      
+      .navigation a:hover {
+        color: #000 !important;
+      }
+      
+      .credit-section {
+        color: #666 !important;
+      }
+      
+      .credit-section a {
+        color: #666 !important;
+      }
+      
+      .credit-section a:hover {
+        color: #000 !important;
+      }
+      
+      .post-date,
+      .post-meta {
+        color: #666 !important;
+      }
+    }
     .navigation {
       margin-bottom: 3rem;
       padding-bottom: 1.5rem;
