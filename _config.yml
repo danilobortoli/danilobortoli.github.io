@@ -8,6 +8,13 @@ baseurl: ""
 markdown: kramdown
 highlighter: rouge
 
+# Kramdown settings for footnotes
+kramdown:
+  input: GFM
+  auto_ids: true
+  footnote_nr: 1
+  hard_wrap: false
+
 # GitHub Pages plugins (whitelist)
 plugins:
   - jekyll-feed
