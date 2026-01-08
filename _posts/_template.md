@@ -35,3 +35,35 @@ Texto com nota[^1].
 
 Mais conteúdo...
 
+### Exemplos de Imagens
+
+**Imagem simples em Markdown:**
+```markdown
+![Texto alternativo da imagem](/assets/images/nome-da-imagem.jpg)
+```
+
+**Figura do Tufte CSS (com legenda):**
+```html
+<figure>
+  <img src="/assets/images/nome-da-imagem.jpg" alt="Descrição da imagem">
+  <figcaption>Legenda da figura. Esta é uma característica especial do Tufte CSS.</figcaption>
+</figure>
+```
+
+**Figura fullwidth (largura total):**
+```html
+<figure class="fullwidth">
+  <img src="/assets/images/nome-da-imagem.jpg" alt="Descrição da imagem">
+  <figcaption>Legenda para figura de largura total.</figcaption>
+</figure>
+```
+
+**Imagem com margin note:**
+```html
+<figure>
+  <img src="/assets/images/nome-da-imagem.jpg" alt="Descrição">
+  <figcaption>Legenda principal da imagem.</figcaption>
+  <span class="marginnote">Nota adicional sobre a imagem na margem.</span>
+</figure>
+```
+

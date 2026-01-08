@@ -17,6 +17,8 @@ Este site usa **Jekyll** para gerar páginas estáticas a partir de arquivos Mar
 ├── _posts/                  # Posts do blog em Markdown
 │   ├── _template.md         # Template para novos posts
 │   └── YYYY-MM-DD-titulo.md # Posts (formato Jekyll)
+├── assets/                  # Arquivos estáticos
+│   └── images/              # Imagens do site
 ├── index.html               # Página inicial
 ├── posts.html               # Página listando todos os posts
 ├── sobre.html               # Página sobre
@@ -62,6 +64,39 @@ Este é o conteúdo do meu post em **Markdown**!
 
 Mais conteúdo aqui...
 ```
+
+## Como Adicionar Imagens
+
+1. **Faça upload da imagem**: Adicione o arquivo de imagem (JPG, PNG, GIF, SVG, WebP) no diretório `assets/images/`
+   - Você pode fazer isso via interface do GitHub (arrastar e soltar) ou via git:
+     ```bash
+     git add assets/images/nome-da-imagem.jpg
+     git commit -m "Adiciona imagem"
+     git push
+     ```
+
+2. **Referencie a imagem no Markdown**:
+   ```markdown
+   ![Texto alternativo](/assets/images/nome-da-imagem.jpg)
+   ```
+
+3. **Use figuras do Tufte CSS** (com legendas elegantes):
+   ```html
+   <figure>
+     <img src="/assets/images/nome-da-imagem.jpg" alt="Descrição">
+     <figcaption>Legenda da figura.</figcaption>
+   </figure>
+   ```
+
+4. **Figura de largura total**:
+   ```html
+   <figure class="fullwidth">
+     <img src="/assets/images/nome-da-imagem.jpg" alt="Descrição">
+     <figcaption>Legenda para figura de largura total.</figcaption>
+   </figure>
+   ```
+
+**Formatos suportados**: JPG, PNG, GIF, SVG, WebP
 
 ## Características do Tufte CSS
 
