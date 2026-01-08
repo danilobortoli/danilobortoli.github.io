@@ -4,9 +4,10 @@ layout: default
 
 <h1>Exemplo de Uso do Tufte CSS</h1>
 
-<p>Esta página demonstra as principais características e funcionalidades do Tufte CSS, o estilo tipográfico usado neste site.</p>
+<section>
+Esta página demonstra as principais características e funcionalidades do Tufte CSS, o estilo tipográfico usado neste site.
 
-<p>O Tufte CSS oferece uma tipografia limpa e espaçamento generoso, criando uma experiência de leitura agradável. Ele também suporta elementos especiais como notas laterais (sidenotes) e figuras com legendas.</p>
+O Tufte CSS oferece uma tipografia limpa e espaçamento generoso, criando uma experiência de leitura agradável. Ele também suporta elementos especiais como notas laterais (sidenotes) e figuras com legendas.
 
 ## Características do Tufte CSS
 
@@ -61,4 +62,5 @@ Você pode criar múltiplas notas de rodapé[^2] e elas serão numeradas automat
 ## Conclusão
 
 Este exemplo demonstra as principais funcionalidades do Tufte CSS. Você pode expandir este template para criar posts mais elaborados com figuras, tabelas, equações matemáticas e muito mais. As notas são uma característica distintiva do estilo Tufte e ajudam a criar uma experiência de leitura rica e informativa.
+</section>
 
