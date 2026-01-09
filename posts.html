@@ -10,6 +10,14 @@ layout: default
     <a href="{{ post.url | relative_url }}" class="post-link">
       <h2 class="post-title">{{ post.title }}</h2>
       <p class="post-date">{{ post.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }}</p>
+      {% if post.categories and post.categories.size > 0 %}
+      <p class="post-meta">Categorias: 
+        {% for c in post.categories %}
+          {% assign slug = c | slugify %}
+          <a href="{{ '/categories/' | append: slug | append: '/' | relative_url }}">{{ c }}</a>{% if forloop.last == false %}, {% endif %}
+        {% endfor %}
+      </p>
+      {% endif %}
       {% if post.excerpt %}
       <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
       {% endif %}
