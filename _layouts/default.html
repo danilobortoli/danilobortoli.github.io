@@ -185,6 +185,77 @@
     
     {{ content }}
   </article>
+  
+  <script>
+    // Converte notas de rodapé do Kramdown para sidenotes do Tufte CSS
+    (function() {
+      'use strict';
+
+      function convertFootnotesToSidenotes() {
+        // Encontra todas as referências de notas de rodapé no texto
+        const footnoteRefs = document.querySelectorAll('sup[id^="fnref:"]');
+        
+        if (footnoteRefs.length === 0) return;
+
+        // Encontra o container de notas de rodapé
+        const footnotesDiv = document.querySelector('.footnotes');
+        if (!footnotesDiv) return;
+
+        // Para cada referência de nota
+        footnoteRefs.forEach((ref, index) => {
+          const footnoteId = ref.id.replace('fnref:', '');
+          const footnoteLink = ref.querySelector('a');
+          
+          if (!footnoteLink) return;
+
+          // Encontra o conteúdo da nota de rodapé correspondente
+          const footnoteItem = document.getElementById('fn:' + footnoteId);
+          if (!footnoteItem) return;
+
+          // Extrai o conteúdo da nota (remove o link de retorno)
+          const footnoteContent = footnoteItem.cloneNode(true);
+          const backref = footnoteContent.querySelector('.reversefootnote');
+          if (backref) backref.remove();
+
+          // Remove o primeiro <p> se houver apenas um parágrafo
+          let content = footnoteContent.innerHTML.trim();
+          if (content.startsWith('<p>') && content.endsWith('</p>')) {
+            content = content.slice(3, -4);
+          }
+
+          // Cria a estrutura de sidenote do Tufte CSS
+          const sidenoteNumber = index + 1;
+          const label = document.createElement('label');
+          label.setAttribute('for', 'sn-' + sidenoteNumber);
+          label.className = 'margin-toggle sidenote-number';
+
+          const input = document.createElement('input');
+          input.setAttribute('type', 'checkbox');
+          input.setAttribute('id', 'sn-' + sidenoteNumber);
+          input.className = 'margin-toggle';
+
+          const sidenote = document.createElement('span');
+          sidenote.className = 'sidenote';
+          sidenote.innerHTML = content;
+
+          // Substitui a referência original pela estrutura de sidenote
+          ref.parentNode.insertBefore(label, ref);
+          ref.parentNode.insertBefore(input, ref);
+          ref.parentNode.insertBefore(sidenote, ref);
+          ref.remove();
+        });
+
+        // Remove a seção de notas de rodapé original
+        footnotesDiv.remove();
+      }
+
+      // Executa quando o DOM estiver pronto
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', convertFootnotesToSidenotes);
+      } else {
+        convertFootnotesToSidenotes();
+      }
+    })();
+  </script>
 </body>
 </html>
-
