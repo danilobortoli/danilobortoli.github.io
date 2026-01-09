@@ -2,7 +2,7 @@
 layout: post
 title: "O estado dual e mais"
 subtitle: "Strict Scrutiny e Kim Lane Scheppele"
-date: 2024-01-01
+date: 2026-01-09
 category: Direito
 ---
 
