@@ -1,3 +1,10 @@
+---
+layout: post
+title: "O estado dual e mais"
+date: 2024-01-01
+category: direito
+---
+
 ![iStock-621131766-copy.jpg]({{site.baseurl}}/iStock-621131766-copy.jpg)
 
 O episódio dessa semana do Strict Scrutiny, focado na apuração e accountability da Suprema Corte dos Estados Unidos, é absolutamente sensacional. Foca na captura de Cortes constitucionais mundo afora e conta com uma entrevista com Kim Lane Scheppele, professora da Faculdade de Direito de Princenton, sobre a autocracia e essa captura de Cortes. O que mais me chamou a atenção foi a lista de recomendações de leitura:
