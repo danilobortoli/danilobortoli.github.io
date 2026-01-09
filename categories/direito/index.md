@@ -9,7 +9,19 @@ permalink: /categories/direito/
 </section>
 
 <ul class="posts-list">
-{% for post in site.categories.direito %}
+{% assign target = "direito" %}
+{% for post in site.posts %}
+  {% assign matched = false %}
+  {% if post.categories and post.categories.size > 0 %}
+    {% if post.categories contains target %}
+      {% assign matched = true %}
+    {% endif %}
+  {% endif %}
+  {% if post.category == target %}
+    {% assign matched = true %}
+  {% endif %}
+
+  {% if matched %}
   <li>
     <a class="post-link" href="{{ post.url | relative_url }}">
       <h2 class="post-title">{{ post.title }}</h2>
@@ -17,5 +29,6 @@ permalink: /categories/direito/
       {% if post.excerpt %}<p class="post-excerpt">{{ post.excerpt }}</p>{% endif %}
     </a>
   </li>
+  {% endif %}
 {% endfor %}
 </ul>
