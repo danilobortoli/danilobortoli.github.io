@@ -13,11 +13,13 @@ permalink: /categories/direito/
 {% for post in site.posts %}
   {% assign matched = false %}
   {% if post.categories and post.categories.size > 0 %}
-    {% if post.categories contains target %}
-      {% assign matched = true %}
-    {% endif %}
+    {% for c in post.categories %}
+      {% if c | downcase == target %}
+        {% assign matched = true %}
+      {% endif %}
+    {% endfor %}
   {% endif %}
-  {% if post.category == target %}
+  {% if post.category and post.category | downcase == target %}
     {% assign matched = true %}
   {% endif %}
 
