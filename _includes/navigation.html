@@ -2,6 +2,7 @@
   <ul>
     <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Início</a></li>
     <li><a href="{{ '/posts.html' | relative_url }}" {% if page.url == '/posts.html' %}class="active"{% endif %}>Posts</a></li>
+    <li><a href="{{ '/categories.html' | relative_url }}" {% if page.url == '/categories.html' or page.url contains '/categories' %}class="active"{% endif %}>Categorias</a></li>
     <li><a href="{{ '/sobre.html' | relative_url }}" {% if page.url == '/sobre.html' %}class="active"{% endif %}>Sobre</a></li>
   </ul>
 </nav>

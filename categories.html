@@ -1,0 +1,23 @@
+---
+layout: default
+title: "Categorias"
+permalink: /categories.html
+---
+
+<section class="intro-section">
+  <h1>Categorias</h1>
+</section>
+
+<ul class="posts-list">
+{% for cat in site.categories %}
+  {% assign name = cat[0] %}
+  {% assign posts = cat[1] %}
+  {% assign slug = name | slugify %}
+  <li>
+    <a href="{{ '/categories/' | append: slug | append: '/' | relative_url }}">
+      <span class="post-title">{{ name }}</span>
+      <div class="post-meta">{{ posts | size }} post(s)</div>
+    </a>
+  </li>
+{% endfor %}
+</ul>
