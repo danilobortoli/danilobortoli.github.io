@@ -6,21 +6,53 @@ layout: default
 
 <ul class="posts-list">
   {% for post in site.posts %}
-  <li>
+  <li class="post-item">
     <a href="{{ post.url | relative_url }}" class="post-link">
-      <h2 class="post-title">{{ post.title }}</h2>
-      <p class="post-date">{{ post.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }}</p>
-      {% if post.categories and post.categories.size > 0 %}
-      <p class="post-meta">Categorias: 
-        {% for c in post.categories %}
-          {% assign slug = c | slugify %}
-          <a href="{{ '/categories/' | append: slug | append: '/' | relative_url }}">{{ c }}</a>{% if forloop.last == false %}, {% endif %}
-        {% endfor %}
-      </p>
+      {%- comment -%} Try featured image: front-matter `image` or first `<img>` in content {%- endcomment -%}
+      {% assign img_src = nil %}
+      {% if post.image %}
+        {% assign img_src = post.image %}
+      {% else %}
+        {% assign after_img = post.content | split:'<img' %}
+        {% if after_img.size > 1 %}
+          {% assign src_part = after_img[1] | split:'src="' %}
+          {% if src_part.size > 1 %}
+            {% assign img_src = src_part[1] | split:'"' | first %}
+          {% else %}
+            {% assign src_part = after_img[1] | split:"src='" %}
+            {% if src_part.size > 1 %}
+              {% assign img_src = src_part[1] | split:"'" | first %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
       {% endif %}
-      {% if post.excerpt %}
-      <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+
+      {% if img_src %}
+        <div class="post-thumbnail">
+          <img src="{{ img_src | relative_url }}" alt="{{ post.title }}">
+        </div>
       {% endif %}
+
+      <div class="post-meta">
+        <h2 class="post-title">{{ post.title }}</h2>
+        <p class="post-date">{{ post.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }}</p>
+        {% if post.categories and post.categories.size > 0 %}
+        <p class="post-meta">Categorias: 
+          {% for c in post.categories %}
+            {% assign slug = c | slugify %}
+            <a href="{{ '/categories/' | append: slug | append: '/' | relative_url }}">{{ c }}</a>{% if forloop.last == false %}, {% endif %}
+          {% endfor %}
+        </p>
+        {% endif %}
+
+        <p class="post-excerpt">
+          {% if post.excerpt %}
+            {{ post.excerpt | strip_html | truncatewords: 30 }}
+          {% else %}
+            {{ post.content | strip_html | truncatewords: 30 }}
+          {% endif %}
+        </p>
+      </div>
     </a>
   </li>
   {% endfor %}
