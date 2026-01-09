@@ -41,8 +41,9 @@ permalink: /categories/advocacia/
         <h2 class="post-title">{{ post.title }}</h2>
         <div class="post-date">{{ post.date | date: "%d %B %Y" }}</div>
         <p class="post-excerpt">
-          {% if post.excerpt %}
-            {{ post.excerpt | strip_html | truncatewords: 30 }}
+          {% assign excerpt_text = post.excerpt | strip_html %}
+          {% if excerpt_text and excerpt_text != '' %}
+            {{ excerpt_text | truncatewords: 30 }}
           {% else %}
             {{ post.content | strip_html | truncatewords: 30 }}
           {% endif %}

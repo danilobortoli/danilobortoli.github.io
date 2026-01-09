@@ -46,8 +46,9 @@ layout: default
         {% endif %}
 
         <p class="post-excerpt">
-          {% if post.excerpt %}
-            {{ post.excerpt | strip_html | truncatewords: 30 }}
+          {% assign excerpt_text = post.excerpt | strip_html %}
+          {% if excerpt_text and excerpt_text != '' %}
+            {{ excerpt_text | truncatewords: 30 }}
           {% else %}
             {{ post.content | strip_html | truncatewords: 30 }}
           {% endif %}
