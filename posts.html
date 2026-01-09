@@ -35,24 +35,27 @@ layout: default
 
       <div class="post-meta">
         <h2 class="post-title">{{ post.title }}</h2>
+        {% if post.subtitle %}
+          <p class="post-subtitle">{{ post.subtitle }}</p>
+        {% endif %}
         <p class="post-date">{{ post.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }}</p>
         {% if post.categories and post.categories.size > 0 %}
-        <p class="post-meta">Categorias: 
+        <div class="post-categories">Categorias: 
           {% for c in post.categories %}
             {% assign slug = c | slugify %}
             <a href="{{ '/categories/' | append: slug | append: '/' | relative_url }}">{{ c }}</a>{% if forloop.last == false %}, {% endif %}
           {% endfor %}
-        </p>
+        </div>
         {% endif %}
 
-        <p class="post-excerpt">
-          {% assign excerpt_text = post.excerpt | strip_html %}
+        <div class="post-excerpt">
+          {% assign excerpt_text = post.excerpt | strip_html | strip %}
           {% if excerpt_text and excerpt_text != '' %}
             {{ excerpt_text | truncatewords: 30 }}
           {% else %}
             {{ post.content | strip_html | truncatewords: 30 }}
           {% endif %}
-        </p>
+        </div>
       </div>
     </a>
   </li>

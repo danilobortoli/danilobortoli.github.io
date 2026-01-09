@@ -39,15 +39,18 @@ permalink: /categories/advocacia/
 
       <div class="post-meta">
         <h2 class="post-title">{{ post.title }}</h2>
-        <div class="post-date">{{ post.date | date: "%d %B %Y" }}</div>
-        <p class="post-excerpt">
-          {% assign excerpt_text = post.excerpt | strip_html %}
+        {% if post.subtitle %}
+          <p class="post-subtitle">{{ post.subtitle }}</p>
+        {% endif %}
+        <div class="post-date">{{ post.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }}</div>
+        <div class="post-excerpt">
+          {% assign excerpt_text = post.excerpt | strip_html | strip %}
           {% if excerpt_text and excerpt_text != '' %}
             {{ excerpt_text | truncatewords: 30 }}
           {% else %}
             {{ post.content | strip_html | truncatewords: 30 }}
           {% endif %}
-        </p>
+        </div>
       </div>
     </a>
   </li>
