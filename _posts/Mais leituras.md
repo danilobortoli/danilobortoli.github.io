@@ -2,7 +2,7 @@
 layout: post
 title: Mais leituras
 subtitle: Neoimperalismo e ansiedade - e outros textos
-date: {}
+date: 2026-01-09
 category: Direito
 ---
 
