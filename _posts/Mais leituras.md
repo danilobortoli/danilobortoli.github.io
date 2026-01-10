@@ -1,10 +1,12 @@
 ---
-layout: post  
-title: "Mais leituras"  
-subtitle: "Neoimperalismo e ansiedade - e outros textos"  
-date: 2026-01-09  
+layout: post
+title: Mais leituras
+subtitle: Neoimperalismo e ansiedade - e outros textos
+date: {}
 category: Direito
 ---
+
+![imagem](https://images.unsplash.com/photo-1717700300409-9cfe51e29671?q=80&w=892&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)
 
 > ‘Whereof one cannot speak, thereof one ought to be silent.’  
 > — Wittgenstein[^1]
@@ -91,4 +93,4 @@ Algo de bucólico, ainda, o que me lembra da [minha canção favorita de 2025](h
 
 [^12]: STEM é um acrônimo em inglês para *Science*, *Technology*, *Engineering* and *Mathematics* (Ciência, Tecnologia, Engenharia e Matemática), usado para designar essas áreas do conhecimento e, por extensão, profissionais com formação exclusiva ou predominante nesses campos. O termo ganhou força especialmente no contexto educacional e corporativo norte-americano a partir dos anos 2000, frequentemente em contraste implícito ou explícito com as humanidades e as artes.
 
-[^13]: Um bom estudo sobre esse papel da literatura está na série de ensaios de Justin H. Smith sobre a obra de Proust - principalmente sobre *Em Busca do Tempo Perdido* - no *The Hinternet*. 
+[^13]: Um bom estudo sobre esse papel da literatura está na série de ensaios de Justin H. Smith sobre a obra de Proust - principalmente sobre *Em Busca do Tempo Perdido* - no *The Hinternet*.
