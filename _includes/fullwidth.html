@@ -1,0 +1,17 @@
+{% comment %}
+Full Width Figure - Figura em largura total da página
+
+Uso:
+{% include fullwidth.html src="/assets/images/panorama.jpg" alt="Vista panorâmica" caption="Legenda opcional" %}
+
+Parâmetros:
+- src: (obrigatório) Caminho da imagem
+- alt: (obrigatório) Texto alternativo para acessibilidade
+- caption: (opcional) Legenda abaixo da imagem
+{% endcomment %}
+<figure class="fullwidth">
+  <img src="{{ include.src }}" alt="{{ include.alt }}"/>
+  {% if include.caption %}
+  <figcaption>{{ include.caption }}</figcaption>
+  {% endif %}
+</figure>

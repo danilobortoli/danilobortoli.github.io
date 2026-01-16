@@ -1,0 +1,10 @@
+{% comment %}
+Newthought - Início de seção com small caps no estilo Tufte
+
+Uso:
+{% include newthought.html text="As primeiras palavras" %} continuam aqui em texto normal.
+
+Parâmetros:
+- text: (obrigatório) As palavras que aparecerão em small caps
+{% endcomment %}
+<span class="newthought">{{ include.text }}</span>

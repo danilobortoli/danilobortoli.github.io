@@ -1,0 +1,20 @@
+{% comment %}
+Figure - Figura com legenda na margem
+
+Uso:
+{% include figure.html src="/assets/images/foto.jpg" alt="Descrição da imagem" caption="Legenda explicativa" id="fig-exemplo" %}
+
+Parâmetros:
+- src: (obrigatório) Caminho da imagem
+- alt: (obrigatório) Texto alternativo para acessibilidade
+- caption: (opcional) Legenda/descrição que aparece na margem
+- id: (opcional) ID único para o toggle, necessário se tiver caption
+{% endcomment %}
+<figure>
+  {% if include.caption %}
+  <label for="{{ include.id | default: 'fig-default' }}" class="margin-toggle">&#8853;</label>
+  <input type="checkbox" id="{{ include.id | default: 'fig-default' }}" class="margin-toggle"/>
+  <span class="marginnote">{{ include.caption }}</span>
+  {% endif %}
+  <img src="{{ include.src }}" alt="{{ include.alt }}"/>
+</figure>

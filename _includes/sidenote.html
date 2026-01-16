@@ -1,0 +1,16 @@
+{% comment %}
+Sidenote - Nota lateral com número de referência (manual)
+
+Uso:
+{% include sidenote.html id="sn-exemplo" text="Texto da sidenote aqui." %}
+
+Parâmetros:
+- id: (obrigatório) ID único para o toggle (use prefixo sn-)
+- text: (obrigatório) Conteúdo da nota
+
+Nota: Para sidenotes automáticas a partir de footnotes do Markdown [^1],
+o JavaScript já faz a conversão automaticamente.
+{% endcomment %}
+<label for="{{ include.id }}" class="margin-toggle sidenote-number"></label>
+<input type="checkbox" id="{{ include.id }}" class="margin-toggle"/>
+<span class="sidenote">{{ include.text }}</span>

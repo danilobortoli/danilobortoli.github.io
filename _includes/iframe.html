@@ -1,0 +1,22 @@
+{% comment %}
+Iframe Wrapper - Container responsivo para vídeos e embeds
+
+Uso:
+{% include iframe.html url="https://www.youtube.com/embed/VIDEO_ID" title="Título do vídeo" %}
+
+Parâmetros:
+- url: (obrigatório) URL do iframe (YouTube, Vimeo, etc.)
+- title: (opcional) Título para acessibilidade
+- width: (opcional) Largura, padrão 853
+- height: (opcional) Altura, padrão 480
+{% endcomment %}
+<figure class="iframe-wrapper">
+  <iframe
+    width="{{ include.width | default: 853 }}"
+    height="{{ include.height | default: 480 }}"
+    src="{{ include.url }}"
+    title="{{ include.title | default: 'Vídeo incorporado' }}"
+    frameborder="0"
+    allowfullscreen>
+  </iframe>
+</figure>

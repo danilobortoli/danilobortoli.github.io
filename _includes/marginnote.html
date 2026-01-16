@@ -1,0 +1,13 @@
+{% comment %}
+Margin Note - Nota na margem sem número de referência
+
+Uso:
+{% include marginnote.html id="mn-exemplo" text="Texto da nota na margem." %}
+
+Parâmetros:
+- id: (obrigatório) ID único para o toggle (use prefixo mn-)
+- text: (obrigatório) Conteúdo da nota
+{% endcomment %}
+<label for="{{ include.id }}" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="{{ include.id }}" class="margin-toggle"/>
+<span class="marginnote">{{ include.text }}</span>
