@@ -4,95 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-  <meta name="description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
-  <meta name="author" content="{{ site.author }}">
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
-  <meta property="og:url" content="{{ page.url | absolute_url }}">
-  <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
-  <meta property="og:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
-  <meta property="og:image" content="{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ site.default_image | absolute_url }}{% endif %}">
-  <meta property="og:locale" content="pt_BR">
-  <meta property="og:site_name" content="{{ site.title }}">
-  {% if page.layout == 'post' %}
-  <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
-  <meta property="article:author" content="{{ site.author }}">
-  {% if page.category %}<meta property="article:section" content="{{ page.category }}">{% endif %}
-  {% if page.tags %}{% for tag in page.tags %}<meta property="article:tag" content="{{ tag }}">{% endfor %}{% endif %}
-  {% endif %}
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="{{ page.url | absolute_url }}">
-  <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
-  <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
-  <meta name="twitter:image" content="{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ site.default_image | absolute_url }}{% endif %}">
-
-  <!-- Schema.org / JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    {% if page.layout == 'post' %}
-    "@type": "BlogPosting",
-    "headline": "{{ page.title | escape }}",
-    "image": "{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ site.default_image | absolute_url }}{% endif %}",
-    "datePublished": "{{ page.date | date_to_xmlschema }}",
-    "dateModified": "{% if page.last_modified_at %}{{ page.last_modified_at | date_to_xmlschema }}{% else %}{{ page.date | date_to_xmlschema }}{% endif %}",
-    "author": {
-      "@type": "Person",
-      "name": "{{ site.author }}"
-    },
-    "publisher": {
-      "@type": "Person",
-      "name": "{{ site.author }}"
-    },
-    "description": "{% if page.description %}{{ page.description | escape }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | truncate: 160 | escape }}{% else %}{{ site.description | escape }}{% endif %}",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "{{ page.url | absolute_url }}"
-    }
-    {% else %}
-    "@type": "WebSite",
-    "name": "{{ site.title | escape }}",
-    "url": "{{ site.url }}",
-    "description": "{{ site.description | escape }}",
-    "author": {
-      "@type": "Person",
-      "name": "{{ site.author }}"
-    }
-    {% endif %}
-  }
-  </script>
-
-  <!-- Canonical URL -->
-  <link rel="canonical" href="{{ page.url | absolute_url }}">
-
-  <!-- RSS Feed -->
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">
-
-  <!-- Tufte CSS (local) -->
-  <link rel="stylesheet" href="{{ '/assets/css/tufte.css' | relative_url }}"/>
+  <!-- Tufte CSS -->
+  <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
 
   <!-- Custom Enhancements -->
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}"/>
-
-  <!-- Analytics -->
-  {% if site.analytics.google_analytics != "" %}
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google_analytics }}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '{{ site.analytics.google_analytics }}');
-  </script>
-  {% endif %}
-  {% if site.analytics.plausible != "" %}
-  <script defer data-domain="{{ site.analytics.plausible }}" src="https://plausible.io/js/script.js"></script>
-  {% endif %}
-  {% if site.analytics.umami.website_id != "" %}
-  <script defer src="{{ site.analytics.umami.src }}" data-website-id="{{ site.analytics.umami.website_id }}"></script>
-  {% endif %}
 </head>
 <body>
   <article>
@@ -107,29 +24,38 @@
       'use strict';
 
       function convertFootnotesToSidenotes() {
+        // Encontra todas as referências de notas de rodapé no texto
         const footnoteRefs = document.querySelectorAll('sup[id^="fnref:"]');
+
         if (footnoteRefs.length === 0) return;
 
+        // Encontra o container de notas de rodapé
         const footnotesDiv = document.querySelector('.footnotes');
         if (!footnotesDiv) return;
 
+        // Para cada referência de nota
         footnoteRefs.forEach((ref, index) => {
           const footnoteId = ref.id.replace('fnref:', '');
           const footnoteLink = ref.querySelector('a');
+
           if (!footnoteLink) return;
 
+          // Encontra o conteúdo da nota de rodapé correspondente
           const footnoteItem = document.getElementById('fn:' + footnoteId);
           if (!footnoteItem) return;
 
+          // Extrai o conteúdo da nota (remove o link de retorno)
           const footnoteContent = footnoteItem.cloneNode(true);
           const backref = footnoteContent.querySelector('.reversefootnote');
           if (backref) backref.remove();
 
+          // Remove o primeiro <p> se houver apenas um parágrafo
           let content = footnoteContent.innerHTML.trim();
           if (content.startsWith('<p>') && content.endsWith('</p>')) {
             content = content.slice(3, -4);
           }
 
+          // Cria a estrutura de sidenote do Tufte CSS
           const sidenoteNumber = index + 1;
           const label = document.createElement('label');
           label.setAttribute('for', 'sn-' + sidenoteNumber);
@@ -144,108 +70,22 @@
           sidenote.className = 'sidenote';
           sidenote.innerHTML = content;
 
+          // Substitui a referência original pela estrutura de sidenote
           ref.parentNode.insertBefore(label, ref);
           ref.parentNode.insertBefore(input, ref);
           ref.parentNode.insertBefore(sidenote, ref);
           ref.remove();
         });
 
+        // Remove a seção de notas de rodapé original
         footnotesDiv.remove();
       }
 
-      // Lazy loading para imagens
-      function setupLazyLoading() {
-        const images = document.querySelectorAll('img:not([loading])');
-        images.forEach(img => {
-          img.setAttribute('loading', 'lazy');
-        });
-      }
-
-      // Dark mode toggle
-      function setupDarkMode() {
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        if (!darkModeToggle) return;
-
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const stored = localStorage.getItem('darkMode');
-
-        if (stored === 'true' || (stored === null && prefersDark)) {
-          document.documentElement.classList.add('dark-mode');
-          darkModeToggle.checked = true;
-        }
-
-        darkModeToggle.addEventListener('change', function() {
-          if (this.checked) {
-            document.documentElement.classList.add('dark-mode');
-            localStorage.setItem('darkMode', 'true');
-          } else {
-            document.documentElement.classList.remove('dark-mode');
-            localStorage.setItem('darkMode', 'false');
-          }
-        });
-      }
-
-      // Busca de posts
-      function setupSearch() {
-        const searchInput = document.getElementById('search-input');
-        const searchResults = document.getElementById('search-results');
-        if (!searchInput || !searchResults) return;
-
-        let posts = [];
-
-        fetch('{{ "/search.json" | relative_url }}')
-          .then(response => response.json())
-          .then(data => { posts = data; })
-          .catch(err => console.error('Erro ao carregar dados de busca:', err));
-
-        searchInput.addEventListener('input', function() {
-          const query = this.value.toLowerCase().trim();
-
-          if (query.length < 2) {
-            searchResults.innerHTML = '';
-            searchResults.style.display = 'none';
-            return;
-          }
-
-          const results = posts.filter(post =>
-            post.title.toLowerCase().includes(query) ||
-            post.content.toLowerCase().includes(query) ||
-            (post.tags && post.tags.some(tag => tag.toLowerCase().includes(query)))
-          ).slice(0, 5);
-
-          if (results.length > 0) {
-            searchResults.innerHTML = results.map(post =>
-              `<a href="${post.url}" class="search-result-item">
-                <strong>${post.title}</strong>
-                <span class="search-result-date">${post.date}</span>
-              </a>`
-            ).join('');
-            searchResults.style.display = 'block';
-          } else {
-            searchResults.innerHTML = '<p class="search-no-results">Nenhum resultado encontrado</p>';
-            searchResults.style.display = 'block';
-          }
-        });
-
-        document.addEventListener('click', function(e) {
-          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-            searchResults.style.display = 'none';
-          }
-        });
-      }
-
+      // Executa quando o DOM estiver pronto
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-          convertFootnotesToSidenotes();
-          setupLazyLoading();
-          setupDarkMode();
-          setupSearch();
-        });
+        document.addEventListener('DOMContentLoaded', convertFootnotesToSidenotes);
       } else {
         convertFootnotesToSidenotes();
-        setupLazyLoading();
-        setupDarkMode();
-        setupSearch();
       }
     })();
   </script>
