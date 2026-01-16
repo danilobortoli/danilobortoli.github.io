@@ -1,6 +1,28 @@
 ---
 layout: default
 ---
+{% if page.image %}
+<div class="post-hero">
+  <div class="post-hero-image" style="background-image: url('{{ page.image | relative_url }}');"></div>
+  <div class="post-hero-overlay"></div>
+  <div class="post-hero-content">
+    {% if page.categories.size > 0 %}
+    <p class="post-hero-categories">
+      {% for category in page.categories %}{{ category | upcase }}{% unless forloop.last %} · {% endunless %}{% endfor %}
+    </p>
+    {% endif %}
+    <h1 class="post-hero-title">{{ page.title }}</h1>
+    {% if page.subtitle %}
+    <p class="post-hero-subtitle">{{ page.subtitle }}</p>
+    {% endif %}
+    <p class="post-hero-meta">{{ page.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }} · {% include reading-time.html content=content %}</p>
+  </div>
+</div>
+
+<section>
+  {{ content }}
+</section>
+{% else %}
 <h1>{{ page.title }}</h1>
 {% if page.subtitle %}
 <p class="post-subtitle">{{ page.subtitle }}</p>
@@ -10,4 +32,5 @@ layout: default
 <section>
   {{ content }}
 </section>
+{% endif %}
 

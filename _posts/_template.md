@@ -1,7 +1,10 @@
 ---
 layout: post
 title: "TÍTULO_DO_POST"
+subtitle: "Subtítulo opcional do post"
 date: YYYY-MM-DD
+categories: [categoria1, categoria2]
+image: /assets/images/hero-image.jpg
 ---
 
 Comece a escrever seu post aqui em Markdown...

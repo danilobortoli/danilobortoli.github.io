@@ -705,6 +705,24 @@ article .post-meta a:hover {
   blockquote::before {
     font-size: 3rem;
   }
+
+  /* Post Hero responsive */
+  .post-hero {
+    height: 60vh;
+    min-height: 350px;
+  }
+
+  .post-hero-content {
+    padding: var(--spacing-md);
+  }
+
+  .post-hero-title {
+    font-size: 2.5rem;
+  }
+
+  .post-hero-subtitle {
+    font-size: 1.3rem;
+  }
 }
 
 /* Extra small devices */
@@ -724,10 +742,135 @@ article .post-meta a:hover {
   .post-title {
     font-size: 1.5rem;
   }
+
+  /* Post Hero extra small */
+  .post-hero {
+    height: 50vh;
+    min-height: 300px;
+  }
+
+  .post-hero-content {
+    padding: var(--spacing-sm);
+    padding-bottom: var(--spacing-md);
+  }
+
+  .post-hero-title {
+    font-size: 2rem;
+  }
+
+  .post-hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .post-hero-categories {
+    font-size: 0.75rem;
+  }
+
+  .post-hero-meta {
+    font-size: 0.9rem;
+  }
 }
 
 /* ==========================================================================
-   15. Print Styles
+   15. Post Hero - Full-bleed Image (Varyer Style)
+   ========================================================================== */
+
+.post-hero {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 70vh;
+  min-height: 400px;
+  max-height: 700px;
+  margin-bottom: var(--spacing-xl);
+  overflow: hidden;
+}
+
+.post-hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 0.6s ease;
+}
+
+.post-hero:hover .post-hero-image {
+  transform: scale(1.02);
+}
+
+.post-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+.post-hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  color: #fff;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.post-hero-categories {
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-sm);
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.post-hero-title {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin: 0 0 var(--spacing-sm) 0;
+  color: #fff !important;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.02em;
+}
+
+.post-hero-subtitle {
+  font-size: 1.6rem;
+  font-style: italic;
+  margin: 0 0 var(--spacing-md) 0;
+  opacity: 0.95;
+  line-height: 1.4;
+  max-width: 600px;
+}
+
+.post-hero-meta {
+  font-size: 1rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* Post with hero has different section styling */
+.post-hero + section {
+  margin-top: 0;
+}
+
+/* ==========================================================================
+   16. Print Styles
    ========================================================================== */
 
 @media print {
