@@ -1,0 +1,15 @@
+{% comment %}
+Margin Figure - Figura pequena na margem
+
+Uso:
+{% include marginfigure.html id="mf-exemplo" src="/assets/images/small.jpg" alt="Descrição" caption="Legenda na margem" %}
+
+Parâmetros:
+- id: (obrigatório) ID único para o toggle (use prefixo mf-)
+- src: (obrigatório) Caminho da imagem
+- alt: (obrigatório) Texto alternativo para acessibilidade
+- caption: (opcional) Legenda abaixo da imagem na margem
+{% endcomment %}
+<label for="{{ include.id }}" class="margin-toggle">&#8853;</label>
+<input type="checkbox" id="{{ include.id }}" class="margin-toggle"/>
+<span class="marginnote"><img src="{{ include.src }}" alt="{{ include.alt }}"/>{% if include.caption %}{{ include.caption }}{% endif %}</span>

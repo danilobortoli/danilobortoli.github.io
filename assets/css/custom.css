@@ -1,0 +1,746 @@
+/**
+ * Custom Tufte CSS Enhancements
+ * =============================
+ * Melhorias de design para o site baseado em Tufte CSS
+ */
+
+/* ==========================================================================
+   1. CSS Variables - Sistema de Design
+   ========================================================================== */
+
+:root {
+  /* Paleta de Cores */
+  --color-background: #fffff8;
+  --color-background-alt: #faf9f6;
+  --color-text: #111;
+  --color-text-muted: #555;
+  --color-text-light: #666;
+  --color-accent: #a00;
+  --color-accent-hover: #c00;
+  --color-link: #1a73e8;
+  --color-link-hover: #1557b0;
+  --color-border: #ddd;
+  --color-border-light: #eee;
+  --color-border-lighter: #f0f0f0;
+
+  /* Tipografia */
+  --font-body: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+  --font-sans: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  --font-mono: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+  /* Espaçamento */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 3rem;
+  --spacing-xl: 4rem;
+
+  /* Transições */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+
+  /* Sombras */
+  --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+/* ==========================================================================
+   2. Base - Reset e Estilos Fundamentais
+   ========================================================================== */
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background) !important;
+  color: var(--color-text) !important;
+}
+
+/* Animação sutil ao carregar */
+article {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   3. Tipografia
+   ========================================================================== */
+
+h1 {
+  font-size: 3.2rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 2.2rem;
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-lighter);
+}
+
+h3 {
+  font-size: 1.7rem;
+  font-style: italic;
+  margin-top: var(--spacing-lg);
+}
+
+/* Parágrafos com melhor ritmo */
+p {
+  margin-bottom: 1.4rem;
+}
+
+/* Links elegantes */
+a:link, a:visited {
+  color: var(--color-link);
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 115, 232, 0.3);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--transition-fast), color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration-color: var(--color-link-hover);
+}
+
+/* Newthought - Small caps para início de seção */
+.newthought {
+  font-variant: small-caps;
+  font-size: 1.2em;
+  letter-spacing: 0.05em;
+}
+
+/* Texto sans-serif */
+.sans {
+  font-family: var(--font-sans);
+  letter-spacing: 0.03em;
+}
+
+/* ==========================================================================
+   4. Navegação
+   ========================================================================== */
+
+.navigation {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-sm) 0 var(--spacing-md);
+  border-bottom: 2px solid var(--color-border);
+  position: relative;
+}
+
+/* Indicador visual elegante */
+.navigation::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--color-accent);
+}
+
+.navigation ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.navigation li {
+  margin: 0;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: var(--color-text-muted);
+  font-size: 1.3rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  transition: color var(--transition-normal);
+}
+
+.navigation a:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.navigation a.active {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   5. Epigraphs - Citações no estilo Tufte
+   ========================================================================== */
+
+.epigraph {
+  margin: var(--spacing-xl) 0;
+}
+
+.epigraph blockquote {
+  margin: var(--spacing-md) 0;
+  padding: 0;
+  border: none;
+  font-style: italic;
+}
+
+.epigraph blockquote p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-sm);
+}
+
+.epigraph blockquote footer {
+  font-size: 1.1rem;
+  font-style: normal;
+  color: var(--color-text-muted);
+}
+
+.epigraph blockquote footer::before {
+  content: "— ";
+}
+
+.epigraph blockquote footer cite {
+  font-style: italic;
+}
+
+/* ==========================================================================
+   6. Sidenotes e Margin Notes
+   ========================================================================== */
+
+.sidenote,
+.marginnote {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: var(--spacing-sm);
+  background: linear-gradient(135deg, var(--color-background-alt) 0%, #f5f4f0 100%);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  vertical-align: baseline;
+  position: relative;
+}
+
+.sidenote-number::after,
+.sidenote::before {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Toggle symbol para marginnotes */
+.margin-toggle:not(.sidenote-number) {
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
+   7. Figuras
+   ========================================================================== */
+
+figure {
+  margin: var(--spacing-lg) 0;
+}
+
+figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+
+figure figcaption {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-sm);
+  font-style: italic;
+}
+
+/* Full-width figures */
+figure.fullwidth {
+  max-width: 90%;
+  clear: both;
+}
+
+figure.fullwidth img {
+  width: 100%;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-medium);
+}
+
+figure.fullwidth figcaption {
+  text-align: center;
+  margin-top: var(--spacing-md);
+}
+
+/* Margin figures */
+.marginnote img {
+  width: 100%;
+  margin-bottom: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+}
+
+/* Iframe wrapper - responsivo */
+.iframe-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  margin: var(--spacing-lg) 0;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-subtle);
+}
+
+.iframe-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: var(--radius-md);
+}
+
+/* ==========================================================================
+   8. Blockquotes - Citações estilizadas
+   ========================================================================== */
+
+blockquote {
+  position: relative;
+  padding-left: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  border-left: none;
+}
+
+blockquote::before {
+  content: """;
+  position: absolute;
+  left: 0;
+  top: -0.5rem;
+  font-size: 4rem;
+  color: var(--color-accent);
+  opacity: 0.3;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+blockquote:not(.epigraph blockquote) p {
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+blockquote footer,
+blockquote cite {
+  display: block;
+  margin-top: var(--spacing-sm);
+  font-size: 1rem;
+  font-style: normal;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   9. Código
+   ========================================================================== */
+
+pre, code {
+  font-family: var(--font-mono);
+  background: var(--color-background-alt);
+  border-radius: var(--radius-sm);
+}
+
+code {
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+  color: var(--color-accent);
+}
+
+pre {
+  padding: var(--spacing-md);
+  overflow-x: auto;
+  border: 1px solid var(--color-border-light);
+  line-height: 1.5;
+  border-radius: var(--radius-md);
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  color: inherit;
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   10. Seções e Layout
+   ========================================================================== */
+
+.intro-section {
+  margin-top: var(--spacing-md);
+}
+
+.intro-section h1 {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.intro-section p {
+  font-size: 1.6rem;
+  line-height: 1.8;
+}
+
+.about-content {
+  margin-top: var(--spacing-md);
+}
+
+.about-content h2 {
+  margin-top: var(--spacing-md);
+}
+
+.about-content p {
+  font-size: 1.4rem;
+  line-height: 1.8;
+}
+
+/* ==========================================================================
+   11. Lista de Posts - Cards modernos
+   ========================================================================== */
+
+.posts-list {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--spacing-md);
+}
+
+.posts-list li {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #fff 0%, #fefdfb 100%);
+  box-shadow: var(--shadow-subtle);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.posts-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.post-item {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.post-thumbnail {
+  flex: 0 0 160px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.post-thumbnail img {
+  width: 160px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  display: block;
+  transition: transform var(--transition-normal);
+}
+
+.posts-list li:hover .post-thumbnail img {
+  transform: scale(1.05);
+}
+
+.post-meta {
+  flex: 1;
+}
+
+.post-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.post-link:hover {
+  text-decoration: none;
+}
+
+.post-link:hover .post-title {
+  color: var(--color-accent);
+}
+
+.post-title {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-xs);
+  transition: color var(--transition-fast);
+  line-height: 1.2;
+}
+
+.post-subtitle {
+  font-size: 1.4rem;
+  color: var(--color-text-light);
+  font-style: italic;
+  margin-top: -0.25rem;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.4;
+}
+
+.post-date {
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-xs);
+}
+
+.post-excerpt {
+  margin-top: var(--spacing-xs);
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* Post meta dentro do post */
+article .post-meta {
+  font-size: 1.2rem;
+  color: var(--color-text-light);
+  font-style: italic;
+  margin-bottom: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+
+article .post-meta a {
+  color: var(--color-text-light);
+  text-decoration: underline;
+}
+
+article .post-meta a:hover {
+  color: var(--color-text);
+}
+
+/* ==========================================================================
+   12. Footer e Créditos
+   ========================================================================== */
+
+.credit-section {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+  text-align: center;
+}
+
+.credit-section::before {
+  content: "❧";
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-accent);
+  opacity: 0.5;
+}
+
+.credit-section a {
+  color: var(--color-text-light);
+  text-decoration: underline;
+}
+
+.credit-section a:hover {
+  color: var(--color-text);
+}
+
+/* ==========================================================================
+   13. Dark Mode Override (mantém light mode)
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--color-background) !important;
+    color: var(--color-text) !important;
+  }
+
+  article {
+    background-color: var(--color-background) !important;
+    color: var(--color-text) !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text) !important;
+  }
+
+  p {
+    color: var(--color-text) !important;
+  }
+
+  a {
+    color: var(--color-link) !important;
+  }
+
+  a:hover {
+    color: var(--color-link-hover) !important;
+  }
+
+  .navigation a {
+    color: var(--color-text-muted) !important;
+  }
+
+  .navigation a:hover {
+    color: var(--color-accent) !important;
+  }
+
+  .credit-section {
+    color: var(--color-text-light) !important;
+  }
+
+  .credit-section a {
+    color: var(--color-text-light) !important;
+  }
+
+  .credit-section a:hover {
+    color: var(--color-text) !important;
+  }
+
+  .post-date,
+  .post-meta {
+    color: var(--color-text-light) !important;
+  }
+}
+
+/* ==========================================================================
+   14. Responsividade
+   ========================================================================== */
+
+@media (max-width: 760px) {
+  :root {
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  .navigation::after {
+    width: 40px;
+  }
+
+  .navigation ul {
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
+
+  .post-item {
+    flex-direction: column;
+  }
+
+  .post-thumbnail {
+    width: 100%;
+    flex: none;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .post-thumbnail img {
+    width: 100%;
+    height: 180px;
+  }
+
+  .post-title {
+    font-size: 1.7rem;
+  }
+
+  .posts-list li {
+    padding: var(--spacing-sm);
+  }
+
+  /* Sidenotes em mobile */
+  .sidenote,
+  .marginnote {
+    margin: var(--spacing-md) 0;
+    width: 100%;
+    float: none;
+    clear: both;
+  }
+
+  /* Full-width figures */
+  figure.fullwidth {
+    max-width: 100%;
+  }
+
+  /* Epigraph mais compacto */
+  .epigraph blockquote p {
+    font-size: 1.2rem;
+  }
+
+  /* Blockquote */
+  blockquote::before {
+    font-size: 3rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .intro-section h1 {
+    font-size: 2.2rem;
+  }
+
+  .navigation a {
+    font-size: 1.1rem;
+  }
+
+  .post-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* ==========================================================================
+   15. Print Styles
+   ========================================================================== */
+
+@media print {
+  .navigation,
+  .margin-toggle {
+    display: none !important;
+  }
+
+  .sidenote,
+  .marginnote {
+    display: block;
+    float: none;
+    width: 100%;
+    margin: 1em 0;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+}

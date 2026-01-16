@@ -1,0 +1,19 @@
+{% comment %}
+Epigraph - Citação no estilo Tufte para introduzir seções
+
+Uso:
+{% include epigraph.html quote="Texto da citação aqui." author="Nome do Autor" source="Título da Obra" %}
+
+Parâmetros:
+- quote: (obrigatório) O texto da citação
+- author: (opcional) Nome do autor
+- source: (opcional) Título da obra ou fonte
+{% endcomment %}
+<div class="epigraph">
+  <blockquote>
+    <p>{{ include.quote }}</p>
+    {% if include.author or include.source %}
+    <footer>{% if include.author %}{{ include.author }}{% endif %}{% if include.author and include.source %}, {% endif %}{% if include.source %}<cite>{{ include.source }}</cite>{% endif %}</footer>
+    {% endif %}
+  </blockquote>
+</div>
