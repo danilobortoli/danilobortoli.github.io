@@ -1,0 +1,193 @@
+---
+layout: default
+title: Guia de Estilo Tufte CSS
+---
+
+<section>
+  <h1>Guia de Estilo Tufte CSS</h1>
+  <p class="subtitle">Documentação completa das features disponíveis para posts</p>
+
+  {% include epigraph.html quote="A excelência no design estatístico consiste em apresentar dados complexos de forma clara, precisa e eficiente." author="Edward Tufte" source="The Visual Display of Quantitative Information" %}
+
+  <p><span class="newthought">Este guia documenta</span> todas as features do Tufte CSS disponíveis neste site. O Tufte CSS foi criado para produzir artigos web com o estilo característico dos livros de Edward Tufte, conhecido por sua ênfase em tipografia elegante e notas na margem.</p>
+
+  <h2>Epigraphs</h2>
+
+  <p>Epigraphs são citações usadas para introduzir uma página ou seção. São renderizadas em itálico com atribuição ao autor.</p>
+
+  <p><strong>Uso no Markdown:</strong></p>
+
+<pre><code>{% raw %}{% include epigraph.html
+  quote="Texto da citação aqui."
+  author="Nome do Autor"
+  source="Título da Obra" %}{% endraw %}</code></pre>
+
+  <h2>Sidenotes e Margin Notes</h2>
+
+  <p>Uma das características mais distintivas do estilo Tufte são as notas laterais, que permitem adicionar informações complementares sem interromper o fluxo do texto principal.<label for="sn-exemplo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-exemplo" class="margin-toggle"/><span class="sidenote">Esta é uma sidenote criada manualmente com o include. Note o número de referência no texto.</span></p>
+
+  <h3>Sidenotes Automáticas</h3>
+
+  <p>A forma mais fácil de criar sidenotes é usando a sintaxe padrão de footnotes do Markdown. O JavaScript do site converte automaticamente para o formato Tufte CSS.</p>
+
+  <h3>Sidenotes Manuais</h3>
+
+  <p>Para maior controle, use o include diretamente:</p>
+
+<pre><code>{% raw %}{% include sidenote.html id="sn-nome" text="Conteúdo da nota." %}{% endraw %}</code></pre>
+
+  <h3>Margin Notes</h3>
+
+  <p>Margin notes são similares às sidenotes, mas sem número de referência.<label for="mn-exemplo" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exemplo" class="margin-toggle"/><span class="marginnote">Esta é uma margin note. Ela aparece na margem mas sem um número de referência no texto. Útil para comentários contextuais.</span> São úteis para informações complementares que não precisam de referência explícita no texto.</p>
+
+<pre><code>{% raw %}{% include marginnote.html id="mn-nome" text="Conteúdo da nota." %}{% endraw %}</code></pre>
+
+  <h2>Newthought</h2>
+
+  <p><span class="newthought">Use newthought para iniciar</span> novas seções ou parágrafos importantes. As primeiras palavras aparecem em small caps, criando uma transição visual elegante.</p>
+
+<pre><code>{% raw %}{% include newthought.html text="Primeiras palavras" %} resto do texto...{% endraw %}</code></pre>
+
+  <h2>Figuras</h2>
+
+  <p>O Tufte CSS oferece três tipos de figuras:</p>
+
+  <h3>Figura Regular</h3>
+
+  <p>Figuras com legenda na margem:</p>
+
+<pre><code>{% raw %}{% include figure.html
+  src="/assets/images/exemplo.jpg"
+  alt="Descrição da imagem"
+  caption="Legenda explicativa"
+  id="fig-1" %}{% endraw %}</code></pre>
+
+  <h3>Figura Full-width</h3>
+
+  <p>Para imagens panorâmicas que ocupam toda a largura:</p>
+
+<pre><code>{% raw %}{% include fullwidth.html
+  src="/assets/images/panorama.jpg"
+  alt="Vista panorâmica"
+  caption="Legenda opcional" %}{% endraw %}</code></pre>
+
+  <h3>Figura na Margem</h3>
+
+  <p>Pequenas imagens que aparecem na margem do texto:</p>
+
+<pre><code>{% raw %}{% include marginfigure.html
+  id="mf-1"
+  src="/assets/images/small.jpg"
+  alt="Descrição"
+  caption="Legenda na margem" %}{% endraw %}</code></pre>
+
+  <h2>Vídeos Incorporados</h2>
+
+  <p>Para incorporar vídeos do YouTube ou outras plataformas de forma responsiva:</p>
+
+<pre><code>{% raw %}{% include iframe.html
+  url="https://www.youtube.com/embed/VIDEO_ID"
+  title="Título do vídeo" %}{% endraw %}</code></pre>
+
+  <h2>Citações (Blockquotes)</h2>
+
+  <p>Citações em bloco são renderizadas com um design elegante:</p>
+
+  <blockquote>
+    <p>O bom design é tão pouco design quanto possível. Menos, mas melhor, porque se concentra nos aspectos essenciais. De volta à pureza, de volta à simplicidade.</p>
+  </blockquote>
+
+  <p>As citações podem incluir atribuição usando a tag <code>footer</code>:</p>
+
+  <blockquote>
+    <p>Simplicidade é a sofisticação máxima.</p>
+    <footer>Leonardo da Vinci</footer>
+  </blockquote>
+
+  <h2>Código</h2>
+
+  <h3>Código Inline</h3>
+
+  <p>Use backticks para código inline como <code>const x = 42;</code> ou nomes de arquivos como <code>_config.yml</code>.</p>
+
+  <h3>Blocos de Código</h3>
+
+<pre><code>function convertFootnotesToSidenotes() {
+  const footnoteRefs = document.querySelectorAll('sup[id^="fnref:"]');
+
+  footnoteRefs.forEach((ref, index) => {
+    // Processa cada nota de rodapé
+    const footnoteId = ref.id.replace('fnref:', '');
+    console.log(`Convertendo nota ${index + 1}: ${footnoteId}`);
+  });
+}</code></pre>
+
+  <h2>Texto Sans-Serif</h2>
+
+  <p class="sans">Este parágrafo usa a fonte sans-serif (Gill Sans), que pode ser útil para textos que precisam de um estilo diferente, como avisos ou notas técnicas.</p>
+
+  <p>Para usar, adicione a classe <code>sans</code> diretamente no HTML:</p>
+
+<pre><code>&lt;p class="sans"&gt;Texto em sans-serif&lt;/p&gt;</code></pre>
+
+  <h2>Estrutura de Documento</h2>
+
+  <p>O Tufte CSS segue uma hierarquia clara:</p>
+
+  <ul>
+    <li><strong>h1</strong>: Título do documento (usado automaticamente pelo layout de post)</li>
+    <li><strong>h2</strong>: Seções principais</li>
+    <li><strong>h3</strong>: Subseções (use com moderação)</li>
+  </ul>
+
+  <p><span class="newthought">Evite usar h4-h6</span> pois o estilo Tufte favorece uma hierarquia mais plana. Se você precisa de mais níveis, considere reorganizar o conteúdo.</p>
+
+  <h2>Resumo dos Includes Disponíveis</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Include</th>
+        <th>Uso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>epigraph.html</code></td>
+        <td>Citações introdutórias</td>
+      </tr>
+      <tr>
+        <td><code>newthought.html</code></td>
+        <td>Início de seção em small caps</td>
+      </tr>
+      <tr>
+        <td><code>sidenote.html</code></td>
+        <td>Notas laterais com número</td>
+      </tr>
+      <tr>
+        <td><code>marginnote.html</code></td>
+        <td>Notas laterais sem número</td>
+      </tr>
+      <tr>
+        <td><code>figure.html</code></td>
+        <td>Figuras com legenda na margem</td>
+      </tr>
+      <tr>
+        <td><code>fullwidth.html</code></td>
+        <td>Figuras em largura total</td>
+      </tr>
+      <tr>
+        <td><code>marginfigure.html</code></td>
+        <td>Figuras pequenas na margem</td>
+      </tr>
+      <tr>
+        <td><code>iframe.html</code></td>
+        <td>Vídeos responsivos</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr />
+
+  <p>Este guia serve como referência e exemplo vivo das features disponíveis. Consulte-o sempre que precisar lembrar a sintaxe de algum elemento.</p>
+</section>
