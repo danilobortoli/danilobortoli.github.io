@@ -526,6 +526,14 @@ article .post-meta {
   margin-top: var(--spacing-sm);
 }
 
+/* Tempo de leitura */
+.reading-time {
+  display: inline-block;
+  font-style: normal;
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+}
+
 article .post-meta a {
   color: var(--color-text-light);
   text-decoration: underline;
