@@ -4,6 +4,12 @@ title: Mais leituras
 subtitle: Neoimperalismo e ansiedade - e outros textos
 date: 2026-01-09
 category: Direito
+tags:
+  - leitura
+  - suprema-corte
+  - política
+  - literatura
+  - filosofia
 ---
 
 ![imagem](https://images.unsplash.com/photo-1717700300409-9cfe51e29671?q=80&w=892&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)

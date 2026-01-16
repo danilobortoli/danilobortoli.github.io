@@ -1,0 +1,65 @@
+---
+layout: default
+title: Busca
+description: Pesquise posts no site
+---
+
+<h1>Busca</h1>
+
+<section class="search-section">
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="Digite para buscar..." autocomplete="off">
+    <div id="search-results" class="search-results"></div>
+  </div>
+
+  <div id="all-posts" class="all-posts-list">
+    <h2>Todos os Posts</h2>
+    <ul class="posts-list">
+      {% for post in site.posts %}
+      <li class="search-post-item" data-title="{{ post.title | downcase }}" data-content="{{ post.content | strip_html | truncate: 500 | downcase }}" data-tags="{% if post.tags %}{{ post.tags | join: ' ' | downcase }}{% endif %}">
+        <a href="{{ post.url | relative_url }}" class="post-link">
+          <div class="post-meta">
+            <h3 class="post-title">{{ post.title }}</h3>
+            <p class="post-date">{{ post.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }}</p>
+            {% if post.tags and post.tags.size > 0 %}
+            <div class="post-tags-inline">
+              {% for tag in post.tags %}
+              <span class="tag-small">{{ tag }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<script>
+(function() {
+  const searchInput = document.getElementById('search-input');
+  const allPosts = document.querySelectorAll('.search-post-item');
+
+  searchInput.addEventListener('input', function() {
+    const query = this.value.toLowerCase().trim();
+
+    if (query.length < 2) {
+      allPosts.forEach(post => post.style.display = '');
+      return;
+    }
+
+    allPosts.forEach(post => {
+      const title = post.dataset.title;
+      const content = post.dataset.content;
+      const tags = post.dataset.tags;
+
+      if (title.includes(query) || content.includes(query) || tags.includes(query)) {
+        post.style.display = '';
+      } else {
+        post.style.display = 'none';
+      }
+    });
+  });
+})();
+</script>

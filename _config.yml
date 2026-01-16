@@ -1,29 +1,65 @@
 title: Danilo Bortoli
 description: Um blog sobre tecnologia, ciência e outras coisas interessantes
+author: Danilo Bortoli
 lang: pt-BR
 url: https://danilobortoli.github.io
 baseurl: ""
+
+# Imagem padrão para Open Graph/Twitter Cards
+default_image: /assets/images/og-default.jpg
+
+# Analytics (deixe vazio para desabilitar)
+# Suporta: google_analytics, plausible, umami
+analytics:
+  google_analytics: ""  # Ex: G-XXXXXXXXXX
+  plausible: ""         # Ex: danilobortoli.github.io
+  umami:
+    website_id: ""      # Ex: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    src: ""             # Ex: https://analytics.example.com/script.js
 
 # Jekyll settings
 markdown: kramdown
 highlighter: rouge
 
-# Kramdown settings for footnotes
+# Kramdown settings for footnotes and TOC
 kramdown:
   input: GFM
   auto_ids: true
   footnote_nr: 1
   hard_wrap: false
+  toc_levels: 2..3
+
+# Paginação
+paginate: 5
+paginate_path: "/posts/page:num/"
 
 # GitHub Pages plugins (whitelist)
 plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-relative-links
+  - jekyll-paginate
+
+# Defaults para posts
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      toc: true
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
 
 # Exclude from processing
 exclude:
   - README.md
   - .git
   - .github
-
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor

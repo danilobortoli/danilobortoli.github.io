@@ -4,6 +4,11 @@ title: "O estado dual e mais"
 subtitle: "Strict Scrutiny e Kim Lane Scheppele"
 date: 2026-01-09
 category: Direito
+tags:
+  - podcast
+  - suprema-corte
+  - autocracia
+  - leitura
 ---
 
 ![iStock-621131766-copy.jpg]({{site.baseurl}}/iStock-621131766-copy.jpg)
