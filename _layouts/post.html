@@ -1,13 +1,130 @@
 ---
 layout: default
 ---
-<h1>{{ page.title }}</h1>
-{% if page.subtitle %}
-<p class="post-subtitle">{{ page.subtitle }}</p>
-{% endif %}
-<p class="post-meta">{{ page.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }}</p>
 
-<section>
+{% comment %} Breadcrumbs {% endcomment %}
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <a href="{{ '/' | relative_url }}">Início</a>
+  <span class="separator">/</span>
+  <a href="{{ '/posts.html' | relative_url }}">Posts</a>
+  {% if page.category %}
+  <span class="separator">/</span>
+  <a href="{{ '/categories/' | append: page.category | slugify | append: '/' | relative_url }}">{{ page.category }}</a>
+  {% endif %}
+  <span class="separator">/</span>
+  <span class="current">{{ page.title | truncate: 30 }}</span>
+</nav>
+
+<header class="post-header">
+  <h1>{{ page.title }}</h1>
+  {% if page.subtitle %}
+  <p class="post-subtitle">{{ page.subtitle }}</p>
+  {% endif %}
+
+  <div class="post-meta-info">
+    <time datetime="{{ page.date | date_to_xmlschema }}">
+      {{ page.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }}
+    </time>
+
+    {% comment %} Tempo de leitura {% endcomment %}
+    {% assign words = content | number_of_words %}
+    {% assign minutes = words | divided_by: 200 %}
+    {% if minutes < 1 %}{% assign minutes = 1 %}{% endif %}
+    <span class="reading-time">{{ minutes }} min de leitura</span>
+
+    {% if page.category %}
+    <span class="post-category">
+      <a href="{{ '/categories/' | append: page.category | slugify | append: '/' | relative_url }}">{{ page.category }}</a>
+    </span>
+    {% endif %}
+  </div>
+
+  {% if page.tags and page.tags.size > 0 %}
+  <div class="post-tags">
+    {% for tag in page.tags %}
+    <a href="{{ '/tags/' | append: tag | slugify | append: '/' | relative_url }}" class="tag">{{ tag }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</header>
+
+{% comment %} Table of Contents para posts longos {% endcomment %}
+{% if page.toc != false %}
+{% assign words = content | number_of_words %}
+{% if words > 500 %}
+{% assign toc = content | toc_only %}
+{% if toc and toc != "" %}
+<details class="toc-container" open>
+  <summary>Índice</summary>
+  <nav class="toc">
+    {{ toc }}
+  </nav>
+</details>
+{% endif %}
+{% endif %}
+{% endif %}
+
+<section class="post-content">
   {{ content }}
 </section>
 
+{% comment %} Navegação entre posts {% endcomment %}
+<nav class="post-navigation">
+  {% if page.previous.url %}
+  <a href="{{ page.previous.url | relative_url }}" class="nav-prev">
+    <span class="nav-label">Anterior</span>
+    <span class="nav-title">{{ page.previous.title }}</span>
+  </a>
+  {% else %}
+  <span class="nav-prev disabled"></span>
+  {% endif %}
+
+  {% if page.next.url %}
+  <a href="{{ page.next.url | relative_url }}" class="nav-next">
+    <span class="nav-label">Próximo</span>
+    <span class="nav-title">{{ page.next.title }}</span>
+  </a>
+  {% else %}
+  <span class="nav-next disabled"></span>
+  {% endif %}
+</nav>
+
+{% comment %} Posts relacionados {% endcomment %}
+{% assign maxRelated = 3 %}
+{% assign minCommonTags = 1 %}
+{% assign related = "" | split: "" %}
+
+{% for post in site.posts %}
+  {% if post.url != page.url %}
+    {% assign commonTags = 0 %}
+    {% for tag in post.tags %}
+      {% if page.tags contains tag %}
+        {% assign commonTags = commonTags | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+    {% if post.category == page.category %}
+      {% assign commonTags = commonTags | plus: 1 %}
+    {% endif %}
+    {% if commonTags >= minCommonTags %}
+      {% assign related = related | push: post %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% assign related = related | slice: 0, maxRelated %}
+
+{% if related.size > 0 %}
+<section class="related-posts">
+  <h2>Posts Relacionados</h2>
+  <ul class="related-list">
+    {% for post in related %}
+    <li>
+      <a href="{{ post.url | relative_url }}">
+        <span class="related-title">{{ post.title }}</span>
+        <span class="related-date">{{ post.date | date: "%d/%m/%Y" }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}

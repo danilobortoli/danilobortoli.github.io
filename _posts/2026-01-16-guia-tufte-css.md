@@ -4,6 +4,11 @@ title: Guia de Estilo Tufte CSS
 subtitle: Documentação completa das features disponíveis para posts
 date: 2026-01-16
 category: Tutorial
+tags:
+  - tufte
+  - design
+  - css
+  - tutorial
 ---
 
 {% include epigraph.html quote="A excelência no design estatístico consiste em apresentar dados complexos de forma clara, precisa e eficiente." author="Edward Tufte" source="The Visual Display of Quantitative Information" %}
