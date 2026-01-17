@@ -870,6 +870,38 @@ article .post-meta a:hover {
   margin-top: 0;
 }
 
+/* Hero com imagem clara - texto escuro */
+.post-hero.hero-light-bg .post-hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.7) 75%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+}
+
+.post-hero.hero-light-bg .post-hero-content {
+  color: #111;
+}
+
+.post-hero.hero-light-bg .post-hero-categories {
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8), 0 2px 10px rgba(255, 255, 255, 0.6);
+}
+
+.post-hero.hero-light-bg .post-hero-title {
+  color: #111 !important;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9), 0 4px 15px rgba(255, 255, 255, 0.7);
+}
+
+.post-hero.hero-light-bg .post-hero-subtitle {
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8), 0 2px 10px rgba(255, 255, 255, 0.6);
+}
+
+.post-hero.hero-light-bg .post-hero-meta {
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.5);
+}
+
 /* ==========================================================================
    16. Print Styles
    ========================================================================== */
