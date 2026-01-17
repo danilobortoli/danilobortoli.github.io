@@ -6,7 +6,7 @@ date: 2026-01-17
 category: Direito
 ---
 
-![miltiadis-fragkidis-2zGTh-S5moM-unsplash.jpg]({{site.baseurl}}/_posts/miltiadis-fragkidis-2zGTh-S5moM-unsplash.jpg)
+![miltiadis-fragkidis-2zGTh-S5moM-unsplash.jpg](https://images.unsplash.com/photo-1610223755176-f8c8c92e4ad8?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)
 
 
 {% include epigraph.html quote="[...] the myth of Ulysses is commonly used to capture the essence of precommitment – especially in relation to _constitutional_ precommitment. Elster sees this commitment story as being a result of the problem of democracy. He argues that the problem of democracy at its core is actually a chain of problems, each link supplied to bandage one problem, but creating more problems in turn." author="Christina Rothwell" source="The Constitution of Theseus: An Investigation into the Metaphysics of Constitutional Precommitment" %}
