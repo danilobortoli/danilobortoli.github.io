@@ -827,6 +827,12 @@ article .post-meta a:hover {
   color: #fff;
   max-width: 900px;
   margin: 0 auto;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.5) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 .post-hero-categories {
