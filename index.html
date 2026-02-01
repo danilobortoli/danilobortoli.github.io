@@ -17,15 +17,16 @@ layout: default
   {% if site.notas.size > 0 %}
   <aside class="notas-sidebar">
     <h3 class="notas-title">Notas</h3>
-    {% assign recent_notas = site.notas | sort: 'date' | reverse | limit: 8 %}
+    {% assign recent_notas = site.notas | sort: 'date' | reverse | limit: 6 %}
     {% for nota in recent_notas %}
     <div class="nota-item">
-      <p class="nota-content">{{ nota.content | strip_html | truncatewords: 40 }}</p>
+      <p class="nota-content">{{ nota.content | strip_html | truncatewords: 30 }}</p>
       <time class="nota-date" datetime="{{ nota.date | date_to_xmlschema }}">
         {{ nota.date | date: "%-d/%-m/%y" }}
       </time>
     </div>
     {% endfor %}
+    <a href="{{ '/notas.html' | relative_url }}" class="notas-ver-todas">Ver todas as notas →</a>
   </aside>
   {% endif %}
 </section>

@@ -419,17 +419,17 @@ pre code {
 }
 
 /* Notas Sidebar - Margem lateral estilo Tufte */
-.intro-section {
-  position: relative;
-}
-
 .notas-sidebar {
-  position: absolute;
-  right: -260px;
-  top: 0;
+  float: right;
+  clear: right;
+  margin-right: -260px;
   width: 220px;
+  margin-top: 0;
+  margin-bottom: var(--spacing-lg);
   font-size: 0.95rem;
   line-height: 1.5;
+  vertical-align: baseline;
+  position: relative;
 }
 
 .notas-title {
@@ -468,6 +468,16 @@ pre code {
   font-variant: small-caps;
   letter-spacing: 0.05em;
   font-style: normal;
+}
+
+/* Link "Ver todas" nas notas */
+.notas-ver-todas {
+  display: block;
+  margin-top: var(--spacing-sm);
+  font-size: 0.85rem;
+  text-align: center;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
 }
 
 /* ==========================================================================
