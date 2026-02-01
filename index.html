@@ -13,34 +13,22 @@ layout: default
 <p>Escrevo para o <em><a href="https://thesinglesjukebox.com">The Singles Jukebox</a></em>. Fiz um <em>One Week One Band</em> sobre o Burial, o qual pode ser visto <a href="https://oneweekoneband.tumblr.com/tagged/burial/chrono">aqui</a>.</p>
 <p>Atuo como advogado (OAB/SP 409.024), especializado em Direito Empresarial e Tributário. Atualmente, trabalho como advogado da <a href="https://matra.org.br" target="_blank">OSCIP MATRA – Marília Transparente</a>, uma organização sem fins lucrativos e apartidária que promove a transparência na gestão pública e combate a corrupção em Marília.</p>
   <p>Este espaço é uma forma de documentar minha jornada de aprendizado e, quem sabe, ajudar outras pessoas que compartilham interesses similares. Sinta-se à vontade para explorar os <em><a href="{{ '/posts.html' | relative_url }}">posts</a></em>, saber mais <a href="{{ '/sobre.html' | relative_url }}">sobre mim</a> ou conhecer minha <a href="{{ '/advocacia.html' | relative_url }}">atuação profissional na advocacia</a>.</p>
-</section>
 
-<section class="notas-section">
-  <h2>Notas</h2>
-  <ul class="notas-list">
-    {% assign recent_notas = site.notas | sort: 'date' | reverse | limit: 5 %}
+  {% if site.notas.size > 0 %}
+  <aside class="notas-sidebar">
+    <h3 class="notas-title">Notas</h3>
+    {% assign recent_notas = site.notas | sort: 'date' | reverse | limit: 6 %}
     {% for nota in recent_notas %}
-    <li class="nota-item">
-      {% if nota.url %}
-      <a href="{{ nota.url | relative_url }}" class="nota-link">
-        <div class="nota-content">{{ nota.content | strip_html | truncatewords: 50 }}</div>
-        <div class="nota-meta">
-          <time class="nota-date" datetime="{{ nota.date | date_to_xmlschema }}">
-            {{ nota.date | date: "%d/%m/%Y" }}
-          </time>
-        </div>
-      </a>
-      {% else %}
-      <div class="nota-content">{{ nota.content | strip_html | truncatewords: 50 }}</div>
-      <div class="nota-meta">
-        <time class="nota-date" datetime="{{ nota.date | date_to_xmlschema }}">
-          {{ nota.date | date: "%d/%m/%Y" }}
-        </time>
-      </div>
-      {% endif %}
-    </li>
+    <div class="nota-item">
+      <p class="nota-content">{{ nota.content | strip_html | truncatewords: 30 }}</p>
+      <time class="nota-date" datetime="{{ nota.date | date_to_xmlschema }}">
+        {{ nota.date | date: "%-d/%-m/%y" }}
+      </time>
+    </div>
     {% endfor %}
-  </ul>
+    <a href="{{ '/notas.html' | relative_url }}" class="notas-ver-todas">Ver todas as notas →</a>
+  </aside>
+  {% endif %}
 </section>
 
 <section class="credit-section">

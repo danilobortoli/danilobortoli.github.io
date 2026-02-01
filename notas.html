@@ -1,0 +1,74 @@
+---
+layout: default
+title: Notas
+---
+
+<h1>Notas</h1>
+
+<p class="subtitle">Pequenos pensamentos, links interessantes e observações rápidas que não justificam um post completo.</p>
+
+{% if site.notas.size > 0 %}
+  {% assign all_notas = site.notas | sort: 'date' | reverse %}
+
+  <section class="notas-archive">
+    {% for nota in all_notas %}
+      <article class="nota-archive-item">
+        <time class="nota-archive-date" datetime="{{ nota.date | date_to_xmlschema }}">
+          {{ nota.date | date: "%-d de %B de %Y às %H:%M" }}
+        </time>
+        <div class="nota-archive-content">
+          {{ nota.content }}
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+
+  <style>
+    .subtitle {
+      font-size: 1.4rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .notas-archive {
+      margin-top: var(--spacing-xl);
+    }
+
+    .nota-archive-item {
+      margin-bottom: var(--spacing-xl);
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border-lighter);
+    }
+
+    .nota-archive-item:last-child {
+      border-bottom: none;
+    }
+
+    .nota-archive-date {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--color-text-light);
+      font-variant: small-caps;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .nota-archive-content {
+      font-size: 1.4rem;
+      line-height: 1.8;
+      color: var(--color-text);
+    }
+
+    .nota-archive-content p {
+      margin-bottom: 1.4rem;
+    }
+
+    .nota-archive-content p:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+
+{% else %}
+  <p><em>Nenhuma nota publicada ainda.</em></p>
+{% endif %}
