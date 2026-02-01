@@ -493,6 +493,15 @@ pre code {
   padding-bottom: 0;
 }
 
+.nota-title-text {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: et-book, Palatino, Georgia, serif;
+  line-height: 1.3;
+}
+
 .nota-content {
   margin: 0 0 0.45rem 0;
   font-size: 1.1rem !important;

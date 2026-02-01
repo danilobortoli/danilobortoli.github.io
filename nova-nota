@@ -5,12 +5,14 @@
 HOJE=$(date +%Y-%m-%d)
 AGORA=$(date "+%Y-%m-%d %H:%M:%S -0300")
 
-# Nome do arquivo (usa título se fornecido, senão usa "Nota")
+# Nome do arquivo e título
 if [ -n "$1" ]; then
+    TITULO_ORIGINAL="$1"
     # Converte o título para formato de arquivo (remove acentos e espaços)
     TITULO=$(echo "$1" | iconv -f UTF-8 -t ASCII//TRANSLIT | sed 's/ /-/g' | sed 's/[^a-zA-Z0-9-]//g')
     ARQUIVO="_notas/${HOJE}-${TITULO}.md"
 else
+    TITULO_ORIGINAL=""
     ARQUIVO="_notas/${HOJE}-Nota.md"
 fi
 
@@ -22,12 +24,22 @@ if [ -f "$ARQUIVO" ]; then
 fi
 
 # Cria o arquivo com front matter
-cat > "$ARQUIVO" << EOF
+if [ -n "$TITULO_ORIGINAL" ]; then
+    cat > "$ARQUIVO" << EOF
+---
+title: $TITULO_ORIGINAL
+date: $AGORA
+---
+
+EOF
+else
+    cat > "$ARQUIVO" << EOF
 ---
 date: $AGORA
 ---
 
 EOF
+fi
 
 echo "✅ Nova nota criada: $ARQUIVO"
 echo "📝 Abra o arquivo e comece a escrever!"

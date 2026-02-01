@@ -17,6 +17,9 @@ title: Notas
           <time class="nota-archive-date" datetime="{{ nota.date | date_to_xmlschema }}">
             {{ nota.date | date: "%-d de %B de %Y às %H:%M" }}
           </time>
+          {% if nota.title %}
+          <h3 class="nota-archive-title">{{ nota.title }}</h3>
+          {% endif %}
         </a>
         <div class="nota-archive-content">
           {{ nota.content }}
@@ -64,6 +67,14 @@ title: Notas
       letter-spacing: 0.05em;
       margin-bottom: var(--spacing-sm);
       transition: color var(--transition-fast);
+    }
+
+    .nota-archive-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 0.5rem 0 1rem 0;
+      line-height: 1.3;
     }
 
     .nota-archive-content {
