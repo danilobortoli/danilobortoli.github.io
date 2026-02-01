@@ -425,68 +425,81 @@ pre code {
   margin-bottom: 1.3rem;
 }
 
-/* Notas Sidebar - Estilo compacto tipo Twitter */
+/* Notas Sidebar - Estilo Tufte minimalista */
 .notas-sidebar {
   float: right;
   clear: right;
-  width: 35%;
+  width: 32%;
   margin-left: 2rem;
   margin-top: 0;
   margin-bottom: 2rem;
-  padding: 1.2rem;
-  background: rgba(250, 249, 246, 0.3);
-  border: 1px solid var(--color-border-lighter);
-  border-radius: var(--radius-md);
+  padding: 0;
+  background: transparent;
+  border: none;
   position: relative;
+}
+
+/* Símbolo decorativo antes do título */
+.notas-sidebar::before {
+  content: "❧";
+  display: block;
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-accent);
+  opacity: 0.4;
+  line-height: 1;
 }
 
 .notas-title {
   font-size: 0.75rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.3rem;
   border-bottom: 1px solid var(--color-border-lighter);
-  color: var(--color-text);
+  color: var(--color-text-muted);
   font-variant: small-caps;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
 }
 
 .notas-title a {
-  color: var(--color-text);
+  color: var(--color-text-muted);
   text-decoration: none;
 }
 
 .notas-title a:hover {
-  color: var(--color-accent);
+  color: var(--color-text);
 }
 
 .nota-item {
-  margin-bottom: 1rem;
-  padding: 0.8rem;
-  background: white;
-  border: 1px solid var(--color-border-lighter);
-  border-radius: var(--radius-sm);
-  transition: all var(--transition-fast);
+  margin-bottom: 1.2rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border-lighter);
+  padding-bottom: 1rem;
+  transition: opacity var(--transition-fast);
   position: relative;
 }
 
 .nota-item:hover {
-  border-color: var(--color-border);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transform: translateX(-2px);
+  opacity: 0.8;
 }
 
 .nota-item:last-child {
   margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .nota-content {
   margin: 0 0 0.5rem 0;
-  font-size: 0.75rem;
-  line-height: 1.45;
+  font-size: 0.9rem;
+  line-height: 1.5;
   color: var(--color-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: et-book, Palatino, Georgia, serif;
+  font-weight: 400;
 }
 
 .nota-link {
@@ -505,12 +518,13 @@ pre code {
 
 .nota-date {
   display: block;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: var(--color-text-light);
   font-variant: normal;
-  letter-spacing: 0.02em;
-  font-style: normal;
-  font-family: var(--font-mono);
+  letter-spacing: 0;
+  font-style: italic;
+  font-family: et-book, Palatino, Georgia, serif;
+  font-weight: 400;
 }
 
 /* ==========================================================================
@@ -791,16 +805,24 @@ article .post-meta a:hover {
     margin-left: 0;
     width: 100%;
     margin-top: 2rem;
-    padding: 1rem;
-    border: 1px solid var(--color-border-lighter);
+    padding: 0;
+    border: none;
+    border-top: 1px solid var(--color-border-lighter);
+    padding-top: 1.5rem;
   }
 
   .nota-content {
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 
   .nota-item {
-    padding: 0.7rem;
+    padding: 0;
+    padding-bottom: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .nota-date {
+    font-size: 0.8rem;
   }
 
   /* Sidenotes em mobile */
