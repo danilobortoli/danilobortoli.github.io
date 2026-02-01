@@ -13,9 +13,11 @@ title: Notas
   <section class="notas-archive">
     {% for nota in all_notas %}
       <article class="nota-archive-item">
-        <time class="nota-archive-date" datetime="{{ nota.date | date_to_xmlschema }}">
-          {{ nota.date | date: "%-d de %B de %Y às %H:%M" }}
-        </time>
+        <a href="{{ nota.url | relative_url }}" class="nota-archive-link">
+          <time class="nota-archive-date" datetime="{{ nota.date | date_to_xmlschema }}">
+            {{ nota.date | date: "%-d de %B de %Y às %H:%M" }}
+          </time>
+        </a>
         <div class="nota-archive-content">
           {{ nota.content }}
         </div>
@@ -45,6 +47,15 @@ title: Notas
       border-bottom: none;
     }
 
+    .nota-archive-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nota-archive-link:hover .nota-archive-date {
+      color: var(--color-accent);
+    }
+
     .nota-archive-date {
       display: block;
       font-size: 0.95rem;
@@ -52,6 +63,7 @@ title: Notas
       font-variant: small-caps;
       letter-spacing: 0.05em;
       margin-bottom: var(--spacing-sm);
+      transition: color var(--transition-fast);
     }
 
     .nota-archive-content {

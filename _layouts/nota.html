@@ -1,0 +1,69 @@
+---
+layout: default
+---
+
+<article class="nota-single">
+  <header class="nota-single-header">
+    <p class="nota-single-back">
+      <a href="{{ '/notas.html' | relative_url }}">&larr; Voltar para Notas</a>
+    </p>
+    <time class="nota-single-date" datetime="{{ page.date | date_to_xmlschema }}">
+      {{ page.date | date: "%-d de %B de %Y às %H:%M" }}
+    </time>
+  </header>
+
+  <div class="nota-single-content">
+    {{ content }}
+  </div>
+</article>
+
+<style>
+  .nota-single {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .nota-single-header {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .nota-single-back {
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .nota-single-back a {
+    color: var(--color-text-light);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .nota-single-back a:hover {
+    color: var(--color-accent);
+  }
+
+  .nota-single-date {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--color-border-lighter);
+  }
+
+  .nota-single-content {
+    font-size: 1.3rem;
+    line-height: 1.7;
+    color: var(--color-text);
+  }
+
+  .nota-single-content p {
+    margin-bottom: 1.3rem;
+  }
+
+  .nota-single-content p:last-child {
+    margin-bottom: 0;
+  }
+</style>
