@@ -15,6 +15,34 @@ layout: default
   <p>Este espaço é uma forma de documentar minha jornada de aprendizado e, quem sabe, ajudar outras pessoas que compartilham interesses similares. Sinta-se à vontade para explorar os <em><a href="{{ '/posts.html' | relative_url }}">posts</a></em>, saber mais <a href="{{ '/sobre.html' | relative_url }}">sobre mim</a> ou conhecer minha <a href="{{ '/advocacia.html' | relative_url }}">atuação profissional na advocacia</a>.</p>
 </section>
 
+<section class="notas-section">
+  <h2>Notas</h2>
+  <ul class="notas-list">
+    {% assign recent_notas = site.notas | sort: 'date' | reverse | limit: 5 %}
+    {% for nota in recent_notas %}
+    <li class="nota-item">
+      {% if nota.url %}
+      <a href="{{ nota.url | relative_url }}" class="nota-link">
+        <div class="nota-content">{{ nota.content | strip_html | truncatewords: 50 }}</div>
+        <div class="nota-meta">
+          <time class="nota-date" datetime="{{ nota.date | date_to_xmlschema }}">
+            {{ nota.date | date: "%d/%m/%Y" }}
+          </time>
+        </div>
+      </a>
+      {% else %}
+      <div class="nota-content">{{ nota.content | strip_html | truncatewords: 50 }}</div>
+      <div class="nota-meta">
+        <time class="nota-date" datetime="{{ nota.date | date_to_xmlschema }}">
+          {{ nota.date | date: "%d/%m/%Y" }}
+        </time>
+      </div>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
 <section class="credit-section">
   <h2>Sobre o design</h2>
   <p>Este site foi criado usando o <a href="https://github.com/edwardtufte/tufte-css" target="_blank">Tufte CSS</a>, um projeto que implementa o estilo tipográfico e de design dos livros de <a href="https://www.edwardtufte.com/tufte/" target="_blank">Edward Tufte</a>.</p>
