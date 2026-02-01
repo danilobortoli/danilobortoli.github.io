@@ -495,8 +495,8 @@ pre code {
 
 .nota-content {
   margin: 0 0 0.45rem 0;
-  font-size: 0.8rem !important;
-  line-height: 1.45;
+  font-size: 1.1rem !important;
+  line-height: 1.6;
   color: var(--color-text);
   font-family: et-book, Palatino, Georgia, serif;
   font-weight: 400;
