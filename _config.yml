@@ -21,6 +21,12 @@ plugins:
   - jekyll-sitemap
   - jekyll-relative-links
 
+# Collections
+collections:
+  notas:
+    output: true
+    permalink: /notas/:name/
+
 # Exclude from processing
 exclude:
   - README.md
