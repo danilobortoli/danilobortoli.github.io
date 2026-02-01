@@ -41,4 +41,6 @@ exclude:
   - README.md
   - .git
   - .github
+  - _notas/_template.md
+  - _posts/_template.md
 
