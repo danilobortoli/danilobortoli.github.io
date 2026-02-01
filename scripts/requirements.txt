@@ -1,0 +1,2 @@
+# Este script usa apenas bibliotecas padrão do Python
+# Nenhuma dependência adicional necessária
