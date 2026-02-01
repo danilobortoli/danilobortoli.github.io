@@ -422,62 +422,59 @@ pre code {
 .notas-sidebar {
   float: right;
   clear: right;
-  margin-right: -260px;
-  width: 220px;
+  margin-right: -220px;
+  width: 200px;
   margin-top: 0;
-  margin-bottom: var(--spacing-lg);
-  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  font-size: 1rem;
   line-height: 1.5;
-  vertical-align: baseline;
+  padding: 0;
   position: relative;
 }
 
 .notas-title {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: var(--spacing-md);
-  padding-bottom: var(--spacing-xs);
-  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border-lighter);
   color: var(--color-text);
   font-variant: small-caps;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
+}
+
+.notas-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.notas-title a:hover {
+  color: var(--color-accent);
 }
 
 .nota-item {
-  margin-bottom: var(--spacing-md);
-  padding-bottom: var(--spacing-md);
-  border-bottom: 1px solid var(--color-border-lighter);
-}
-
-.nota-item:last-child {
-  border-bottom: none;
+  margin-bottom: 1.5rem;
   padding-bottom: 0;
 }
 
+.nota-item:last-child {
+  margin-bottom: 0;
+}
+
 .nota-content {
-  margin: 0 0 var(--spacing-xs) 0;
-  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--color-text-muted);
 }
 
 .nota-date {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: var(--color-text-light);
   font-variant: small-caps;
   letter-spacing: 0.05em;
   font-style: normal;
-}
-
-/* Link "Ver todas" nas notas */
-.notas-ver-todas {
-  display: block;
-  margin-top: var(--spacing-sm);
-  font-size: 0.85rem;
-  text-align: center;
-  font-variant: small-caps;
-  letter-spacing: 0.05em;
 }
 
 /* ==========================================================================
@@ -749,11 +746,16 @@ article .post-meta a:hover {
 
   /* Notas em mobile - aparecem abaixo do conteúdo */
   .notas-sidebar {
-    position: static;
+    float: none;
+    margin-right: 0;
     width: 100%;
-    margin-top: var(--spacing-lg);
-    padding-top: var(--spacing-lg);
+    margin-top: 2rem;
+    padding-top: 1.5rem;
     border-top: 1px solid var(--color-border);
+  }
+
+  .nota-content {
+    font-size: 0.95rem;
   }
 
   /* Sidenotes em mobile */
