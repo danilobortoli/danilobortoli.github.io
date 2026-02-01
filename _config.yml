@@ -24,8 +24,16 @@ plugins:
 # Collections
 collections:
   notas:
-    output: true
-    permalink: /notas/:name/
+    output: false
+    sort_by: date
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "notas"
+    values:
+      layout: "default"
 
 # Exclude from processing
 exclude:
