@@ -422,17 +422,18 @@ pre code {
 .notas-sidebar {
   float: right;
   clear: right;
-  margin-right: -280px;
-  width: 240px;
+  margin-right: -220px;
+  width: 200px;
   margin-top: 0;
   margin-bottom: 2rem;
-  font-size: 0.85rem;
-  line-height: 1.4;
+  font-size: 1rem;
+  line-height: 1.5;
   padding: 0;
+  position: relative;
 }
 
 .notas-title {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
@@ -452,7 +453,7 @@ pre code {
 }
 
 .nota-item {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 0;
 }
 
@@ -461,15 +462,15 @@ pre code {
 }
 
 .nota-content {
-  margin: 0 0 0.4rem 0;
-  font-size: 0.8rem;
-  line-height: 1.4;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
   color: var(--color-text-muted);
 }
 
 .nota-date {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   color: var(--color-text-light);
   font-variant: small-caps;
   letter-spacing: 0.05em;
