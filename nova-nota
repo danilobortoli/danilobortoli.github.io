@@ -1,0 +1,35 @@
+#!/bin/bash
+# Cria uma nova nota com front matter já configurado
+
+# Obtém data e hora atual
+HOJE=$(date +%Y-%m-%d)
+AGORA=$(date "+%Y-%m-%d %H:%M:%S -0300")
+
+# Nome do arquivo (usa título se fornecido, senão usa "Nota")
+if [ -n "$1" ]; then
+    # Converte o título para formato de arquivo (remove acentos e espaços)
+    TITULO=$(echo "$1" | iconv -f UTF-8 -t ASCII//TRANSLIT | sed 's/ /-/g' | sed 's/[^a-zA-Z0-9-]//g')
+    ARQUIVO="_notas/${HOJE}-${TITULO}.md"
+else
+    ARQUIVO="_notas/${HOJE}-Nota.md"
+fi
+
+# Verifica se o arquivo já existe
+if [ -f "$ARQUIVO" ]; then
+    echo "❌ Arquivo já existe: $ARQUIVO"
+    echo "💡 Use um nome diferente ou edite o arquivo existente"
+    exit 1
+fi
+
+# Cria o arquivo com front matter
+cat > "$ARQUIVO" << EOF
+---
+date: $AGORA
+---
+
+EOF
+
+echo "✅ Nova nota criada: $ARQUIVO"
+echo "📝 Abra o arquivo e comece a escrever!"
+echo ""
+echo "   Dica: Adicione o conteúdo após o front matter"
