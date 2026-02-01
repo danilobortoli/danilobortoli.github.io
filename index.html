@@ -10,7 +10,7 @@ layout: default
     {% for nota in recent_notas %}
     <div class="nota-item">
       <a href="{{ nota.url | relative_url }}" class="nota-link">
-        <p class="nota-content">{{ nota.content | strip_html | truncate: 100 }}</p>
+        <p class="nota-content">{{ nota.content | strip_html | truncate: 280 }}</p>
         <time class="nota-date">{{ nota.date | date: "%-d/%-m" }}</time>
       </a>
     </div>
