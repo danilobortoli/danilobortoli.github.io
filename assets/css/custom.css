@@ -804,12 +804,17 @@ article .post-meta a:hover {
   }
 
   /* Notas e conteúdo em mobile - aparecem em coluna única */
-  .about-content {
-    width: 100%;
-    padding-right: 0;
+  .intro-section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .intro-section > * {
+    order: 1;
   }
 
   .notas-sidebar {
+    order: 2;
     float: none;
     margin-left: 0;
     width: 100%;
@@ -818,6 +823,11 @@ article .post-meta a:hover {
     border: none;
     border-top: 1px solid var(--color-border-lighter);
     padding-top: 1.5rem;
+  }
+
+  .about-content {
+    width: 100%;
+    padding-right: 0;
   }
 
   .nota-content {
