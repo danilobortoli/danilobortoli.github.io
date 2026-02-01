@@ -407,7 +407,6 @@ pre code {
 
 .about-content {
   margin-top: var(--spacing-md);
-  max-width: 55rem;
 }
 
 .about-content h2 {
