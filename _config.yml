@@ -24,7 +24,8 @@ plugins:
 # Collections
 collections:
   notas:
-    output: false
+    output: true
+    permalink: /notas/:year-:month-:day-:hour-:minute/
     sort_by: date
 
 # Defaults
@@ -33,7 +34,7 @@ defaults:
       path: ""
       type: "notas"
     values:
-      layout: "default"
+      layout: "nota"
 
 # Exclude from processing
 exclude:
