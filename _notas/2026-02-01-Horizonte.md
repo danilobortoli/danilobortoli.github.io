@@ -1,6 +1,6 @@
 ---
 title: Horizonte
-date: 26-02-01
+date: 2026-02-01 14:27:00 -0300
 ---
 
 Um [tweet que vi hoje do Acid Horizon](https://x.com/acidhorizonpod/status/2017784316948791678) diz o seguinte: 

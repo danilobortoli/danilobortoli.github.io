@@ -1,6 +1,7 @@
---- 
+---
 title: Soberania
 subtitle: Regulamentação e chocolate
+date: 2026-02-01 15:55:00 -0300
 ---
 
 Prestando consultoria para uma empresa que quer exportar para a União Europeia e outros países do continente, pesquisei regulações e, numa outra empreitada paralela, por curiosidade, fui tentar descobrir a razão de uma dúvida: por qual razão o chocolate vendido no Brasil é tão pior em comparação com a versão europeia.
