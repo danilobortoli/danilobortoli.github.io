@@ -6,7 +6,7 @@ layout: default
   {% if site.notas.size > 0 %}
   <aside class="notas-sidebar">
     <h3 class="notas-title"><a href="{{ '/notas.html' | relative_url }}">Notas</a></h3>
-    {% assign recent_notas = site.notas | sort: 'date' | reverse | limit: 6 %}
+    {% assign recent_notas = site.notas | sort: 'date' | reverse | limit: 3 %}
     {% for nota in recent_notas %}
     <div class="nota-item">
       <a href="{{ nota.url | relative_url }}" class="nota-link">
@@ -18,6 +18,9 @@ layout: default
       </a>
     </div>
     {% endfor %}
+    {% if site.notas.size > 3 %}
+    <a href="{{ '/notas.html' | relative_url }}" class="notas-ver-todas">ver todas as notas &rarr;</a>
+    {% endif %}
   </aside>
   {% endif %}
 
