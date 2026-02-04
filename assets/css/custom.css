@@ -393,6 +393,7 @@ pre code {
 
 .intro-section {
   margin-top: var(--spacing-md);
+  overflow: hidden;
 }
 
 .intro-section h1 {
@@ -534,6 +535,24 @@ pre code {
   font-style: italic;
   font-family: et-book, Palatino, Georgia, serif;
   font-weight: 400;
+}
+
+/* Link "ver todas as notas" */
+.notas-ver-todas {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  transition: color var(--transition-fast);
+}
+
+.notas-ver-todas:hover {
+  color: var(--color-text);
 }
 
 /* ==========================================================================
