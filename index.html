@@ -13,7 +13,7 @@ layout: default
         {% if nota.title %}
         <h4 class="nota-title-text">{{ nota.title }}</h4>
         {% endif %}
-        <p class="nota-content">{{ nota.content | strip_html | truncate: 280 }}</p>
+        <p class="nota-content">{{ nota.content | strip_html | truncate: 150 }}</p>
         <time class="nota-date">{{ nota.date | date: "%-d/%-m" }}</time>
       </a>
     </div>
