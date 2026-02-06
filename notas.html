@@ -38,6 +38,7 @@ title: Notas
 
     .notas-archive {
       margin-top: var(--spacing-xl);
+      width: 55%;
     }
 
     .nota-archive-item {
@@ -89,6 +90,24 @@ title: Notas
 
     .nota-archive-content p:last-child {
       margin-bottom: 0;
+    }
+
+    /* Sidenotes dentro do arquivo de notas: exibir inline */
+    .nota-archive-content .sidenote,
+    .nota-archive-content .marginnote {
+      float: none;
+      clear: both;
+      display: block;
+      width: 100%;
+      margin: 1rem 0;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 760px) {
+      .notas-archive {
+        width: 100%;
+      }
     }
   </style>
 
