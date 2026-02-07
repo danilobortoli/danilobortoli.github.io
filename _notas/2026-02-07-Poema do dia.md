@@ -1,6 +1,6 @@
 ---
 title: Poema do dia
-date: 2026-02-07
+date: 2026-02-07 11:12:00 -0300
 ---
 
 {% include epigraph.html
