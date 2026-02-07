@@ -1,6 +1,6 @@
 ---
 title: Adicção
-date: 2026-02-07
+date: 2026-02-07 08:07:00 -0300
 ---
 
 Parece promissor.
