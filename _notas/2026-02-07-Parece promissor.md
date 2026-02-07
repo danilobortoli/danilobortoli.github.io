@@ -5,4 +5,4 @@ date: {}
 
 Parece promissor.
 
-![imagem](assets/images/HAgVNDKXEAA5FIC.jpeg).
+![imagem]({{site.baseurl}}/assets/images/HAgVNDKXEAA5FIC.jpeg).
