@@ -1,45 +1,101 @@
 ---
-layout: default
+layout: home
 ---
 
-<section class="intro-section">
+<!-- Hero Section -->
+<section class="hero-editorial">
+  <div class="hero-editorial-inner">
+    <p class="hero-editorial-subtitle">UM ESPAÇO DEDICADO A</p>
+    <h1 class="hero-editorial-title">
+      <span class="hero-line">TRANS</span>
+      <span class="hero-line"><span class="hero-highlight">PA</span><span class="hero-strike">RÊN</span></span>
+      <span class="hero-line">CIA<span class="hero-period">.</span></span>
+    </h1>
+    <p class="hero-editorial-desc">
+      Advocacia, tecnologia, cultura e escrita convergem aqui. Reflexões sobre direito empresarial, desenho institucional e o mundo digital. Sem limites. Sem compromissos.
+    </p>
+    <a href="{{ '/posts.html' | relative_url }}" class="hero-editorial-cta">VER POSTS_</a>
+  </div>
+
   {% if site.notas.size > 0 %}
-  <aside class="notas-sidebar">
-    <h3 class="notas-title"><a href="{{ '/notas.html' | relative_url }}">Notas</a></h3>
+  <aside class="hero-notas">
     {% assign recent_notas = site.notas | sort: 'date' | reverse %}
-    {% for nota in recent_notas limit:3 %}
-    <div class="nota-item">
-      <a href="{{ nota.url | relative_url }}" class="nota-link">
-        {% if nota.title %}
-        <h4 class="nota-title-text">{{ nota.title }}</h4>
-        {% endif %}
-        <p class="nota-content">{{ nota.content | strip_html | truncate: 150 }}</p>
-        <time class="nota-date">{{ nota.date | date: "%-d/%-m" }}</time>
-      </a>
-    </div>
+    {% for nota in recent_notas limit:1 %}
+    <a href="{{ nota.url | relative_url }}" class="hero-nota-card">
+      <span class="hero-nota-label">NOTA RECENTE</span>
+      <p class="hero-nota-text">{{ nota.content | strip_html | truncate: 100 }}</p>
+      <time class="hero-nota-date">{{ nota.date | date: "%-d/%-m/%Y" }}</time>
+    </a>
     {% endfor %}
-    {% if site.notas.size > 3 %}
-    <a href="{{ '/notas.html' | relative_url }}" class="notas-ver-todas">ver todas as notas &rarr;</a>
-    {% endif %}
   </aside>
   {% endif %}
 
-  <h1>Danilo Bortoli</h1>
-  <blockquote>
-  <p>"In a communications crisis, the true prophets are the translators."</p>
-  <footer>
-    <cite>—Ellen Willis, "Dylan", Out of the Vinyl Deeps</cite>
-  </footer>
-</blockquote>
-<p>Escrevo para o <em><a href="https://thesinglesjukebox.com">The Singles Jukebox</a></em>. Fiz um <em>One Week One Band</em> sobre o Burial, o qual pode ser visto <a href="https://oneweekoneband.tumblr.com/tagged/burial/chrono">aqui</a>.</p>
-<p>Atuo como advogado (OAB/SP 409.024), especializado em Direito Empresarial e Tributário. Atualmente, trabalho como advogado da <a href="https://matra.org.br" target="_blank">OSCIP MATRA – Marília Transparente</a>, uma organização sem fins lucrativos e apartidária que promove a transparência na gestão pública e combate a corrupção em Marília.</p>
-  <p>Este espaço é uma forma de documentar minha jornada de aprendizado e, quem sabe, ajudar outras pessoas que compartilham interesses similares. Sinta-se à vontade para explorar os <em><a href="{{ '/posts.html' | relative_url }}">posts</a></em>, saber mais <a href="{{ '/sobre.html' | relative_url }}">sobre mim</a> ou conhecer minha <a href="{{ '/advocacia.html' | relative_url }}">atuação profissional na advocacia</a>.</p>
+  <div class="hero-pagination" aria-hidden="true">
+    <span class="page-num active">1</span>
+    <span class="page-num">2</span>
+    <span class="page-num">3</span>
+    <span class="page-num">4</span>
+    <span class="page-num">5</span>
+  </div>
 </section>
 
-<section class="credit-section">
-  <h2>Sobre o design</h2>
-  <p>Este site foi criado usando o <a href="https://github.com/edwardtufte/tufte-css" target="_blank">Tufte CSS</a>, um projeto que implementa o estilo tipográfico e de design dos livros de <a href="https://www.edwardtufte.com/tufte/" target="_blank">Edward Tufte</a>.</p>
-  <p>Sou um grande fã do trabalho de Tufte, especialmente de seus livros clássicos sobre visualização de dados e design de informação, como <em>The Visual Display of Quantitative Information</em>, <em>Envisioning Information</em> e <em>Beautiful Evidence</em>. Tufte revolucionou a forma como pensamos sobre a apresentação de informações, defendendo princípios como a eliminação de "chartjunk" (decoração desnecessária), o uso eficiente do espaço em branco, e a integração harmoniosa de texto, gráficos e notas laterais.</p>
-  <p>O Tufte CSS captura essa filosofia de design elegante e minimalista, criando uma experiência de leitura excepcional que prioriza o conteúdo e a clareza. É uma homenagem ao trabalho de um dos maiores pensadores sobre design de informação de nosso tempo. Para ver um exemplo prático das funcionalidades do Tufte CSS, incluindo sidenotes, margin notes e footnotes, confira esta <a href="{{ '/exemplo' | relative_url }}">página de exemplo</a>.</p>
-  <p>Este site está licenciado sob a <a href="{{ '/licenca.html' | relative_url }}">Licença MIT</a>; consulte a página da licença para o texto completo, orientações e avisos legais.</p>
+<!-- Grid: Areas de Atuacao -->
+<section class="grid-section">
+  <div class="grid-header">
+    <span class="grid-label">ÁREAS DE ATUAÇÃO</span>
+    <div class="grid-header-right">
+      <span class="grid-provider-label">OAB/SP</span>
+      <span class="grid-provider-label">MATRA</span>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <div class="grid-item">
+      <span class="grid-number">01</span>
+      <h3 class="grid-name">Direito Empresarial</h3>
+      <p class="grid-desc">Causas empresariais complexas e estratégia tributária</p>
+    </div>
+    <div class="grid-item">
+      <span class="grid-number">02</span>
+      <h3 class="grid-name">Transparência</h3>
+      <p class="grid-desc">Controle social e fiscalização da gestão pública</p>
+    </div>
+    <div class="grid-item grid-item-dark">
+      <span class="grid-number">03</span>
+      <h3 class="grid-name">Tecnologia</h3>
+    </div>
+    <div class="grid-item">
+      <div class="grid-item-provider">JUKEBOX</div>
+      <span class="grid-number">04</span>
+      <h3 class="grid-name">Escrita & Cultura</h3>
+      <p class="grid-desc">Crítica cultural e reflexão institucional</p>
+    </div>
+  </div>
+</section>
+
+<!-- Feature Badges -->
+<section class="badges-section">
+  <a href="{{ '/advocacia.html' | relative_url }}" class="badge">ADVOCACIA</a>
+  <a href="{{ '/posts.html' | relative_url }}" class="badge">TRANSPARÊNCIA</a>
+  <span class="badge">TECNOLOGIA</span>
+  <a href="{{ '/posts.html' | relative_url }}" class="badge">ESCRITA</a>
+  <a href="{{ '/notas.html' | relative_url }}" class="badge">NOTAS</a>
+</section>
+
+<!-- Recent Posts -->
+<section class="recent-posts-section">
+  <div class="grid-header">
+    <span class="grid-label">POSTS RECENTES</span>
+  </div>
+  <ul class="recent-posts-list">
+    {% for post in site.posts limit:3 %}
+    <li class="recent-post-item">
+      <a href="{{ post.url | relative_url }}" class="recent-post-link">
+        <span class="recent-post-date">{{ post.date | date: "%d/%m" }}</span>
+        <span class="recent-post-title">{{ post.title }}</span>
+        <span class="recent-post-arrow">&rarr;</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
 </section>
