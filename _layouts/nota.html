@@ -8,7 +8,7 @@ layout: default
       <a href="{{ '/notas.html' | relative_url }}">&larr; Voltar para Notas</a>
     </p>
     <time class="nota-single-date" datetime="{{ page.date | date_to_xmlschema }}">
-      {{ page.date | date: "%-d de %B de %Y às %H:%M" }}
+      {% include data-pt.html date=page.date %}
     </time>
   </header>
 

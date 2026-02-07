@@ -15,7 +15,7 @@ title: Notas
       <article class="nota-archive-item">
         <a href="{{ nota.url | relative_url }}" class="nota-archive-link">
           <time class="nota-archive-date" datetime="{{ nota.date | date_to_xmlschema }}">
-            {{ nota.date | date: "%-d de %B de %Y às %H:%M" }}
+            {% include data-pt.html date=nota.date %}
           </time>
           {% if nota.title %}
           <h3 class="nota-archive-title">{{ nota.title }}</h3>
