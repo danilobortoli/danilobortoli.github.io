@@ -1,0 +1,29 @@
+#!/bin/bash
+# Pre-commit hook: adiciona automaticamente o horário atual às notas
+# que possuem apenas data (sem horário) no front matter.
+# Isso garante que cada nota tenha uma URL única baseada em data+hora.
+
+NOTAS_DIR="_notas"
+
+# Obtém lista de arquivos .md em _notas/ que estão staged (novos ou modificados)
+STAGED_NOTAS=$(git diff --cached --name-only --diff-filter=ACM | grep "^${NOTAS_DIR}/.*\.md$" | grep -v "_template.md")
+
+if [ -z "$STAGED_NOTAS" ]; then
+    exit 0
+fi
+
+AGORA=$(date "+%H:%M:%S -0300")
+
+while IFS= read -r file; do
+    [ -z "$file" ] && continue
+
+    # Verifica se o campo date tem apenas data (YYYY-MM-DD) sem horário
+    if grep -qE '^date:[[:space:]]+[0-9]{4}-[0-9]{2}-[0-9]{2}[[:space:]]*$' "$file"; then
+        # Adiciona horário atual ao campo date
+        sed -i -E "s/^(date:[[:space:]]+[0-9]{4}-[0-9]{2}-[0-9]{2})[[:space:]]*$/\1 ${AGORA}/" "$file"
+        git add "$file"
+        echo "Horário adicionado automaticamente à nota: $file"
+    fi
+done <<< "$STAGED_NOTAS"
+
+exit 0
