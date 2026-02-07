@@ -7,6 +7,7 @@ baseurl: ""
 # Jekyll settings
 markdown: kramdown
 highlighter: rouge
+timezone: America/Sao_Paulo
 
 # Kramdown settings for footnotes
 kramdown:
