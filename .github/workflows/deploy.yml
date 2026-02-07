@@ -1,51 +1,65 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Dispara quando há push no branch main
   push:
-    branches:
-      - main
-  
-  # Permite executar manualmente
+    branches: [main]
   workflow_dispatch:
 
-# Permissões necessárias para fazer deploy
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
-# Permite apenas um deploy concorrente
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
-      - name: Checkout código
+      - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Configurar Pages
-        uses: actions/configure-pages@v4
-      
-      - name: Build com Jekyll
+
+      - name: Adicionar horário às notas sem hora
+        run: |
+          AGORA=$(TZ="America/Sao_Paulo" date "+%H:%M:%S -0300")
+          CHANGED=false
+          for file in _notas/*.md; do
+            [ "$file" = "_notas/_template.md" ] && continue
+            if grep -qE '^date:[[:space:]]+[0-9]{4}-[0-9]{2}-[0-9]{2}[[:space:]]*$' "$file"; then
+              sed -i -E "s/^(date:[[:space:]]+[0-9]{4}-[0-9]{2}-[0-9]{2})[[:space:]]*$/\1 ${AGORA}/" "$file"
+              echo "Horário adicionado: $file"
+              CHANGED=true
+            fi
+          done
+          if [ "$CHANGED" = "true" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add _notas/
+            git commit -m "Adicionar horário automático às notas"
+            git push
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
-      
-      - name: Fazer upload do site
+
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./_site
-      
-      - name: Fazer deploy para GitHub Pages
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
