@@ -4,22 +4,399 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Preview - Novo Design</title>
+  <style>
+    /* === Variables === */
+    :root {
+      --color-background: #fffff8;
+      --color-text: #111;
+      --color-text-muted: #555;
+      --color-text-light: #666;
+      --color-border: #ddd;
+      --color-border-light: #eee;
+      --font-sans: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+      --transition-fast: 0.2s ease;
+    }
 
-  <!-- Tufte CSS -->
-  <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
+    /* === Reset === */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <!-- Custom Enhancements -->
-  <link rel="stylesheet" href="assets/css/custom.css"/>
+    body {
+      background: var(--color-background);
+      color: var(--color-text);
+      font-family: Palatino, "Palatino Linotype", Georgia, serif;
+    }
+
+    /* === Marquee === */
+    .marquee {
+      background: #111;
+      color: #fff;
+      overflow: hidden;
+      white-space: nowrap;
+      font-size: 0.7rem;
+      font-family: var(--font-sans);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #333;
+    }
+    .marquee-track {
+      display: inline-block;
+      animation: marqueeScroll 40s linear infinite;
+    }
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* === Header === */
+    .home-header {
+      padding: 1.2rem 2.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .home-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .home-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      text-decoration: none;
+      color: var(--color-text);
+    }
+    .brand-mark {
+      font-family: Palatino, Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1;
+    }
+    .brand-name {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+    .home-nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    .home-nav-links a {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--color-text-muted);
+      transition: color var(--transition-fast);
+    }
+    .home-nav-links a:hover { color: var(--color-text); }
+
+    /* === Main === */
+    .home-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    /* === Hero === */
+    .hero-editorial {
+      position: relative;
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid var(--color-border);
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .hero-editorial-inner { max-width: 75%; }
+    .hero-editorial-subtitle {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .hero-editorial-title {
+      font-family: Palatino, "Palatino Linotype", Georgia, serif;
+      font-size: clamp(5rem, 13vw, 11rem);
+      font-weight: 400;
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      margin: 0 0 2rem 0;
+      color: var(--color-text);
+    }
+    .hero-line { display: block; }
+    .hero-highlight { color: #c00; }
+    .hero-strike {
+      text-decoration: line-through;
+      text-decoration-color: #c00;
+      text-decoration-thickness: 0.04em;
+    }
+    .hero-period { font-size: 0.7em; }
+    .hero-editorial-desc {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--color-text-muted);
+      max-width: 520px;
+      margin-bottom: 2rem;
+    }
+    .hero-editorial-cta {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text);
+      text-decoration: none;
+      padding: 0.8rem 1.8rem;
+      border: 1px solid var(--color-text);
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .hero-editorial-cta:hover {
+      background: var(--color-text);
+      color: var(--color-background);
+    }
+
+    /* === Hero Notas Card === */
+    .hero-notas {
+      position: absolute;
+      top: 4rem;
+      right: 0;
+      width: 200px;
+    }
+    .hero-nota-card {
+      display: block;
+      background: #111;
+      color: #fff;
+      padding: 1.2rem;
+      text-decoration: none;
+      transition: transform var(--transition-fast);
+    }
+    .hero-nota-card:hover { transform: translateY(-2px); }
+    .hero-nota-label {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 0.8rem;
+    }
+    .hero-nota-text {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #ddd;
+      margin-bottom: 0.8rem;
+    }
+    .hero-nota-date {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: #888;
+    }
+
+    /* === Pagination === */
+    .hero-pagination {
+      position: absolute;
+      bottom: 3rem;
+      right: 0;
+      display: flex;
+      gap: 0.3rem;
+    }
+    .page-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+    }
+    .page-num.active {
+      background: var(--color-text);
+      color: var(--color-background);
+      border-color: var(--color-text);
+    }
+
+    /* === Grid === */
+    .grid-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .grid-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .grid-label {
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+    .grid-header-right { display: flex; gap: 3rem; }
+    .grid-provider-label {
+      font-family: var(--font-sans);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--color-text);
+      border-top: none;
+    }
+    .grid-item {
+      padding: 2rem;
+      border: 1px solid var(--color-text);
+    }
+    .grid-item-dark {
+      background: var(--color-text);
+      color: var(--color-background);
+    }
+    .grid-item-dark .grid-number,
+    .grid-item-dark .grid-name { color: var(--color-background); }
+    .grid-number {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .grid-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      line-height: 1.2;
+    }
+    .grid-desc {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--color-text-muted);
+      margin: 0;
+    }
+    .grid-item-dark .grid-desc { color: #aaa; }
+    .grid-item-provider {
+      font-family: var(--font-sans);
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: 1rem;
+    }
+
+    /* === Badges === */
+    .badges-section {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text);
+      padding: 0.6rem 1.2rem;
+      border: 1px solid var(--color-text);
+      text-decoration: none;
+      transition: background var(--transition-fast), color var(--transition-fast);
+      cursor: pointer;
+    }
+    .badge:hover {
+      background: var(--color-text);
+      color: var(--color-background);
+    }
+
+    /* === Recent Posts === */
+    .recent-posts-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .recent-posts-list { list-style: none; }
+    .recent-post-item { border-bottom: 1px solid var(--color-border-light); }
+    .recent-post-item:last-child { border-bottom: none; }
+    .recent-post-link {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 1.2rem 0;
+      text-decoration: none;
+      color: var(--color-text);
+      transition: opacity var(--transition-fast);
+    }
+    .recent-post-link:hover { opacity: 0.7; }
+    .recent-post-date {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      min-width: 3.5rem;
+    }
+    .recent-post-title { font-size: 1.2rem; flex: 1; }
+    .recent-post-arrow { color: var(--color-text-muted); }
+
+    /* === Footer === */
+    .editorial-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 2.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+
+    /* === Responsive === */
+    @media (max-width: 900px) {
+      .home-header { padding: 1rem 1.5rem; }
+      .home-main { padding: 0 1.5rem; }
+      .hero-editorial { min-height: auto; padding: 3rem 0 2rem; }
+      .hero-editorial-inner { max-width: 100%; }
+      .hero-editorial-title { font-size: clamp(3.5rem, 15vw, 7rem); }
+      .hero-notas { position: relative; top: auto; right: auto; width: 100%; margin-top: 2rem; }
+      .hero-pagination { position: relative; bottom: auto; right: auto; margin-top: 2rem; }
+      .grid-container { grid-template-columns: 1fr; }
+      .grid-header-right { display: none; }
+    }
+    @media (max-width: 480px) {
+      .home-nav { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
+      .hero-editorial-title { font-size: clamp(3rem, 18vw, 5rem); }
+      .badge { font-size: 0.55rem; padding: 0.5rem 0.8rem; }
+    }
+  </style>
 </head>
-<body class="home-page">
-  <!-- Scrolling Marquee -->
+<body>
+  <!-- Marquee -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
       <span>DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull;&nbsp;</span>
     </div>
   </div>
 
-  <!-- Home Navigation -->
+  <!-- Header -->
   <header class="home-header">
     <nav class="home-nav">
       <a href="#" class="home-brand">
@@ -36,8 +413,7 @@
   </header>
 
   <main class="home-main">
-
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero-editorial">
       <div class="hero-editorial-inner">
         <p class="hero-editorial-subtitle">UM ESPA&Ccedil;O DEDICADO A</p>
@@ -69,7 +445,7 @@
       </div>
     </section>
 
-    <!-- Grid: Areas de Atuacao -->
+    <!-- Grid -->
     <section class="grid-section">
       <div class="grid-header">
         <span class="grid-label">&Aacute;REAS DE ATUA&Ccedil;&Atilde;O</span>
@@ -78,7 +454,6 @@
           <span class="grid-provider-label">MATRA</span>
         </div>
       </div>
-
       <div class="grid-container">
         <div class="grid-item">
           <span class="grid-number">01</span>
@@ -103,13 +478,13 @@
       </div>
     </section>
 
-    <!-- Feature Badges -->
+    <!-- Badges -->
     <section class="badges-section">
-      <a href="#" class="badge">ADVOCACIA</a>
-      <a href="#" class="badge">TRANSPAR&Ecirc;NCIA</a>
+      <span class="badge">ADVOCACIA</span>
+      <span class="badge">TRANSPAR&Ecirc;NCIA</span>
       <span class="badge">TECNOLOGIA</span>
-      <a href="#" class="badge">ESCRITA</a>
-      <a href="#" class="badge">NOTAS</a>
+      <span class="badge">ESCRITA</span>
+      <span class="badge">NOTAS</span>
     </section>
 
     <!-- Recent Posts -->
@@ -141,13 +516,12 @@
         </li>
       </ul>
     </section>
-
   </main>
 
-  <!-- Editorial Footer -->
+  <!-- Footer -->
   <footer class="editorial-footer">
-    <span class="footer-left">DANILO BORTOLI</span>
-    <span class="footer-right">&copy;2026</span>
+    <span>DANILO BORTOLI</span>
+    <span>&copy;2026</span>
   </footer>
 </body>
 </html>
