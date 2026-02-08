@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add _notas/
-            git commit -m "Adicionar horário automático às notas"
+            git commit -m "Adicionar horário automático às notas [skip ci]"
             git push
           fi
 
