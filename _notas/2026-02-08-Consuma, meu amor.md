@@ -1,6 +1,6 @@
 ---
 title: Consuma, meu amor
-date: 2026-02-08
+date: 2026-02-08 19:42:19 -0300
 ---
 
 No novo clipe de Taylor Swift, o amor é, como tudo nessa quadra da história, comprado.
