@@ -318,6 +318,16 @@ figure.fullwidth figcaption {
   border-radius: var(--radius-md);
 }
 
+/* Raw iframes (e.g. YouTube embeds) - respeitar largura do container */
+article iframe,
+section iframe,
+.nota-single-content iframe,
+.nota-archive-content iframe {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
 /* ==========================================================================
    8. Blockquotes - Citações estilizadas
    ========================================================================== */
