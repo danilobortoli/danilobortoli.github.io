@@ -5,18 +5,6 @@ layout: default
 <h1>Sobre</h1>
 
 <section class="about-content">
-{% if site.notas.size > 0 %}
-<aside class="notas-sidebar">
-  <h3 class="notas-title"><a href="{{ '/notas.html' | relative_url }}">Notas</a></h3>
-  {% assign recent_notas = site.notas | sort: 'date' | reverse | limit: 6 %}
-  {% for nota in recent_notas %}
-  <div class="nota-item">
-    <p class="nota-content">{{ nota.content | strip_html | truncate: 120 }}</p>
-    <time class="nota-date">{{ nota.date | date: "%-d/%-m" }}</time>
-  </div>
-  {% endfor %}
-</aside>
-{% endif %}
 <p>Sou advogado, com atuação concentrada em Direito Empresarial, Tributário e Direito Público, especialmente em contextos de alta complexidade institucional, econômica e regulatória. Minha formação e prática profissional foram moldadas menos pela especialização precoce e mais por uma preocupação constante com estruturas: como o direito se organiza, como o poder se legitima, como as instituições funcionam — e, sobretudo, como falham. Essa atenção ao desenho institucional atravessa tanto minha advocacia privada quanto minha atuação no terceiro setor e na esfera pública.</p>
 <p>Atualmente, sou coordenador jurídico da MATRA – Marília Transparente, organização da sociedade civil dedicada ao controle social da administração pública, à promoção da transparência, ao fortalecimento da participação democrática e ao combate à corrupção. Nesse espaço, lidero uma equipe jurídica responsável pela fiscalização contínua do Município de Marília em áreas sensíveis como contratos administrativos, políticas públicas, concessões de serviços públicos e governança institucional. Minha atuação envolve não apenas o manejo técnico do direito administrativo e constitucional, mas também a construção de estratégias jurídicas que dialoguem com a sociedade civil, com órgãos de controle e com o Ministério Público.</p>
 <p>No campo privado, minha experiência concentra-se em causas empresariais complexas, com destaque para execuções estratégicas, recuperação judicial, dissolução societária, litígios empresariais estruturais e questões tributárias federais. Atuo de forma interdisciplinar, combinando dogmática jurídica rigorosa com leitura econômica, institucional e estratégica dos conflitos, evitando soluções meramente procedimentais. Interessa-me menos a retórica do litígio e mais a compreensão profunda do conflito que lhe dá origem — e das assimetrias de poder que o atravessam.</p>

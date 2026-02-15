@@ -419,7 +419,6 @@ pre code {
 .about-content {
   margin-top: var(--spacing-md);
   width: 55%;
-  padding-right: 2rem;
 }
 
 .about-content h2 {
