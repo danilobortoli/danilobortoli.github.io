@@ -38,61 +38,68 @@
       'use strict';
 
       function convertFootnotesToSidenotes() {
-        // Encontra todas as referências de notas de rodapé no texto
-        const footnoteRefs = document.querySelectorAll('sup[id^="fnref:"]');
+        // Encontra todas as seções de notas de rodapé na página
+        // (pode haver múltiplas quando várias notas são renderizadas na mesma página)
+        const footnoteSections = document.querySelectorAll('.footnotes');
 
-        if (footnoteRefs.length === 0) return;
+        if (footnoteSections.length === 0) return;
 
-        // Encontra o container de notas de rodapé
-        const footnotesDiv = document.querySelector('.footnotes');
-        if (!footnotesDiv) return;
+        let globalCounter = 0;
 
-        // Para cada referência de nota
-        footnoteRefs.forEach((ref, index) => {
-          const footnoteId = ref.id.replace('fnref:', '');
-          const footnoteLink = ref.querySelector('a');
+        footnoteSections.forEach(function(footnotesDiv) {
+          // Encontra o container pai desta seção de notas de rodapé
+          var container = footnotesDiv.parentElement;
+          if (!container) return;
 
-          if (!footnoteLink) return;
+          // Encontra as referências de notas apenas dentro deste container
+          var footnoteRefs = container.querySelectorAll('sup[id^="fnref:"]');
 
-          // Encontra o conteúdo da nota de rodapé correspondente
-          const footnoteItem = document.getElementById('fn:' + footnoteId);
-          if (!footnoteItem) return;
+          footnoteRefs.forEach(function(ref) {
+            globalCounter++;
+            var footnoteId = ref.id.replace('fnref:', '');
+            var footnoteLink = ref.querySelector('a');
 
-          // Extrai o conteúdo da nota (remove o link de retorno)
-          const footnoteContent = footnoteItem.cloneNode(true);
-          const backref = footnoteContent.querySelector('.reversefootnote');
-          if (backref) backref.remove();
+            if (!footnoteLink) return;
 
-          // Remove o primeiro <p> se houver apenas um parágrafo
-          let content = footnoteContent.innerHTML.trim();
-          if (content.startsWith('<p>') && content.endsWith('</p>')) {
-            content = content.slice(3, -4);
-          }
+            // Encontra o conteúdo da nota dentro DESTA seção específica
+            var footnoteItem = footnotesDiv.querySelector('li[id="fn:' + footnoteId + '"]');
+            if (!footnoteItem) return;
 
-          // Cria a estrutura de sidenote do Tufte CSS
-          const sidenoteNumber = index + 1;
-          const label = document.createElement('label');
-          label.setAttribute('for', 'sn-' + sidenoteNumber);
-          label.className = 'margin-toggle sidenote-number';
+            // Extrai o conteúdo da nota (remove o link de retorno)
+            var footnoteContent = footnoteItem.cloneNode(true);
+            var backref = footnoteContent.querySelector('.reversefootnote');
+            if (backref) backref.remove();
 
-          const input = document.createElement('input');
-          input.setAttribute('type', 'checkbox');
-          input.setAttribute('id', 'sn-' + sidenoteNumber);
-          input.className = 'margin-toggle';
+            // Remove o primeiro <p> se houver apenas um parágrafo
+            var content = footnoteContent.innerHTML.trim();
+            if (content.startsWith('<p>') && content.endsWith('</p>')) {
+              content = content.slice(3, -4);
+            }
 
-          const sidenote = document.createElement('span');
-          sidenote.className = 'sidenote';
-          sidenote.innerHTML = content;
+            // Cria a estrutura de sidenote do Tufte CSS
+            var label = document.createElement('label');
+            label.setAttribute('for', 'sn-' + globalCounter);
+            label.className = 'margin-toggle sidenote-number';
 
-          // Substitui a referência original pela estrutura de sidenote
-          ref.parentNode.insertBefore(label, ref);
-          ref.parentNode.insertBefore(input, ref);
-          ref.parentNode.insertBefore(sidenote, ref);
-          ref.remove();
+            var input = document.createElement('input');
+            input.setAttribute('type', 'checkbox');
+            input.setAttribute('id', 'sn-' + globalCounter);
+            input.className = 'margin-toggle';
+
+            var sidenote = document.createElement('span');
+            sidenote.className = 'sidenote';
+            sidenote.innerHTML = content;
+
+            // Substitui a referência original pela estrutura de sidenote
+            ref.parentNode.insertBefore(label, ref);
+            ref.parentNode.insertBefore(input, ref);
+            ref.parentNode.insertBefore(sidenote, ref);
+            ref.remove();
+          });
+
+          // Remove esta seção de notas de rodapé
+          footnotesDiv.remove();
         });
-
-        // Remove a seção de notas de rodapé original
-        footnotesDiv.remove();
       }
 
       // Executa quando o DOM estiver pronto
