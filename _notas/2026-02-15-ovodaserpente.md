@@ -1,6 +1,6 @@
 ---
 title: Ovo da serpente
-date: 2026-02-15
+date: 2026-02-15 06:44:54 -0300
 ---
 
 Uma coisa da qual lembro, estranhamente, é que, na oitava ou sétima série - não sei ao certo - perguntei à professora de História que dava aula sobre Getúlio Vargas qual seria exatamente o problema numa ditadura se as coisas, enfim, funcionavam.
