@@ -440,8 +440,9 @@ pre code {
 .notas-sidebar {
   float: right;
   clear: right;
-  width: 32%;
+  width: 30%;
   margin-left: 2rem;
+  margin-right: 1.5rem;
   margin-top: 0;
   margin-bottom: 2rem;
   padding: 0;
