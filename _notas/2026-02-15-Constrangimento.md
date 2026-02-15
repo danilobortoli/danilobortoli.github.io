@@ -1,6 +1,6 @@
 ---
 title: Constrangimento epistêmico e IA
-date: 2026-02-15
+date: 2026-02-15 20:16:20 -0300
 ---
 
 Tirando o atraso dos episódios passados do Onze Supremos. Eis o episódio com Lenio Streck sobre os limites da inteligência artificial no Direito, no cotidiano jurídico. No _habitus_ do Direito, ainda.
