@@ -84,6 +84,15 @@ title: Notas
       color: var(--color-text);
     }
 
+    /* Evita dupla restrição de largura: .notas-archive já é 55%,
+       Tufte CSS aplica width: 55% em <p>, causando p a 30% do body.
+       Aqui forçamos 100% relativo ao container pai. */
+    .nota-archive-content p,
+    .nota-archive-content ol,
+    .nota-archive-content ul {
+      width: 100%;
+    }
+
     .nota-archive-content p {
       margin-bottom: 1.4rem;
     }
@@ -92,7 +101,7 @@ title: Notas
       margin-bottom: 0;
     }
 
-    /* Sidenotes dentro do arquivo de notas: posicionar na margem direita */
+    /* Sidenotes dentro do arquivo de notas */
     .nota-archive-content .sidenote,
     .nota-archive-content .marginnote {
       font-size: 0.85rem;
