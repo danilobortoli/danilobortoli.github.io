@@ -1,6 +1,6 @@
 ---
 title: Evil Corp
-date: 2026-02-28
+date: 2026-02-28 18:06:49 -0300
 ---
 
 A OpenAI [agora](https://x.com/sama/status/2027578652477821175).
