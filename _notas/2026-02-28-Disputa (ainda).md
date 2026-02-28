@@ -1,6 +1,6 @@
 ---
 title: Disputa (ainda)
-date: 2026-02-28
+date: 2026-02-28 18:32:38 -0300
 ---
 
 Falei, numa nota [anterior](https://danilobortoli.github.io/notas/2026-02-16-17-13/), sobre a queda de braços entre a *Anthropic* e o Departamento de Guerra[^1] dos EUA envolvendo o uso das ferramentas de inteligência artificial do laboratório (e empresa com *valuation* multibilionário) em operações de, enfim, inteligência e guerra. O governo de Trump queria que a *Anthropic* flexibilizasse os seus termos de uso para permitir a utilização do Claude para "all lawful purposes"[^2], mas a empresa negava com base em algumas condicionantes importantes e que, se levadas a cabo, inviabilizariam, segundo o Departamento, o uso da inteligência artificial pelo Pentágono. 
