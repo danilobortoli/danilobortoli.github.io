@@ -10,7 +10,7 @@ title: Notas
 {% if site.notas.size > 0 %}
   {% assign all_notas = site.notas | sort: 'date' | reverse %}
 
-  <section class="notas-archive">
+  <section class="notas-archive" id="notas-archive">
     {% for nota in all_notas %}
       <article class="nota-archive-item">
         <a href="{{ nota.url | relative_url }}" class="nota-archive-link">
@@ -27,6 +27,9 @@ title: Notas
       </article>
     {% endfor %}
   </section>
+
+  <nav class="pagination" id="pagination" aria-label="Paginação das notas">
+  </nav>
 
   <style>
     .subtitle {
@@ -107,12 +110,174 @@ title: Notas
       font-size: 0.85rem;
     }
 
+    /* Paginação */
+    .pagination {
+      width: 55%;
+      margin-top: var(--spacing-lg);
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid var(--color-border-lighter);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .pagination:empty {
+      display: none;
+    }
+
+    .pagination-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.4rem;
+      height: 2.4rem;
+      padding: 0 0.6rem;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-variant: small-caps;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      background: none;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .pagination-btn:hover {
+      color: var(--color-text);
+      border-color: var(--color-border);
+    }
+
+    .pagination-btn.active {
+      color: var(--color-text);
+      font-weight: 600;
+      border-color: var(--color-accent);
+    }
+
+    .pagination-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .pagination-ellipsis {
+      color: var(--color-text-muted);
+      font-size: 1rem;
+      padding: 0 0.2rem;
+      user-select: none;
+    }
+
     @media (max-width: 760px) {
-      .notas-archive {
+      .notas-archive,
+      .pagination {
         width: 100%;
       }
     }
   </style>
+
+  <script>
+    (function () {
+      var ITEMS_PER_PAGE = 10;
+      var archive = document.getElementById('notas-archive');
+      var paginationNav = document.getElementById('pagination');
+      var items = archive.querySelectorAll('.nota-archive-item');
+      var totalItems = items.length;
+      var totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+      if (totalPages <= 1) return;
+
+      function getPageFromHash() {
+        var match = location.hash.match(/^#pagina-(\d+)$/);
+        if (match) {
+          var p = parseInt(match[1], 10);
+          if (p >= 1 && p <= totalPages) return p;
+        }
+        return 1;
+      }
+
+      function showPage(page) {
+        var start = (page - 1) * ITEMS_PER_PAGE;
+        var end = start + ITEMS_PER_PAGE;
+
+        for (var i = 0; i < totalItems; i++) {
+          items[i].style.display = (i >= start && i < end) ? '' : 'none';
+        }
+
+        renderPagination(page);
+
+        if (location.hash || page > 1) {
+          history.replaceState(null, '', page === 1 ? location.pathname : '#pagina-' + page);
+        }
+      }
+
+      function renderPagination(current) {
+        var html = '';
+
+        // Botão anterior
+        html += '<button class="pagination-btn" data-page="' + (current - 1) + '"' +
+                (current === 1 ? ' disabled' : '') + ' aria-label="Página anterior">&laquo; anterior</button>';
+
+        // Números das páginas
+        var pages = buildPageRange(current, totalPages);
+        for (var i = 0; i < pages.length; i++) {
+          var p = pages[i];
+          if (p === '...') {
+            html += '<span class="pagination-ellipsis">&hellip;</span>';
+          } else {
+            html += '<button class="pagination-btn' + (p === current ? ' active' : '') +
+                    '" data-page="' + p + '" aria-label="Página ' + p + '"' +
+                    (p === current ? ' aria-current="page"' : '') + '>' + p + '</button>';
+          }
+        }
+
+        // Botão próximo
+        html += '<button class="pagination-btn" data-page="' + (current + 1) + '"' +
+                (current === totalPages ? ' disabled' : '') + ' aria-label="Próxima página">próxima &raquo;</button>';
+
+        paginationNav.innerHTML = html;
+      }
+
+      function buildPageRange(current, total) {
+        if (total <= 7) {
+          var all = [];
+          for (var i = 1; i <= total; i++) all.push(i);
+          return all;
+        }
+
+        var pages = [1];
+
+        if (current > 3) pages.push('...');
+
+        var rangeStart = Math.max(2, current - 1);
+        var rangeEnd = Math.min(total - 1, current + 1);
+
+        for (var j = rangeStart; j <= rangeEnd; j++) pages.push(j);
+
+        if (current < total - 2) pages.push('...');
+
+        pages.push(total);
+        return pages;
+      }
+
+      paginationNav.addEventListener('click', function (e) {
+        var btn = e.target.closest('.pagination-btn');
+        if (!btn || btn.disabled) return;
+
+        var page = parseInt(btn.getAttribute('data-page'), 10);
+        showPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      window.addEventListener('hashchange', function () {
+        showPage(getPageFromHash());
+      });
+
+      showPage(getPageFromHash());
+    })();
+  </script>
 
 {% else %}
   <p><em>Nenhuma nota publicada ainda.</em></p>
