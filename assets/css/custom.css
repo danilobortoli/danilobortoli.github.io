@@ -703,12 +703,12 @@ article .post-meta a:hover {
   border-top: 1px solid var(--color-border);
   font-size: 1.1rem;
   color: var(--color-text-light);
-  text-align: center;
 }
 
 .credit-section::before {
   content: "❧";
   display: block;
+  text-align: center;
   font-size: 1.5rem;
   margin-bottom: var(--spacing-sm);
   color: var(--color-accent);
