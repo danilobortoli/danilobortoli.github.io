@@ -1,6 +1,6 @@
 ---
 title: Morros e morte
-date: 2026-02-28
+date: 2026-02-28 18:03:02 -0300
 ---
 
 Sigo completamente obcecado com "Dying for You", de Charli XCX. Canção do ano até agora.
