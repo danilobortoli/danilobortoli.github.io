@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Guia: Fichas de Mídia</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+@page {
+  size: A4;
+  margin: 2.5cm 2cm 2.5cm 2cm;
+  @bottom-center {
+    content: counter(page);
+    font-family: 'EB Garamond', Palatino, Georgia, serif;
+    font-size: 9pt;
+    color: #888;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'EB Garamond', Palatino, "Palatino Linotype", Georgia, serif;
+  font-size: 12pt;
+  line-height: 1.6;
+  color: #111;
+  background: #fff;
+  max-width: 100%;
+}
+
+h1 {
+  font-size: 28pt;
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 0.3em;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 16pt;
+  font-weight: 400;
+  font-style: italic;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+  padding-top: 0.8em;
+  border-top: 1px solid #eee;
+}
+
+h3 {
+  font-size: 13pt;
+  font-weight: 600;
+  margin-top: 1.2em;
+  margin-bottom: 0.4em;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+}
+
+p {
+  margin-bottom: 0.8em;
+}
+
+.subtitle {
+  font-size: 14pt;
+  font-style: italic;
+  color: #555;
+  margin-bottom: 1.5em;
+}
+
+.date {
+  font-size: 10pt;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin-bottom: 2em;
+  display: block;
+}
+
+code, pre {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 9.5pt;
+}
+
+code {
+  background: #f5f4f0;
+  padding: 0.15em 0.35em;
+  border-radius: 2px;
+  color: #a00;
+}
+
+pre {
+  background: #f9f8f5;
+  border: 1px solid #e8e7e3;
+  border-left: 3px solid #a00;
+  border-radius: 0 4px 4px 0;
+  padding: 0.8em 1em;
+  margin: 0.8em 0 1.2em 0;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: 9pt;
+}
+
+.note {
+  font-size: 10pt;
+  line-height: 1.5;
+  padding: 0.6em 0.8em;
+  background: linear-gradient(135deg, #faf9f6, #f5f4f0);
+  border-left: 3px solid #a00;
+  border-radius: 0 4px 4px 0;
+  margin: 0.8em 0;
+  color: #333;
+}
+
+.note strong {
+  color: #a00;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.8em 0 1.2em 0;
+  font-size: 10.5pt;
+}
+
+th {
+  text-align: left;
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  font-weight: 600;
+  padding: 0.4em 0.6em;
+  border-bottom: 2px solid #111;
+  color: #333;
+}
+
+td {
+  padding: 0.4em 0.6em;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+
+tr:last-child td {
+  border-bottom: 1px solid #ccc;
+}
+
+ul, ol {
+  margin: 0.6em 0 1em 1.5em;
+}
+
+li {
+  margin-bottom: 0.3em;
+}
+
+.separator {
+  text-align: center;
+  font-size: 14pt;
+  color: #a00;
+  opacity: 0.5;
+  margin: 1.5em 0;
+}
+
+.two-col {
+  display: flex;
+  gap: 1.5em;
+}
+
+.two-col > div {
+  flex: 1;
+}
+
+a {
+  color: #1a73e8;
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 115, 232, 0.3);
+}
+
+.card-example {
+  display: flex;
+  gap: 1em;
+  padding: 0.8em;
+  background: #faf9f6;
+  border-left: 3px solid #a00;
+  border-radius: 0 6px 6px 0;
+  margin: 0.8em 0 1.2em 0;
+}
+
+.card-example .poster {
+  width: 70px;
+  height: 105px;
+  background: #e0ddd6;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24pt;
+  color: #bbb;
+  flex-shrink: 0;
+}
+
+.card-example .info {
+  font-size: 9.5pt;
+  line-height: 1.5;
+}
+
+.card-example .info .type {
+  font-variant: small-caps;
+  letter-spacing: 0.1em;
+  color: #a00;
+  font-size: 8pt;
+  font-weight: 600;
+}
+
+.card-example .info .title {
+  font-size: 12pt;
+  font-weight: 600;
+  margin: 0.1em 0 0.3em 0;
+}
+
+.card-example .info .meta-line {
+  color: #555;
+}
+
+.card-example .info .meta-label {
+  font-variant: small-caps;
+  color: #888;
+}
+
+.card-example .info .rating {
+  margin-top: 0.4em;
+  padding-top: 0.4em;
+  border-top: 1px solid #e8e7e3;
+}
+
+.card-example .info .rating-num {
+  font-size: 14pt;
+  font-weight: 600;
+  color: #a00;
+}
+
+.card-example .info .rating-max {
+  font-size: 9pt;
+  color: #888;
+}
+
+.card-example .info .bar {
+  width: 100%;
+  height: 3px;
+  background: #e0ddd6;
+  border-radius: 2px;
+  margin-top: 0.2em;
+}
+
+.card-example .info .bar-fill {
+  height: 100%;
+  background: #a00;
+  border-radius: 2px;
+}
+
+.pagebreak {
+  page-break-before: always;
+}
+</style>
+</head>
+<body>
+
+<h1>Guia: Fichas de Mídia</h1>
+<p class="subtitle">Como usar o sistema de reviews de filmes, álbuns e canções no blog</p>
+<span class="date">Março de 2026</span>
+
+<p>Este guia explica como adicionar fichas de mídia aos seus posts e notas. As fichas buscam automaticamente poster, diretor, artista, gêneros e outros dados de bancos de dados externos (<strong>TMDB</strong> para filmes, <strong>MusicBrainz</strong> para música).</p>
+
+<div class="card-example">
+  <div class="poster">&#127916;</div>
+  <div class="info">
+    <div class="type">Filme</div>
+    <div class="title">Clube da Luta</div>
+    <div class="meta-line"><span class="meta-label">Diretor:</span> David Fincher</div>
+    <div class="meta-line"><span class="meta-label">Ano:</span> 1999</div>
+    <div class="meta-line"><span class="meta-label">Gêneros:</span> Drama, Thriller</div>
+    <div class="rating">
+      <span class="rating-num">9</span><span class="rating-max">/10</span>
+      <div class="bar"><div class="bar-fill" style="width: 90%"></div></div>
+    </div>
+  </div>
+</div>
+
+
+<h2>1. Filmes (via TMDB)</h2>
+
+<h3>Encontrar o ID</h3>
+
+<ol>
+  <li>Acesse <a href="https://www.themoviedb.org">themoviedb.org</a> e busque o filme</li>
+  <li>O <strong>ID numérico</strong> está na URL: <code>themoviedb.org/movie/<strong>550</strong>-fight-club</code></li>
+  <li>Neste caso, o ID é <strong>550</strong></li>
+</ol>
+
+<h3>Front matter</h3>
+
+<pre><code>---
+title: Minha review do Clube da Luta
+date: 2026-03-05
+media:
+  type: filme
+  tmdb_id: 550
+  nota: 9
+---
+
+Aqui vai o texto da sua crítica...</code></pre>
+
+<div class="note">
+  <strong>Buscado automaticamente:</strong> título, poster, diretor, ano de lançamento e gêneros.
+</div>
+
+
+<h2>2. Álbuns (via MusicBrainz)</h2>
+
+<h3>Encontrar o ID</h3>
+
+<ol>
+  <li>Acesse <a href="https://musicbrainz.org">musicbrainz.org</a> e busque o álbum</li>
+  <li>Clique no <strong>Release Group</strong> (não na release individual)</li>
+  <li>O <strong>UUID</strong> está na URL: <code>musicbrainz.org/release-group/<strong>b84ee12a-...</strong></code></li>
+  <li>Copie o UUID inteiro</li>
+</ol>
+
+<h3>Front matter</h3>
+
+<pre><code>---
+title: OK Computer é uma obra-prima
+date: 2026-03-05
+media:
+  type: álbum
+  musicbrainz_id: "b84ee12a-09ef-421b-82de-0441a926375b"
+  nota: 10
+---
+
+O álbum que definiu uma geração...</code></pre>
+
+<div class="note">
+  <strong>Buscado automaticamente:</strong> título, capa (via Cover Art Archive), artista, ano e gêneros.
+</div>
+
+
+<h2>3. Canções (via MusicBrainz)</h2>
+
+<h3>Encontrar o ID</h3>
+
+<ol>
+  <li>No MusicBrainz, busque a música</li>
+  <li>Clique na <strong>Recording</strong></li>
+  <li>Copie o UUID da URL: <code>musicbrainz.org/recording/<strong>uuid-aqui</strong></code></li>
+</ol>
+
+<h3>Front matter</h3>
+
+<pre><code>---
+title: Paranoid Android
+date: 2026-03-05
+media:
+  type: canção
+  musicbrainz_id: "b3015bab-1540-4d4e-9f30-14571f1c1bfb"
+  nota: 9.5
+---
+
+Uma das melhores faixas dos anos 90...</code></pre>
+
+<div class="note">
+  <strong>Buscado automaticamente:</strong> título, artista, álbum, ano, gêneros e capa do álbum.
+</div>
+
+<div class="pagebreak"></div>
+
+<h2>4. Modo manual (sem APIs)</h2>
+
+<p>Se preferir, preencha todos os campos diretamente no front matter, sem depender de IDs ou APIs:</p>
+
+<pre><code>media:
+  type: filme
+  titulo: "Clube da Luta"
+  diretor: "David Fincher"
+  ano: 1999
+  generos: "Drama, Thriller"
+  capa: /assets/images/fight-club.jpg
+  nota: 9</code></pre>
+
+<pre><code>media:
+  type: álbum
+  titulo: "OK Computer"
+  artista: "Radiohead"
+  ano: 1997
+  generos: "Alternative Rock, Art Rock"
+  capa: /assets/images/ok-computer.jpg
+  nota: 10</code></pre>
+
+<pre><code>media:
+  type: canção
+  titulo: "Paranoid Android"
+  artista: "Radiohead"
+  album: "OK Computer"
+  ano: 1997
+  capa: /assets/images/ok-computer.jpg
+  nota: 9.5</code></pre>
+
+<div class="note">
+  <strong>Dica:</strong> Campos manuais e automáticos podem ser combinados. Os campos manuais preenchidos <em>nunca</em> são sobrescritos pela API &mdash; funcionam como override.
+</div>
+
+
+<h2>5. Referência rápida de campos</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Campo</th>
+      <th>Tipo</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>type</code></td>
+      <td>Obrigatório</td>
+      <td><code>filme</code>, <code>álbum</code> ou <code>canção</code></td>
+    </tr>
+    <tr>
+      <td><code>tmdb_id</code></td>
+      <td>Filmes</td>
+      <td>ID numérico do TMDB (busca automática)</td>
+    </tr>
+    <tr>
+      <td><code>musicbrainz_id</code></td>
+      <td>Música</td>
+      <td>UUID do MusicBrainz (busca automática)</td>
+    </tr>
+    <tr>
+      <td><code>nota</code></td>
+      <td>Opcional</td>
+      <td>Sua avaliação de 0 a 10</td>
+    </tr>
+    <tr>
+      <td><code>titulo</code></td>
+      <td>Manual</td>
+      <td>Nome da obra (override ou sem API)</td>
+    </tr>
+    <tr>
+      <td><code>diretor</code></td>
+      <td>Manual</td>
+      <td>Diretor do filme</td>
+    </tr>
+    <tr>
+      <td><code>artista</code></td>
+      <td>Manual</td>
+      <td>Artista/banda</td>
+    </tr>
+    <tr>
+      <td><code>album</code></td>
+      <td>Manual</td>
+      <td>Álbum (para canções)</td>
+    </tr>
+    <tr>
+      <td><code>ano</code></td>
+      <td>Manual</td>
+      <td>Ano de lançamento</td>
+    </tr>
+    <tr>
+      <td><code>generos</code></td>
+      <td>Manual</td>
+      <td>Gêneros separados por vírgula</td>
+    </tr>
+    <tr>
+      <td><code>capa</code></td>
+      <td>Manual</td>
+      <td>URL ou caminho local para poster/capa</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h2>6. Onde funciona</h2>
+
+<p>A ficha de mídia aparece automaticamente no topo do conteúdo em:</p>
+
+<ul>
+  <li><strong>Posts</strong> (<code>_posts/</code>) &mdash; layout <code>post</code></li>
+  <li><strong>Notas</strong> (<code>_notas/</code>) &mdash; layout <code>nota</code></li>
+</ul>
+
+<p>Basta adicionar o bloco <code>media:</code> no front matter de qualquer post ou nota. Se não houver bloco <code>media:</code>, nada aparece &mdash; o post/nota funciona normalmente.</p>
+
+
+<div class="separator">&#10087;</div>
+
+<p style="font-size: 10pt; color: #888; text-align: center; font-style: italic;">
+  APIs utilizadas: TMDB (themoviedb.org) para filmes &middot; MusicBrainz (musicbrainz.org) + Cover Art Archive para música
+</p>
+
+</body>
+</html>
