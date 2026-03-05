@@ -1,0 +1,128 @@
+{% if page.media %}
+<aside class="media-review" data-media-type="{{ page.media.type }}"
+  {% if page.media.tmdb_id %}data-tmdb-id="{{ page.media.tmdb_id }}"{% endif %}
+  {% if page.media.musicbrainz_id %}data-musicbrainz-id="{{ page.media.musicbrainz_id }}"{% endif %}>
+
+  <div class="media-review-cover">
+    {% if page.media.capa %}
+    <img src="{{ page.media.capa }}" alt="Capa" class="media-review-img">
+    {% else %}
+    <div class="media-review-img media-review-placeholder"></div>
+    {% endif %}
+  </div>
+
+  <div class="media-review-info">
+    {% if page.media.type == "filme" %}
+      <span class="media-review-type">Filme</span>
+    {% elsif page.media.type == "álbum" %}
+      <span class="media-review-type">Álbum</span>
+    {% elsif page.media.type == "canção" %}
+      <span class="media-review-type">Canção</span>
+    {% endif %}
+
+    {% if page.media.titulo %}
+    <h3 class="media-review-title">{{ page.media.titulo }}</h3>
+    {% else %}
+    <h3 class="media-review-title"></h3>
+    {% endif %}
+
+    <dl class="media-review-meta">
+      {% if page.media.type == "filme" %}
+        {% if page.media.diretor %}
+        <div class="media-review-field">
+          <dt>Diretor</dt>
+          <dd class="media-review-director">{{ page.media.diretor }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Diretor</dt>
+          <dd class="media-review-director"></dd>
+        </div>
+        {% endif %}
+        {% if page.media.ano %}
+        <div class="media-review-field">
+          <dt>Ano</dt>
+          <dd class="media-review-year">{{ page.media.ano }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Ano</dt>
+          <dd class="media-review-year"></dd>
+        </div>
+        {% endif %}
+        {% if page.media.generos %}
+        <div class="media-review-field">
+          <dt>Gêneros</dt>
+          <dd class="media-review-genres">{{ page.media.generos }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Gêneros</dt>
+          <dd class="media-review-genres"></dd>
+        </div>
+        {% endif %}
+      {% else %}
+        {% if page.media.artista %}
+        <div class="media-review-field">
+          <dt>Artista</dt>
+          <dd class="media-review-artist">{{ page.media.artista }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Artista</dt>
+          <dd class="media-review-artist"></dd>
+        </div>
+        {% endif %}
+        {% if page.media.type == "canção" and page.media.album %}
+        <div class="media-review-field">
+          <dt>Álbum</dt>
+          <dd class="media-review-album">{{ page.media.album }}</dd>
+        </div>
+        {% elsif page.media.type == "canção" %}
+        <div class="media-review-field">
+          <dt>Álbum</dt>
+          <dd class="media-review-album"></dd>
+        </div>
+        {% endif %}
+        {% if page.media.ano %}
+        <div class="media-review-field">
+          <dt>Ano</dt>
+          <dd class="media-review-year">{{ page.media.ano }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Ano</dt>
+          <dd class="media-review-year"></dd>
+        </div>
+        {% endif %}
+        {% if page.media.generos %}
+        <div class="media-review-field">
+          <dt>Gêneros</dt>
+          <dd class="media-review-genres">{{ page.media.generos }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Gêneros</dt>
+          <dd class="media-review-genres"></dd>
+        </div>
+        {% endif %}
+      {% endif %}
+    </dl>
+
+    {% if page.media.nota %}
+    <div class="media-review-rating">
+      <span class="media-review-rating-value">{{ page.media.nota }}</span>
+      <span class="media-review-rating-max">/10</span>
+      <div class="media-review-rating-bar">
+        <div class="media-review-rating-fill" style="width: {{ page.media.nota | times: 10 }}%"></div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</aside>
+
+<script>
+  window.TMDB_API_KEY = "{{ site.tmdb_api_key }}";
+</script>
+<script src="{{ '/assets/js/media-fetch.js' | relative_url }}"></script>
+{% endif %}
