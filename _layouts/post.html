@@ -20,6 +20,7 @@ layout: default
 </div>
 
 <section>
+  {% include media-review.html %}
   {{ content }}
 </section>
 {% else %}
@@ -30,6 +31,7 @@ layout: default
 <p class="post-meta">{{ page.date | date: "%d de %B de %Y" | replace: "January", "Janeiro" | replace: "February", "Fevereiro" | replace: "March", "Março" | replace: "April", "Abril" | replace: "May", "Maio" | replace: "June", "Junho" | replace: "July", "Julho" | replace: "August", "Agosto" | replace: "September", "Setembro" | replace: "October", "Outubro" | replace: "November", "Novembro" | replace: "December", "Dezembro" }} · {% include reading-time.html content=content %}</p>
 
 <section>
+  {% include media-review.html %}
   {{ content }}
 </section>
 {% endif %}
