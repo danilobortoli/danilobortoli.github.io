@@ -38,7 +38,7 @@ defaults:
       layout: "nota"
 
 # TMDB API key (obtenha grátis em https://www.themoviedb.org/settings/api)
-tmdb_api_key: ""
+tmdb_api_key: "eaf970feafeeed38a6b698f623c66e94"
 
 # Exclude from processing
 exclude:
