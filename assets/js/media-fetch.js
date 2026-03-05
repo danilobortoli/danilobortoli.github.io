@@ -28,6 +28,7 @@
 
     fetch(url)
       .then(function (r) {
+        if (!r.ok) throw new Error("TMDB HTTP " + r.status);
         return r.json();
       })
       .then(function (data) {
@@ -94,10 +95,9 @@
       (mediaType === "canção" ? "+releases" : "") +
       "&fmt=json";
 
-    fetch(url, {
-      headers: { "User-Agent": "DaniloBortoliBlog/1.0 (blog pessoal)" },
-    })
+    fetch(url)
       .then(function (r) {
+        if (!r.ok) throw new Error("MusicBrainz HTTP " + r.status);
         return r.json();
       })
       .then(function (data) {
@@ -166,6 +166,7 @@
     var url = "https://coverartarchive.org/" + entity + "/" + id;
     fetch(url)
       .then(function (r) {
+        if (!r.ok) throw new Error("CoverArt HTTP " + r.status);
         return r.json();
       })
       .then(function (data) {
