@@ -1,6 +1,6 @@
 ---
 title: Esteticista
-date: 2026-03-05
+date: 2026-03-05 18:40:53 -0300
 media: 
 	type: canção
 	musicbrainz_id: 3219236f-0d0c-41a7-90cf-670ec34f1220
