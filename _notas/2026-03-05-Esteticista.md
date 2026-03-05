@@ -8,6 +8,5 @@ media:
 	titulo: "One Stop"
 	artista: "Aldous Harding"
 	ano: 2026
- ---
- 
+ --- 
 A máquina de publicidade estética da _Pitchfork_ segue a pleno vapor. Eis algo razoável e hypável.
