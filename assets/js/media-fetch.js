@@ -107,6 +107,23 @@
               });
             });
           }
+          // If song ID is a release (single) instead of recording, retry as release
+          if (mediaType === "canção" && r.status === 404) {
+            return fetch(
+              "https://musicbrainz.org/ws/2/release/" + id +
+              "?inc=artist-credits+genres+recordings+release-groups&fmt=json"
+            ).then(function (r2) {
+              if (!r2.ok) throw new Error("MusicBrainz HTTP " + r2.status);
+              return r2.json().then(function (releaseData) {
+                releaseData._isRelease = true;
+                // Extract album title from the release itself
+                if (!releaseData.releases) {
+                  releaseData.releases = [{ id: id, title: releaseData.title }];
+                }
+                return releaseData;
+              });
+            });
+          }
           throw new Error("MusicBrainz HTTP " + r.status);
         }
         return r.json();
@@ -175,6 +192,11 @@
           if (mediaType === "canção" && data.releases && data.releases.length > 0) {
             coverId = data.releases[0].id;
             coverEntity = "release";
+          }
+          // For song as release, also try release-group for cover
+          if (mediaType === "canção" && data._isRelease && data["release-group"]) {
+            coverId = data["release-group"].id;
+            coverEntity = "release-group";
           }
           fetchCoverArt(coverId, coverEntity, imgEl, data.title || "Capa");
         }
