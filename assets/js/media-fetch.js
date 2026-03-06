@@ -86,21 +86,37 @@
 
   function fetchMusicBrainz(id, mediaType) {
     var entity = mediaType === "álbum" ? "release-group" : "recording";
+    var inc = "artist-credits+genres" + (mediaType === "canção" ? "+releases" : "");
     var url =
-      "https://musicbrainz.org/ws/2/" +
-      entity +
-      "/" +
-      id +
-      "?inc=artist-credits+genres" +
-      (mediaType === "canção" ? "+releases" : "") +
-      "&fmt=json";
+      "https://musicbrainz.org/ws/2/" + entity + "/" + id +
+      "?inc=" + inc + "&fmt=json";
 
     fetch(url)
       .then(function (r) {
-        if (!r.ok) throw new Error("MusicBrainz HTTP " + r.status);
+        if (!r.ok) {
+          // If album ID is a release instead of release-group, retry as release
+          if (mediaType === "álbum" && r.status === 404) {
+            return fetch(
+              "https://musicbrainz.org/ws/2/release/" + id +
+              "?inc=artist-credits+genres+release-groups&fmt=json"
+            ).then(function (r2) {
+              if (!r2.ok) throw new Error("MusicBrainz HTTP " + r2.status);
+              return r2.json().then(function (releaseData) {
+                releaseData._isRelease = true;
+                return releaseData;
+              });
+            });
+          }
+          throw new Error("MusicBrainz HTTP " + r.status);
+        }
         return r.json();
       })
       .then(function (data) {
+        var releaseGroupId = null;
+        if (data._isRelease && data["release-group"]) {
+          releaseGroupId = data["release-group"].id;
+        }
+
         // Title
         var titleEl = card.querySelector(".media-review-title");
         if (titleEl && !titleEl.textContent.trim()) {
@@ -120,20 +136,26 @@
         // Year
         var yearEl = card.querySelector(".media-review-year");
         if (yearEl && !yearEl.textContent.trim()) {
-          var date = data["first-release-date"] || data["first-release"] || "";
+          var date = data["first-release-date"] || data.date || "";
           if (date) {
             yearEl.textContent = date.substring(0, 4);
           }
         }
 
-        // Genres
+        // Genres — for releases, also check release-group genres
         var genreEl = card.querySelector(".media-review-genres");
-        if (genreEl && !genreEl.textContent.trim() && data.genres && data.genres.length > 0) {
-          genreEl.textContent = data.genres
-            .map(function (g) {
-              return g.name;
-            })
-            .join(", ");
+        if (genreEl && !genreEl.textContent.trim()) {
+          var genres = (data.genres && data.genres.length > 0) ? data.genres : null;
+          if (!genres && data._isRelease && data["release-group"] && data["release-group"].genres) {
+            genres = data["release-group"].genres;
+          }
+          if (genres && genres.length > 0) {
+            genreEl.textContent = genres
+              .map(function (g) {
+                return g.name;
+              })
+              .join(", ");
+          }
         }
 
         // Album (for songs)
@@ -147,8 +169,8 @@
         // Cover art from Cover Art Archive
         var imgEl = card.querySelector(".media-review-img");
         if (imgEl.classList.contains("media-review-placeholder")) {
-          var coverId = id;
-          var coverEntity = "release-group";
+          var coverId = releaseGroupId || id;
+          var coverEntity = releaseGroupId ? "release-group" : (data._isRelease ? "release" : "release-group");
           // For recordings, try to get cover from the first release
           if (mediaType === "canção" && data.releases && data.releases.length > 0) {
             coverId = data.releases[0].id;
