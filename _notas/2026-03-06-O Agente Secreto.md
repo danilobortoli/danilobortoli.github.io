@@ -21,4 +21,4 @@ Mendonça usou muito das pesquisas que desenvolveu enquanto fazia *Retratos Fant
 
 Então, de uma certa forma, dizer que o "Brasil é ridículo" recai nessa mesma tentativa consciente de esquecer da possibilidade e da fantasia; que, enfim, é possível sonhar algo mais. 
 
-Não é por outras razões que o realismo fantástico floresceu tão bem na América Latina. Não poderia ter dado certo em outro nenhum lugar do mundo.
+Não é por outras razões que o realismo fantástico floresceu tão bem na América Latina. Não é à toa que uma perna decepada zanze atacando pessoas no meio do filme. É que essa forma de realismo não poderia ter dado certo em outro nenhum lugar do mundo.
