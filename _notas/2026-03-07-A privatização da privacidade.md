@@ -1,6 +1,6 @@
 ---
 title: A privatização da privacidade
-date: 2026-03-07
+date: 2026-03-07 19:36:16 -0300
 media:
   type: filme
   tmdb_id: 293310
