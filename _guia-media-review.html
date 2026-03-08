@@ -373,9 +373,37 @@ Uma das melhores faixas dos anos 90...</code></pre>
   <strong>Buscado automaticamente:</strong> título, artista, álbum, ano, gêneros e capa do álbum.
 </div>
 
+<h2>4. Livros (via Open Library)</h2>
+
+<h3>Encontrar o ID</h3>
+
+<ol>
+  <li>Acesse <a href="https://openlibrary.org">openlibrary.org</a> e busque o livro</li>
+  <li>Clique na <strong>obra</strong> (Works) para um ID genérico, ou na <strong>edição</strong> específica</li>
+  <li>O ID está na URL: <code>openlibrary.org/works/<strong>OL45804W</strong></code> ou <code>openlibrary.org/books/<strong>OL7353617M</strong></code></li>
+  <li>Copie o ID (ex: <code>OL45804W</code> ou <code>OL7353617M</code>)</li>
+</ol>
+
+<h3>Front matter</h3>
+
+<pre><code>---
+title: Resenha de 1984
+date: 2026-03-08
+media:
+  type: livro
+  openlibrary_id: "OL45804W"
+  nota: 9
+---
+
+Uma distopia que nunca envelhece...</code></pre>
+
+<div class="note">
+  <strong>Buscado automaticamente:</strong> título, capa, autor, ano de publicação, editora (edições) e gêneros/assuntos.
+</div>
+
 <div class="pagebreak"></div>
 
-<h2>4. Modo manual (sem APIs)</h2>
+<h2>5. Modo manual (sem APIs)</h2>
 
 <p>Se preferir, preencha todos os campos diretamente no front matter, sem depender de IDs ou APIs:</p>
 
@@ -406,12 +434,22 @@ Uma das melhores faixas dos anos 90...</code></pre>
   capa: /assets/images/ok-computer.jpg
   nota: 9.5</code></pre>
 
+<pre><code>media:
+  type: livro
+  titulo: "1984"
+  autor: "George Orwell"
+  editora: "Companhia das Letras"
+  ano: 1949
+  generos: "Distopia, Ficção Científica"
+  capa: /assets/images/1984.jpg
+  nota: 9</code></pre>
+
 <div class="note">
   <strong>Dica:</strong> Campos manuais e automáticos podem ser combinados. Os campos manuais preenchidos <em>nunca</em> são sobrescritos pela API &mdash; funcionam como override.
 </div>
 
 
-<h2>5. Referência rápida de campos</h2>
+<h2>6. Referência rápida de campos</h2>
 
 <table>
   <thead>
@@ -425,7 +463,7 @@ Uma das melhores faixas dos anos 90...</code></pre>
     <tr>
       <td><code>type</code></td>
       <td>Obrigatório</td>
-      <td><code>filme</code>, <code>álbum</code> ou <code>canção</code></td>
+      <td><code>filme</code>, <code>álbum</code>, <code>canção</code> ou <code>livro</code></td>
     </tr>
     <tr>
       <td><code>tmdb_id</code></td>
@@ -436,6 +474,11 @@ Uma das melhores faixas dos anos 90...</code></pre>
       <td><code>musicbrainz_id</code></td>
       <td>Música</td>
       <td>UUID do MusicBrainz (busca automática)</td>
+    </tr>
+    <tr>
+      <td><code>openlibrary_id</code></td>
+      <td>Livros</td>
+      <td>ID do Open Library: <code>OL...W</code> (obra) ou <code>OL...M</code> (edição)</td>
     </tr>
     <tr>
       <td><code>nota</code></td>
@@ -463,6 +506,16 @@ Uma das melhores faixas dos anos 90...</code></pre>
       <td>Álbum (para canções)</td>
     </tr>
     <tr>
+      <td><code>autor</code></td>
+      <td>Manual</td>
+      <td>Autor do livro</td>
+    </tr>
+    <tr>
+      <td><code>editora</code></td>
+      <td>Manual</td>
+      <td>Editora do livro</td>
+    </tr>
+    <tr>
       <td><code>ano</code></td>
       <td>Manual</td>
       <td>Ano de lançamento</td>
@@ -481,7 +534,7 @@ Uma das melhores faixas dos anos 90...</code></pre>
 </table>
 
 
-<h2>6. Onde funciona</h2>
+<h2>7. Onde funciona</h2>
 
 <p>A ficha de mídia aparece automaticamente no topo do conteúdo em:</p>
 

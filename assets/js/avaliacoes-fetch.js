@@ -22,6 +22,7 @@
     var type = card.dataset.mediaType;
     var tmdbId = card.dataset.tmdbId;
     var mbId = card.dataset.musicbrainzId;
+    var olId = card.dataset.openlibraryId;
 
     if (type === "filme" && tmdbId) {
       fetchTMDB(card, tmdbId);
@@ -30,6 +31,8 @@
         fetchMusicBrainz(card, mbId, type, done);
       });
       processMbQueue();
+    } else if (type === "livro" && olId) {
+      fetchOpenLibrary(card, olId);
     }
   });
 
@@ -162,6 +165,65 @@
       .catch(function (err) {
         console.warn("Erro ao buscar dados do MusicBrainz:", err);
         if (done) done();
+      });
+  }
+
+  function fetchOpenLibrary(card, id) {
+    var isWork = /W$/.test(id);
+    var url = "https://openlibrary.org/" + (isWork ? "works/" : "books/") + id + ".json";
+
+    fetch(url)
+      .then(function (r) {
+        if (!r.ok) throw new Error("OpenLibrary HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        var titleEl = card.querySelector(".avaliacao-title");
+        if (titleEl && !titleEl.textContent.trim() && data.title) {
+          titleEl.textContent = data.title;
+        }
+
+        var yearEl = card.querySelector(".avaliacao-year");
+        if (yearEl && !yearEl.textContent.trim()) {
+          var year = "";
+          var dateStr = data.first_publish_date || data.publish_date || "";
+          if (dateStr) {
+            var match = dateStr.match(/\d{4}/);
+            if (match) year = match[0];
+          }
+          if (year) yearEl.textContent = "(" + year + ")";
+        }
+
+        var imgEl = card.querySelector(".avaliacao-img");
+        if (imgEl && imgEl.classList.contains("avaliacao-placeholder") && data.covers && data.covers.length > 0) {
+          var img = document.createElement("img");
+          img.src = "https://covers.openlibrary.org/b/id/" + data.covers[0] + "-M.jpg";
+          img.alt = data.title || "Capa";
+          img.className = "avaliacao-img";
+          imgEl.parentNode.replaceChild(img, imgEl);
+        }
+
+        var creatorEl = card.querySelector(".avaliacao-creator");
+        if (creatorEl && !creatorEl.textContent.trim() && data.authors) {
+          var authorKeys = data.authors.map(function (a) {
+            return a.author ? a.author.key : a.key;
+          }).filter(Boolean);
+
+          if (authorKeys.length > 0) {
+            Promise.all(authorKeys.map(function (key) {
+              return fetch("https://openlibrary.org" + key + ".json")
+                .then(function (r) { return r.ok ? r.json() : null; });
+            })).then(function (authors) {
+              var names = authors.filter(Boolean).map(function (a) { return a.name; });
+              if (names.length > 0 && !creatorEl.textContent.trim()) {
+                creatorEl.textContent = names.join(", ");
+              }
+            });
+          }
+        }
+      })
+      .catch(function (err) {
+        console.warn("Erro ao buscar dados do Open Library:", err);
       });
   }
 

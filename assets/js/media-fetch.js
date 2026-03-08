@@ -7,12 +7,15 @@
   var type = card.dataset.mediaType;
   var tmdbId = card.dataset.tmdbId;
   var mbId = card.dataset.musicbrainzId;
+  var olId = card.dataset.openlibraryId;
 
   // Only fetch if we have an ID and fields are empty (not manually filled)
   if (type === "filme" && tmdbId) {
     fetchTMDB(tmdbId);
   } else if ((type === "álbum" || type === "canção") && mbId) {
     fetchMusicBrainz(mbId, type);
+  } else if (type === "livro" && olId) {
+    fetchOpenLibrary(olId);
   }
 
   function fetchTMDB(id) {
@@ -203,6 +206,94 @@
       })
       .catch(function (err) {
         console.warn("Erro ao buscar dados do MusicBrainz:", err);
+      });
+  }
+
+  function fetchOpenLibrary(id) {
+    // id can be a works ID (OL...W) or editions ID (OL...M)
+    var isWork = /W$/.test(id);
+    var url = "https://openlibrary.org/" + (isWork ? "works/" : "books/") + id + ".json";
+
+    fetch(url)
+      .then(function (r) {
+        if (!r.ok) throw new Error("OpenLibrary HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        // Title
+        var titleEl = card.querySelector(".media-review-title");
+        if (titleEl && !titleEl.textContent.trim() && data.title) {
+          titleEl.textContent = data.title;
+        }
+
+        // Year
+        var yearEl = card.querySelector(".media-review-year");
+        if (yearEl && !yearEl.textContent.trim()) {
+          var year = "";
+          if (data.first_publish_date) {
+            year = data.first_publish_date.match(/\d{4}/);
+            if (year) year = year[0];
+          } else if (data.publish_date) {
+            year = data.publish_date.match(/\d{4}/);
+            if (year) year = year[0];
+          }
+          if (year) yearEl.textContent = year;
+        }
+
+        // Cover
+        var imgEl = card.querySelector(".media-review-img");
+        if (imgEl && imgEl.classList.contains("media-review-placeholder")) {
+          var coverId = null;
+          if (data.covers && data.covers.length > 0) {
+            coverId = data.covers[0];
+          }
+          if (coverId) {
+            var img = document.createElement("img");
+            img.src = "https://covers.openlibrary.org/b/id/" + coverId + "-M.jpg";
+            img.alt = data.title || "Capa";
+            img.className = "media-review-img";
+            imgEl.parentNode.replaceChild(img, imgEl);
+          }
+        }
+
+        // Author — works have authors as [{author: {key: "/authors/OL..."}}]
+        var authorEl = card.querySelector(".media-review-author");
+        if (authorEl && !authorEl.textContent.trim() && data.authors) {
+          var authorKeys = data.authors.map(function (a) {
+            return a.author ? a.author.key : a.key;
+          }).filter(Boolean);
+
+          if (authorKeys.length > 0) {
+            Promise.all(authorKeys.map(function (key) {
+              return fetch("https://openlibrary.org" + key + ".json")
+                .then(function (r) { return r.ok ? r.json() : null; });
+            })).then(function (authors) {
+              var names = authors.filter(Boolean).map(function (a) { return a.name; });
+              if (names.length > 0 && !authorEl.textContent.trim()) {
+                authorEl.textContent = names.join(", ");
+              }
+            });
+          }
+        }
+
+        // Publisher (editions only)
+        var pubEl = card.querySelector(".media-review-publisher");
+        if (pubEl && !pubEl.textContent.trim() && data.publishers && data.publishers.length > 0) {
+          pubEl.textContent = data.publishers[0];
+        }
+
+        // Genres/Subjects
+        var genreEl = card.querySelector(".media-review-genres");
+        if (genreEl && !genreEl.textContent.trim() && data.subjects && data.subjects.length > 0) {
+          var subjects = data.subjects.slice(0, 3);
+          // subjects can be strings or objects with name
+          genreEl.textContent = subjects.map(function (s) {
+            return typeof s === "string" ? s : s.name;
+          }).join(", ");
+        }
+      })
+      .catch(function (err) {
+        console.warn("Erro ao buscar dados do Open Library:", err);
       });
   }
 
