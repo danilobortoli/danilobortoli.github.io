@@ -5,7 +5,7 @@ title: Avaliações
 
 <h1>Avaliações</h1>
 
-<p class="subtitle">Notas recentes para filmes, canções e álbuns.</p>
+<p class="subtitle">Notas recentes para filmes, canções, álbuns e livros.</p>
 
 {% assign all_items = "" | split: "" %}
 
@@ -30,13 +30,15 @@ title: Avaliações
   <button class="filter-btn" data-filter="filme">Filmes</button>
   <button class="filter-btn" data-filter="álbum">Álbuns</button>
   <button class="filter-btn" data-filter="canção">Canções</button>
+  <button class="filter-btn" data-filter="livro">Livros</button>
 </div>
 
 <section class="avaliacoes-grid" id="avaliacoes-grid">
   {% for item in all_items %}
   <a href="{{ item.url | relative_url }}" class="avaliacao-card" data-media-type="{{ item.media.type }}"
     {% if item.media.tmdb_id %}data-tmdb-id="{{ item.media.tmdb_id }}"{% endif %}
-    {% if item.media.musicbrainz_id %}data-musicbrainz-id="{{ item.media.musicbrainz_id }}"{% endif %}>
+    {% if item.media.musicbrainz_id %}data-musicbrainz-id="{{ item.media.musicbrainz_id }}"{% endif %}
+    {% if item.media.openlibrary_id %}data-openlibrary-id="{{ item.media.openlibrary_id }}"{% endif %}>
 
     <div class="avaliacao-cover">
       {% if item.media.capa %}
@@ -53,6 +55,8 @@ title: Avaliações
         <span class="avaliacao-type">Álbum</span>
       {% elsif item.media.type == "canção" %}
         <span class="avaliacao-type">Canção</span>
+      {% elsif item.media.type == "livro" %}
+        <span class="avaliacao-type">Livro</span>
       {% endif %}
 
       {% if item.media.titulo %}
@@ -65,6 +69,12 @@ title: Avaliações
         {% if item.media.type == "filme" %}
           {% if item.media.diretor %}
           <span class="avaliacao-creator">{{ item.media.diretor }}</span>
+          {% else %}
+          <span class="avaliacao-creator"></span>
+          {% endif %}
+        {% elsif item.media.type == "livro" %}
+          {% if item.media.autor %}
+          <span class="avaliacao-creator">{{ item.media.autor }}</span>
           {% else %}
           <span class="avaliacao-creator"></span>
           {% endif %}

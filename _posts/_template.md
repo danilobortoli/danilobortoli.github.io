@@ -7,15 +7,18 @@ categories: [categoria1, categoria2]
 image: /assets/images/hero-image.jpg
 # Para reviews de mídia, descomente e preencha:
 # media:
-#   type: filme         # filme | álbum | canção
+#   type: filme         # filme | álbum | canção | livro
 #   tmdb_id: 12345      # (filmes) ID do TMDB - busca automática de poster, diretor, ano, gêneros
 #   musicbrainz_id: ""  # (álbuns/canções) ID do MusicBrainz - busca automática de capa, artista, ano
+#   openlibrary_id: ""  # (livros) ID do Open Library - busca automática de capa, autor, ano, editora
 #   nota: 8.5           # sua nota de 0 a 10
-#   # Campos manuais (opcionais - preenchidos automaticamente se usar tmdb_id ou musicbrainz_id):
-#   # titulo: "Nome do Filme/Álbum/Canção"
+#   # Campos manuais (opcionais - preenchidos automaticamente se usar IDs acima):
+#   # titulo: "Nome do Filme/Álbum/Canção/Livro"
 #   # diretor: "Nome do Diretor"        # filmes
 #   # artista: "Nome do Artista"         # música
 #   # album: "Nome do Álbum"            # canções
+#   # autor: "Nome do Autor"            # livros
+#   # editora: "Nome da Editora"        # livros
 #   # ano: 2024
 #   # generos: "Drama, Ficção Científica"
 #   # capa: /assets/images/poster.jpg   # URL ou caminho local para poster/capa

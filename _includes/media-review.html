@@ -1,7 +1,8 @@
 {% if page.media %}
 <aside class="media-review" data-media-type="{{ page.media.type }}"
   {% if page.media.tmdb_id %}data-tmdb-id="{{ page.media.tmdb_id }}"{% endif %}
-  {% if page.media.musicbrainz_id %}data-musicbrainz-id="{{ page.media.musicbrainz_id }}"{% endif %}>
+  {% if page.media.musicbrainz_id %}data-musicbrainz-id="{{ page.media.musicbrainz_id }}"{% endif %}
+  {% if page.media.openlibrary_id %}data-openlibrary-id="{{ page.media.openlibrary_id }}"{% endif %}>
 
   <div class="media-review-cover">
     {% if page.media.capa %}
@@ -18,6 +19,8 @@
       <span class="media-review-type">Álbum</span>
     {% elsif page.media.type == "canção" %}
       <span class="media-review-type">Canção</span>
+    {% elsif page.media.type == "livro" %}
+      <span class="media-review-type">Livro</span>
     {% endif %}
 
     {% if page.media.titulo %}
@@ -37,6 +40,51 @@
         <div class="media-review-field">
           <dt>Diretor</dt>
           <dd class="media-review-director"></dd>
+        </div>
+        {% endif %}
+        {% if page.media.ano %}
+        <div class="media-review-field">
+          <dt>Ano</dt>
+          <dd class="media-review-year">{{ page.media.ano }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Ano</dt>
+          <dd class="media-review-year"></dd>
+        </div>
+        {% endif %}
+        {% if page.media.generos %}
+        <div class="media-review-field">
+          <dt>Gêneros</dt>
+          <dd class="media-review-genres">{{ page.media.generos }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Gêneros</dt>
+          <dd class="media-review-genres"></dd>
+        </div>
+        {% endif %}
+      {% elsif page.media.type == "livro" %}
+        {% if page.media.autor %}
+        <div class="media-review-field">
+          <dt>Autor</dt>
+          <dd class="media-review-author">{{ page.media.autor }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Autor</dt>
+          <dd class="media-review-author"></dd>
+        </div>
+        {% endif %}
+        {% if page.media.editora %}
+        <div class="media-review-field">
+          <dt>Editora</dt>
+          <dd class="media-review-publisher">{{ page.media.editora }}</dd>
+        </div>
+        {% else %}
+        <div class="media-review-field">
+          <dt>Editora</dt>
+          <dd class="media-review-publisher"></dd>
         </div>
         {% endif %}
         {% if page.media.ano %}
