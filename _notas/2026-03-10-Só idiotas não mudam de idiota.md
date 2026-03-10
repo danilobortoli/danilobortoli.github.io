@@ -1,6 +1,6 @@
 ---
 title: Só idiotas não mudam de ideia
-date: 2026-03-10
+date: 2026-03-10 10:42:30 -0300
 ---
 
 <blockquote class="twitter-tweet" data-media-max-width="560"><p lang="en" dir="ltr">North Korea Was Right About Nuclear Weapons <a href="https://t.co/LKfeFgpEE4">https://t.co/LKfeFgpEE4</a></p>&mdash; Francis Fukuyama (@FukuyamaFrancis) <a href="https://twitter.com/FukuyamaFrancis/status/2031126511357661516?ref_src=twsrc%5Etfw">March 9, 2026</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
