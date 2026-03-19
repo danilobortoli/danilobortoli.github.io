@@ -1,6 +1,6 @@
 ---
 title: Estado da arte
-date: 2026-03-19
+date: 2026-03-19 17:02:48 -0300
 ---
 
 Surreal.
