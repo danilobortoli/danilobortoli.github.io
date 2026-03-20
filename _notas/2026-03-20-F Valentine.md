@@ -4,7 +4,7 @@ media:
   type: filme
   tmdb_id: 1429605
   nota: 1.8
-date: 2026-03-20
+date: 2026-03-20 19:31:41 -0300
 ---
 
 Valeu pela _pizza_ de CGI.
