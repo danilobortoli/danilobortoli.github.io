@@ -1,5 +1,5 @@
 ---
-title: 'Contrapasso' de ContraPoints
+title: Contrapasso de ContraPoints
 date: 2026-03-21 18:16:49 -0300
 ---
 
