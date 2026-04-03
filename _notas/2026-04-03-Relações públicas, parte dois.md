@@ -1,6 +1,6 @@
 ---
 title: Relações públicas, parte dois
-date: 2026-04-03
+date: 2026-04-03 18:40:27 -0300
 ---
 
 Complementando a nota anterior: Ainda sigo com raiva da Anthropic.
