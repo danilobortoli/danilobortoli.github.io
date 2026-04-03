@@ -1,6 +1,6 @@
 ---
 title: Relações públicas
-date: 2026-04-03
+date: 2026-04-03 18:24:39 -0300
 ---
 
 Algo interessante ocorreu comigo no *Twitter*.
