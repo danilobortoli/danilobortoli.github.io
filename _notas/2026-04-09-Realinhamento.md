@@ -1,6 +1,6 @@
 ---
 title: Realinhamento
-date: 2026-04-09
+date: 2026-04-09 19:37:28 -0300
 ---
 *[“Compensate the Losers?” Economic Policy and the Origins of U.S. Partisan Realignment](https://academic.oup.com/qje/advance-article-abstract/doi/10.1093/qje/qjag019/8571578?redirectedFrom=fulltext&login=false)* no *The Quarterly Journal of Economics*:
 
