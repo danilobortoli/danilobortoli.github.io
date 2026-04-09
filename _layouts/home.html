@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'pt-BR' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ site.title }}</title>
+
+  <!-- Tufte CSS -->
+  <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
+
+  <!-- Custom Enhancements -->
+  <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}"/>
+</head>
+<body class="home-page">
+  <!-- Scrolling Marquee -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull; DIREITO &bull; TECNOLOGIA &bull; ESCRITA &bull; CULTURA &bull; ADVOCACIA &bull; TRANSPAR&Ecirc;NCIA &bull;&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- Home Navigation -->
+  <header class="home-header">
+    <nav class="home-nav">
+      <a href="{{ '/' | relative_url }}" class="home-brand">
+        <span class="brand-mark">DB</span>
+        <span class="brand-name">BORTOLI</span>
+      </a>
+      <div class="home-nav-links">
+        <a href="{{ '/posts.html' | relative_url }}">Posts</a>
+        <a href="{{ '/sobre.html' | relative_url }}">Sobre</a>
+        <a href="{{ '/advocacia.html' | relative_url }}">Advocacia</a>
+        <a href="{{ '/notas.html' | relative_url }}">Notas</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="home-main">
+    {{ content }}
+  </main>
+
+  <!-- Editorial Footer -->
+  <footer class="editorial-footer">
+    <span class="footer-left">DANILO BORTOLI</span>
+    <span class="footer-right">&copy;2026</span>
+  </footer>
+</body>
+</html>
