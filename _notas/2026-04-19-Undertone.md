@@ -4,7 +4,7 @@ media:
   type: filme
   tmdb_id: 1480387
   nota: 5.4
-date: 2026-04-19
+date: 2026-04-19 11:17:20 -0300
 ---
 
 _Undertone_ acompanha uma apresentadora de um _podcast_ de terror, junto a seu colega de profissão, quando decidem pautar seus próximos episódios com base em dez arquivos de áudio encaminhados de forma anônima. A narrativa se desenvolve e degringola a partir da escuta atenta dos áudios - como se o público fosse forçado a se tornar audiófilos também.
