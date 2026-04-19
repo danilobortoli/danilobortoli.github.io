@@ -1,6 +1,6 @@
 ---
 title: Dívida, a história dela
-date: 2026-04-19
+date: 2026-04-19 11:47:52 -0300
 ---
 Nunca deixa de me impressionar o fato de que alguém como David Graeber já deu uma palestra nas dependências do Google.
 
