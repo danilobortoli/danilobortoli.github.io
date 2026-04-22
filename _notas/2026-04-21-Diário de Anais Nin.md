@@ -1,6 +1,6 @@
 ---
 title: Síndrome de impostor
-date: 2026-04-21
+date: 2026-04-21 21:20:30 -0300
 ---
 
 {% include epigraph.html
