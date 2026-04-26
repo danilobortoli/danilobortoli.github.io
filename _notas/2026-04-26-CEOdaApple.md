@@ -1,6 +1,6 @@
 ---
 title: CHO
-date: 2026-04-26
+date: 2026-04-26 13:34:23 -0300
 ---
 *[Apple's Next CEO Is the Engineer Who Built Its Chips](https://awesomeagents.ai/news/apple-ternus-ceo-hardware-ai-strategy/)* no *Awesome Agents*:
 
