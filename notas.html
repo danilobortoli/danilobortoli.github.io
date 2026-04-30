@@ -12,9 +12,9 @@ title: Notas
   {% assign all_notas = site.notas | sort: 'date' | reverse %}
 
   {%- comment -%}
-    Determine kind for each nota:
-    - if it has media → media.type (canção, álbum, livro, filme)
-    - else → "nota"
+    Determina o "kind" de cada nota:
+    - se tem media → media.type (canção, álbum, livro, filme)
+    - senão → "nota"
   {%- endcomment -%}
   {%- assign kind_pairs = "" | split: "" -%}
   {%- for nota in all_notas -%}
@@ -28,14 +28,14 @@ title: Notas
   {%- assign kinds = kind_pairs | uniq | sort -%}
 
   <div class="tag-cloud" id="notas-tags" role="list">
-    <button class="tag-pill active" data-tag="todas" type="button">todas<span class="tag-count">{{ all_notas.size }}</span></button>
+    <button class="tag-pill active" data-tag="todas" type="button">todas <span class="tag-count">&middot; {{ all_notas.size }}</span></button>
     {% for k in kinds %}
       {% assign count = 0 %}
       {% for n in all_notas %}
         {% if n.media and n.media.type %}{% assign nk = n.media.type | downcase %}{% else %}{% assign nk = "nota" %}{% endif %}
         {% if nk == k %}{% assign count = count | plus: 1 %}{% endif %}
       {% endfor %}
-      <button class="tag-pill" data-tag="{{ k }}" type="button">{{ k }}<span class="tag-count">{{ count }}</span></button>
+      <button class="tag-pill" data-tag="{{ k }}" type="button">{{ k }} <span class="tag-count">&middot; {{ count }}</span></button>
     {% endfor %}
   </div>
 
@@ -43,32 +43,33 @@ title: Notas
     {% for nota in all_notas %}
       {% if nota.media and nota.media.type %}{% assign nk = nota.media.type | downcase %}{% else %}{% assign nk = "nota" %}{% endif %}
       <article class="nota-archive-item" data-tag="{{ nk }}">
-        <a href="{{ nota.url | relative_url }}" class="nota-archive-link">
-          <div class="nota-archive-meta">
-            <time class="nota-archive-date" datetime="{{ nota.date | date_to_xmlschema }}">
-              {% include data-pt.html date=nota.date %}
-            </time>
-            <span class="nota-archive-kind">{{ nk }}</span>
-          </div>
-          {% if nota.title %}
-          <h3 class="nota-archive-title">{{ nota.title }}</h3>
-          {% endif %}
-        </a>
-        <div class="nota-archive-content">
-          {{ nota.content }}
+        <div class="nota-archive-date">
+          {{ nota.date | date: "%-d %b" | replace: "Jan", "jan" | replace: "Feb", "fev" | replace: "Mar", "mar" | replace: "Apr", "abr" | replace: "May", "mai" | replace: "Jun", "jun" | replace: "Jul", "jul" | replace: "Aug", "ago" | replace: "Sep", "set" | replace: "Oct", "out" | replace: "Nov", "nov" | replace: "Dec", "dez" }}
         </div>
-        {% if nota.media %}
-        <a href="{{ nota.url | relative_url }}" class="nota-media-pill">
-          <span class="nota-media-pill-type">{{ nota.media.type }}</span>
-          <span class="nota-media-pill-title">
-            {% if nota.media.titulo %}{{ nota.media.titulo }}{% endif %}
-            {% if nota.media.artista %} &middot; {{ nota.media.artista }}{% endif %}
-            {% if nota.media.diretor %} &middot; {{ nota.media.diretor }}{% endif %}
-            {% if nota.media.autor %} &middot; {{ nota.media.autor }}{% endif %}
-          </span>
-          {% if nota.media.nota %}<span class="nota-media-pill-rating">{{ nota.media.nota }}/10</span>{% endif %}
-        </a>
-        {% endif %}
+        <div class="nota-archive-kind">{{ nk }}</div>
+        <div class="nota-archive-body">
+          {% if nota.title %}
+          <h3 class="nota-archive-title">
+            <a href="{{ nota.url | relative_url }}">{{ nota.title }}</a>
+          </h3>
+          {% endif %}
+          {% assign excerpt_text = nota.content | strip_html | strip | replace: "&nbsp;", " " %}
+          {% if excerpt_text != "" %}
+          <p class="nota-archive-excerpt">{{ excerpt_text | truncatewords: 28 }}</p>
+          {% endif %}
+          {% if nota.media %}
+          <a href="{{ nota.url | relative_url }}" class="nota-media-pill">
+            <span class="nota-media-pill-type">{{ nota.media.type }}</span>
+            <span class="nota-media-pill-title">
+              {% if nota.media.titulo %}{{ nota.media.titulo }}{% endif %}
+              {% if nota.media.artista %} &middot; {{ nota.media.artista }}{% endif %}
+              {% if nota.media.diretor %} &middot; {{ nota.media.diretor }}{% endif %}
+              {% if nota.media.autor %} &middot; {{ nota.media.autor }}{% endif %}
+            </span>
+            {% if nota.media.nota %}<span class="nota-media-pill-rating">{{ nota.media.nota }}/10</span>{% endif %}
+          </a>
+          {% endif %}
+        </div>
       </article>
     {% endfor %}
   </section>
@@ -76,157 +77,12 @@ title: Notas
   <nav class="pagination" id="pagination" aria-label="Paginação das notas">
   </nav>
 
-  <style>
-    .subtitle {
-      font-size: 1.4rem;
-      color: var(--color-text-muted);
-      font-style: italic;
-      margin-bottom: var(--spacing-md);
-    }
-
-    .notas-archive {
-      margin-top: var(--spacing-md);
-      width: 55%;
-    }
-
-    .nota-archive-item {
-      margin-bottom: var(--spacing-xl);
-      padding-bottom: var(--spacing-lg);
-      border-bottom: 1px solid var(--color-border-lighter);
-    }
-
-    .nota-archive-item:last-child {
-      border-bottom: none;
-    }
-
-    .nota-archive-link {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .nota-archive-link:hover .nota-archive-date {
-      color: var(--color-accent);
-    }
-
-    .nota-archive-date {
-      font-size: 0.95rem;
-      color: var(--color-text-light);
-      font-variant: small-caps;
-      letter-spacing: 0.05em;
-      transition: color var(--transition-fast);
-    }
-
-    .nota-archive-title {
-      font-size: 1.6rem;
-      font-weight: 600;
-      color: var(--color-text);
-      margin: 0.5rem 0 1rem 0;
-      line-height: 1.3;
-    }
-
-    .nota-archive-content {
-      font-size: 1.4rem;
-      line-height: 1.8;
-      color: var(--color-text);
-    }
-
-    /* Evita dupla restrição de largura: .notas-archive já é 55%,
-       Tufte CSS aplica width: 55% em <p>, causando p a 30% do body.
-       Aqui forçamos 100% relativo ao container pai. */
-    .nota-archive-content p,
-    .nota-archive-content ol,
-    .nota-archive-content ul {
-      width: 100%;
-    }
-
-    .nota-archive-content p {
-      margin-bottom: 1.4rem;
-    }
-
-    .nota-archive-content p:last-child {
-      margin-bottom: 0;
-    }
-
-    /* Sidenotes dentro do arquivo de notas */
-    .nota-archive-content .sidenote,
-    .nota-archive-content .marginnote {
-      font-size: 0.85rem;
-    }
-
-    /* Paginação */
-    .pagination {
-      width: 55%;
-      margin-top: var(--spacing-lg);
-      padding-top: var(--spacing-lg);
-      border-top: 1px solid var(--color-border-lighter);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .pagination:empty {
-      display: none;
-    }
-
-    .pagination-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 2.4rem;
-      height: 2.4rem;
-      padding: 0 0.6rem;
-      font-family: var(--font-body);
-      font-size: 1rem;
-      font-variant: small-caps;
-      letter-spacing: 0.05em;
-      color: var(--color-text-muted);
-      background: none;
-      border: 1px solid transparent;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: color var(--transition-fast), border-color var(--transition-fast);
-      text-decoration: none;
-    }
-
-    .pagination-btn:hover {
-      color: var(--color-text);
-      border-color: var(--color-border);
-    }
-
-    .pagination-btn.active {
-      color: var(--color-text);
-      font-weight: 600;
-      border-color: var(--color-accent);
-    }
-
-    .pagination-btn:disabled {
-      opacity: 0.3;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .pagination-ellipsis {
-      color: var(--color-text-muted);
-      font-size: 1rem;
-      padding: 0 0.2rem;
-      user-select: none;
-    }
-
-    @media (max-width: 760px) {
-      .notas-archive,
-      .pagination {
-        width: 100%;
-      }
-    }
-  </style>
-
   <script>
     (function () {
       var pills = document.querySelectorAll('#notas-tags .tag-pill');
       var items = Array.prototype.slice.call(document.querySelectorAll('.nota-archive-item'));
       var paginationNav = document.getElementById('pagination');
-      var ITEMS_PER_PAGE = 10;
+      var ITEMS_PER_PAGE = 15;
       var activeTag = 'todas';
       var currentPage = 1;
 
@@ -289,14 +145,11 @@ title: Notas
           for (var i = 1; i <= total; i++) all.push(i);
           return all;
         }
-
         var pages = [1];
         if (current > 3) pages.push('...');
-
         var rangeStart = Math.max(2, current - 1);
         var rangeEnd = Math.min(total - 1, current + 1);
         for (var j = rangeStart; j <= rangeEnd; j++) pages.push(j);
-
         if (current < total - 2) pages.push('...');
         pages.push(total);
         return pages;
