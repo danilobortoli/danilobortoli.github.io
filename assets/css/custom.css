@@ -1888,7 +1888,6 @@ article .post-meta a:hover {
 
 .tag-pill .tag-count {
   opacity: 0.7;
-  margin-left: 0.3rem;
 }
 
 /* ==========================================================================
@@ -2032,26 +2031,83 @@ article .post-meta a:hover {
 }
 
 /* ==========================================================================
-   Redesign 2026 — /notas with kind tags + media pill
+   Redesign 2026 — /notas: index grid (data | tipo | corpo)
    ========================================================================== */
+
+.notas-archive {
+  width: 87.5%;
+  margin-top: var(--spacing-md);
+}
+
+.notas-archive .nota-archive-item {
+  display: grid;
+  grid-template-columns: 5rem 6rem 1fr;
+  gap: 1rem;
+  padding: 1.2rem 0;
+  margin: 0;
+  border-top: 1px solid var(--color-border-lighter);
+  border-bottom: none;
+  align-items: baseline;
+}
+
+.notas-archive .nota-archive-item:first-of-type {
+  border-top: 1px solid var(--color-border);
+}
 
 .notas-archive .nota-archive-item.hidden {
   display: none;
 }
 
-.nota-archive-meta {
-  display: flex;
-  gap: 1rem;
-  align-items: baseline;
-  margin-bottom: 0.4rem;
+.nota-archive-date {
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  margin: 0;
+  padding-top: 0.2rem;
 }
 
 .nota-archive-kind {
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   font-variant: small-caps;
   letter-spacing: 0.08em;
   color: var(--color-accent);
   font-weight: 600;
+  white-space: nowrap;
+  padding-top: 0.2rem;
+}
+
+.nota-archive-body {
+  min-width: 0;
+}
+
+.nota-archive-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  border: none;
+  line-height: 1.35;
+}
+
+.nota-archive-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.nota-archive-title a:hover {
+  color: var(--color-accent);
+}
+
+.nota-archive-excerpt {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0.3rem 0 0 0;
+  width: 100%;
 }
 
 .nota-media-pill {
@@ -2067,6 +2123,7 @@ article .post-meta a:hover {
   color: inherit;
   font-style: normal;
   width: fit-content;
+  max-width: 100%;
 }
 
 .nota-media-pill:hover {
@@ -2091,6 +2148,20 @@ article .post-meta a:hover {
   font-size: 0.9rem;
   color: var(--color-accent);
   font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .notas-archive {
+    width: 100%;
+  }
+  .notas-archive .nota-archive-item {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+  .nota-archive-date,
+  .nota-archive-kind {
+    padding-top: 0;
+  }
 }
 
 /* ==========================================================================

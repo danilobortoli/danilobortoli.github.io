@@ -25,14 +25,14 @@ title: Escrita
   <p class="escrita-subtitle">Textos longos sobre direito, cultura e leituras. Ver também <a href="{{ '/notas.html' | relative_url }}">notas</a> (texto curto).</p>
 
   <div class="tag-cloud" id="escrita-tags" role="list">
-    <button class="tag-pill active" data-tag="todos" type="button">todos<span class="tag-count">{{ all_posts.size }}</span></button>
+    <button class="tag-pill active" data-tag="todos" type="button">todos <span class="tag-count">&middot; {{ all_posts.size }}</span></button>
     {% for t in tags %}
       {% assign count = 0 %}
       {% for p in all_posts %}
         {% if p.category %}{% assign pt = p.category | downcase %}{% else %}{% assign pt = "outros" %}{% endif %}
         {% if pt == t %}{% assign count = count | plus: 1 %}{% endif %}
       {% endfor %}
-      <button class="tag-pill" data-tag="{{ t }}" type="button">{{ t }}<span class="tag-count">{{ count }}</span></button>
+      <button class="tag-pill" data-tag="{{ t }}" type="button">{{ t }} <span class="tag-count">&middot; {{ count }}</span></button>
     {% endfor %}
   </div>
 
