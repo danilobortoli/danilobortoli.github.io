@@ -1,2 +1,9 @@
 # macOS
 .DS_Store
+
+# Jekyll / Bundler
+.bundle/
+Gemfile.lock
+_site/
+.jekyll-cache/
+.jekyll-metadata

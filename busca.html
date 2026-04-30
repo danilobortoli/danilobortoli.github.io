@@ -1,0 +1,44 @@
+---
+layout: default
+title: Busca
+permalink: /busca/
+---
+
+<h1>Busca</h1>
+
+<p class="subtitle">Procure em todos os posts e notas do site.</p>
+
+<div class="search-container">
+  <form class="search-form" role="search" onsubmit="return false;">
+    <label for="search-input" class="visually-hidden">Termo de busca</label>
+    <input
+      type="search"
+      id="search-input"
+      class="search-input"
+      placeholder="Digite uma palavra ou frase&hellip;"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      aria-label="Termo de busca"
+    >
+    <div class="search-filters">
+      <label class="search-filter">
+        <input type="checkbox" value="post" checked> Posts
+      </label>
+      <label class="search-filter">
+        <input type="checkbox" value="nota" checked> Notas
+      </label>
+    </div>
+  </form>
+
+  <div class="search-status" id="search-status" aria-live="polite">
+    <em>Carregando índice de busca&hellip;</em>
+  </div>
+
+  <ol class="search-results" id="search-results"></ol>
+</div>
+
+<script src="https://unpkg.com/lunr@2.3.9/lunr.js" defer></script>
+<script src="https://unpkg.com/lunr-languages@1.14.0/lunr.stemmer.support.js" defer></script>
+<script src="https://unpkg.com/lunr-languages@1.14.0/lunr.pt.js" defer></script>
+<script src="{{ '/assets/js/search.js' | relative_url }}" defer></script>
