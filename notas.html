@@ -3,20 +3,53 @@ layout: default
 title: Notas
 ---
 
+<p class="escrita-eyebrow">Caderno &middot; notas curtas</p>
 <h1>Notas</h1>
 
-<p class="subtitle">Pequenos pensamentos, links interessantes e observações rápidas que não justificam um post completo.</p>
+<p class="subtitle">Pequenos pensamentos e observações — não justificam um ensaio, mas merecem registro.</p>
 
 {% if site.notas.size > 0 %}
   {% assign all_notas = site.notas | sort: 'date' | reverse %}
 
+  {%- comment -%}
+    Determine kind for each nota:
+    - if it has media → media.type (canção, álbum, livro, filme)
+    - else → "nota"
+  {%- endcomment -%}
+  {%- assign kind_pairs = "" | split: "" -%}
+  {%- for nota in all_notas -%}
+    {%- if nota.media and nota.media.type -%}
+      {%- assign k = nota.media.type | downcase -%}
+    {%- else -%}
+      {%- assign k = "nota" -%}
+    {%- endif -%}
+    {%- assign kind_pairs = kind_pairs | push: k -%}
+  {%- endfor -%}
+  {%- assign kinds = kind_pairs | uniq | sort -%}
+
+  <div class="tag-cloud" id="notas-tags" role="list">
+    <button class="tag-pill active" data-tag="todas" type="button">todas<span class="tag-count">{{ all_notas.size }}</span></button>
+    {% for k in kinds %}
+      {% assign count = 0 %}
+      {% for n in all_notas %}
+        {% if n.media and n.media.type %}{% assign nk = n.media.type | downcase %}{% else %}{% assign nk = "nota" %}{% endif %}
+        {% if nk == k %}{% assign count = count | plus: 1 %}{% endif %}
+      {% endfor %}
+      <button class="tag-pill" data-tag="{{ k }}" type="button">{{ k }}<span class="tag-count">{{ count }}</span></button>
+    {% endfor %}
+  </div>
+
   <section class="notas-archive" id="notas-archive">
     {% for nota in all_notas %}
-      <article class="nota-archive-item">
+      {% if nota.media and nota.media.type %}{% assign nk = nota.media.type | downcase %}{% else %}{% assign nk = "nota" %}{% endif %}
+      <article class="nota-archive-item" data-tag="{{ nk }}">
         <a href="{{ nota.url | relative_url }}" class="nota-archive-link">
-          <time class="nota-archive-date" datetime="{{ nota.date | date_to_xmlschema }}">
-            {% include data-pt.html date=nota.date %}
-          </time>
+          <div class="nota-archive-meta">
+            <time class="nota-archive-date" datetime="{{ nota.date | date_to_xmlschema }}">
+              {% include data-pt.html date=nota.date %}
+            </time>
+            <span class="nota-archive-kind">{{ nk }}</span>
+          </div>
           {% if nota.title %}
           <h3 class="nota-archive-title">{{ nota.title }}</h3>
           {% endif %}
@@ -24,6 +57,18 @@ title: Notas
         <div class="nota-archive-content">
           {{ nota.content }}
         </div>
+        {% if nota.media %}
+        <a href="{{ nota.url | relative_url }}" class="nota-media-pill">
+          <span class="nota-media-pill-type">{{ nota.media.type }}</span>
+          <span class="nota-media-pill-title">
+            {% if nota.media.titulo %}{{ nota.media.titulo }}{% endif %}
+            {% if nota.media.artista %} &middot; {{ nota.media.artista }}{% endif %}
+            {% if nota.media.diretor %} &middot; {{ nota.media.diretor }}{% endif %}
+            {% if nota.media.autor %} &middot; {{ nota.media.autor }}{% endif %}
+          </span>
+          {% if nota.media.nota %}<span class="nota-media-pill-rating">{{ nota.media.nota }}/10</span>{% endif %}
+        </a>
+        {% endif %}
       </article>
     {% endfor %}
   </section>
@@ -36,11 +81,11 @@ title: Notas
       font-size: 1.4rem;
       color: var(--color-text-muted);
       font-style: italic;
-      margin-bottom: var(--spacing-xl);
+      margin-bottom: var(--spacing-md);
     }
 
     .notas-archive {
-      margin-top: var(--spacing-xl);
+      margin-top: var(--spacing-md);
       width: 55%;
     }
 
@@ -64,12 +109,10 @@ title: Notas
     }
 
     .nota-archive-date {
-      display: block;
       font-size: 0.95rem;
       color: var(--color-text-light);
       font-variant: small-caps;
       letter-spacing: 0.05em;
-      margin-bottom: var(--spacing-sm);
       transition: color var(--transition-fast);
     }
 
@@ -180,47 +223,48 @@ title: Notas
 
   <script>
     (function () {
-      var ITEMS_PER_PAGE = 10;
-      var archive = document.getElementById('notas-archive');
+      var pills = document.querySelectorAll('#notas-tags .tag-pill');
+      var items = Array.prototype.slice.call(document.querySelectorAll('.nota-archive-item'));
       var paginationNav = document.getElementById('pagination');
-      var items = archive.querySelectorAll('.nota-archive-item');
-      var totalItems = items.length;
-      var totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+      var ITEMS_PER_PAGE = 10;
+      var activeTag = 'todas';
+      var currentPage = 1;
 
-      if (totalPages <= 1) return;
-
-      function getPageFromHash() {
-        var match = location.hash.match(/^#pagina-(\d+)$/);
-        if (match) {
-          var p = parseInt(match[1], 10);
-          if (p >= 1 && p <= totalPages) return p;
-        }
-        return 1;
+      function visibleByTag() {
+        return items.filter(function (item) {
+          return activeTag === 'todas' || item.getAttribute('data-tag') === activeTag;
+        });
       }
 
       function showPage(page) {
+        var visible = visibleByTag();
+        var totalPages = Math.max(1, Math.ceil(visible.length / ITEMS_PER_PAGE));
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+        currentPage = page;
+
         var start = (page - 1) * ITEMS_PER_PAGE;
         var end = start + ITEMS_PER_PAGE;
 
-        for (var i = 0; i < totalItems; i++) {
-          items[i].style.display = (i >= start && i < end) ? '' : 'none';
-        }
+        items.forEach(function (item) { item.style.display = 'none'; });
+        visible.slice(start, end).forEach(function (item) { item.style.display = ''; });
 
-        renderPagination(page);
+        renderPagination(page, totalPages);
 
         if (location.hash || page > 1) {
           history.replaceState(null, '', page === 1 ? location.pathname : '#pagina-' + page);
         }
       }
 
-      function renderPagination(current) {
+      function renderPagination(current, totalPages) {
+        if (totalPages <= 1) {
+          paginationNav.innerHTML = '';
+          return;
+        }
         var html = '';
-
-        // Botão anterior
         html += '<button class="pagination-btn" data-page="' + (current - 1) + '"' +
                 (current === 1 ? ' disabled' : '') + ' aria-label="Página anterior">&laquo; anterior</button>';
 
-        // Números das páginas
         var pages = buildPageRange(current, totalPages);
         for (var i = 0; i < pages.length; i++) {
           var p = pages[i];
@@ -233,7 +277,6 @@ title: Notas
           }
         }
 
-        // Botão próximo
         html += '<button class="pagination-btn" data-page="' + (current + 1) + '"' +
                 (current === totalPages ? ' disabled' : '') + ' aria-label="Próxima página">próxima &raquo;</button>';
 
@@ -248,16 +291,13 @@ title: Notas
         }
 
         var pages = [1];
-
         if (current > 3) pages.push('...');
 
         var rangeStart = Math.max(2, current - 1);
         var rangeEnd = Math.min(total - 1, current + 1);
-
         for (var j = rangeStart; j <= rangeEnd; j++) pages.push(j);
 
         if (current < total - 2) pages.push('...');
-
         pages.push(total);
         return pages;
       }
@@ -265,11 +305,28 @@ title: Notas
       paginationNav.addEventListener('click', function (e) {
         var btn = e.target.closest('.pagination-btn');
         if (!btn || btn.disabled) return;
-
         var page = parseInt(btn.getAttribute('data-page'), 10);
         showPage(page);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+
+      pills.forEach(function (pill) {
+        pill.addEventListener('click', function () {
+          activeTag = pill.getAttribute('data-tag');
+          pills.forEach(function (p) { p.classList.remove('active'); });
+          pill.classList.add('active');
+          showPage(1);
+        });
+      });
+
+      function getPageFromHash() {
+        var match = location.hash.match(/^#pagina-(\d+)$/);
+        if (match) {
+          var p = parseInt(match[1], 10);
+          if (p >= 1) return p;
+        }
+        return 1;
+      }
 
       window.addEventListener('hashchange', function () {
         showPage(getPageFromHash());

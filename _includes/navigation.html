@@ -1,10 +1,17 @@
-<nav class="navigation">
-  <ul>
-    <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Início</a></li>
-    <li><a href="{{ '/posts.html' | relative_url }}" {% if page.url == '/posts.html' %}class="active"{% endif %}>Posts</a></li>
-    <li><a href="{{ '/avaliacoes.html' | relative_url }}" {% if page.url == '/avaliacoes.html' %}class="active"{% endif %}>Avaliações</a></li>
-    <li><a href="{{ '/sobre.html' | relative_url }}" {% if page.url == '/sobre.html' %}class="active"{% endif %}>Sobre</a></li>
-    <li><a href="{{ '/busca/' | relative_url }}" {% if page.url == '/busca/' %}class="active"{% endif %}>Busca</a></li>
-  </ul>
-</nav>
+<header class="site-header">
+  <a href="{{ '/' | relative_url }}" class="site-wordmark">
+    <span class="site-wordmark-name">Danilo Bortoli</span>
+    <span class="site-wordmark-subtitle">Advogado &middot; Ensaísta &middot; Crítico de música</span>
+  </a>
 
+  <nav class="navigation" aria-label="Navegação principal">
+    <ul>
+      <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Início</a></li>
+      <li><a href="{{ '/escrita.html' | relative_url }}" {% if page.url == '/escrita.html' or page.layout == 'post' %}class="active"{% endif %}>Escrita</a></li>
+      <li><a href="{{ '/notas.html' | relative_url }}" {% if page.url == '/notas.html' or page.layout == 'nota' %}class="active"{% endif %}>Notas</a></li>
+      <li><a href="{{ '/advocacia.html' | relative_url }}" {% if page.url == '/advocacia.html' %}class="active"{% endif %}>Advocacia</a></li>
+      <li><a href="{{ '/agora.html' | relative_url }}" {% if page.url == '/agora.html' %}class="active"{% endif %}>Agora</a></li>
+      <li><a href="{{ '/sobre.html' | relative_url }}" {% if page.url == '/sobre.html' %}class="active"{% endif %}>Sobre</a></li>
+    </ul>
+  </nav>
+</header>

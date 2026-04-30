@@ -2,44 +2,51 @@
 layout: default
 ---
 
-<section class="intro-section">
-  {% if site.notas.size > 0 %}
-  <aside class="notas-sidebar">
-    <h3 class="notas-title"><a href="{{ '/notas.html' | relative_url }}">Notas</a></h3>
-    {% assign recent_notas = site.notas | sort: 'date' | reverse %}
-    {% for nota in recent_notas limit:3 %}
-    <div class="nota-item">
-      <a href="{{ nota.url | relative_url }}" class="nota-link">
-        {% if nota.title %}
-        <h4 class="nota-title-text">{{ nota.title }}</h4>
-        {% endif %}
-        <p class="nota-content">{{ nota.content | strip_html | truncate: 150 }}</p>
-        <time class="nota-date">{{ nota.date | date: "%-d/%-m" }}</time>
-      </a>
-    </div>
-    {% endfor %}
-    {% if site.notas.size > 3 %}
-    <a href="{{ '/notas.html' | relative_url }}" class="notas-ver-todas">ver todas as notas &rarr;</a>
-    {% endif %}
-  </aside>
-  {% endif %}
-
+<section class="home-lede">
+  <p class="home-lede-eyebrow">Início</p>
   <h1>Danilo Bortoli</h1>
-  <blockquote>
-  <p>"In a communications crisis, the true prophets are the translators."</p>
-  <footer>
-    <cite>—Ellen Willis, "Dylan", Out of the Vinyl Deeps</cite>
-  </footer>
-</blockquote>
-<p>Escrevo para o <em><a href="https://thesinglesjukebox.com">The Singles Jukebox</a></em>. Fiz um <em>One Week One Band</em> sobre o Burial, o qual pode ser visto <a href="https://oneweekoneband.tumblr.com/tagged/burial/chrono">aqui</a>.</p>
-<p>Atuo como advogado (OAB/SP 409.024), especializado em Direito Empresarial e Tributário. Atualmente, trabalho como advogado da <a href="https://matra.org.br" target="_blank">OSCIP MATRA – Marília Transparente</a>, uma organização sem fins lucrativos e apartidária que promove a transparência na gestão pública e combate a corrupção em Marília.</p>
-  <p>Este espaço é uma forma de documentar minha jornada de aprendizado. Sinta-se à vontade para explorar os <em><a href="{{ '/posts.html' | relative_url }}">posts</a></em>, saber mais <a href="{{ '/sobre.html' | relative_url }}">sobre mim</a> ou conhecer minha <a href="{{ '/advocacia.html' | relative_url }}">atuação profissional na advocacia</a>.</p>
-</section>
+  <p class="home-lede-subtitle">advogado &middot; ensaísta &middot; <em><a href="https://thesinglesjukebox.com">The Singles Jukebox</a></em></p>
 
-<section class="credit-section">
-  <h2>Sobre o design</h2>
-  <p>Este site foi criado usando o <a href="https://github.com/edwardtufte/tufte-css" target="_blank">Tufte CSS</a>, um projeto que implementa o estilo tipográfico e de design dos livros de <a href="https://www.edwardtufte.com/tufte/" target="_blank">Edward Tufte</a>.</p>
-  <p>Sou um grande fã do trabalho de Tufte, especialmente de seus livros clássicos sobre visualização de dados e design de informação, como <em>The Visual Display of Quantitative Information</em>, <em>Envisioning Information</em> e <em>Beautiful Evidence</em>. Tufte revolucionou a forma como pensamos sobre a apresentação de informações, defendendo princípios como a eliminação de "chartjunk" (decoração desnecessária), o uso eficiente do espaço em branco, e a integração harmoniosa de texto, gráficos e notas laterais.</p>
-  <p>O Tufte CSS captura essa filosofia de design elegante e minimalista, criando uma experiência de leitura excepcional que prioriza o conteúdo e a clareza. É uma homenagem ao trabalho de um dos maiores pensadores sobre design de informação de nosso tempo. Para ver um exemplo prático das funcionalidades do Tufte CSS, incluindo sidenotes, margin notes e footnotes, confira esta <a href="{{ '/exemplo' | relative_url }}">página de exemplo</a>.</p>
-  <p>Este site está licenciado sob a <a href="{{ '/licenca.html' | relative_url }}">Licença MIT</a>; consulte a página da licença para o texto completo, orientações e avisos legais.</p>
+  <div class="home-lede-body">
+    <p>
+      <span class="newthought">Sou advogado</span> com atuação em Direito Empresarial e Tributário<label for="sn-advocacia" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-advocacia" class="margin-toggle"/><span class="sidenote">OAB/SP 409.024. Coordenador jurídico da <a href="https://matra.org.br" target="_blank">MATRA – Marília Transparente</a>. Ver <a href="{{ '/advocacia.html' | relative_url }}">Advocacia</a> para atuação e contato.</span>.
+      Em paralelo, escrevo <em>ensaios</em> sobre crítica cultural e direito, e alimento um arquivo de <em>notas</em> curtas — pequenas observações, poemas que encontro, canções que escuto.
+    </p>
+
+    <p>
+      Comece pelo <em><a href="{{ '/escrita.html' | relative_url }}">último ensaio</a></em>, folheie as <em><a href="{{ '/notas.html' | relative_url }}">notas</a></em>, ou veja o que estou fazendo <em><a href="{{ '/agora.html' | relative_url }}">agora</a></em>.
+    </p>
+  </div>
+
+  {% assign latest_post = site.posts | first %}
+  {% if latest_post %}
+  <div class="home-last">
+    <p class="home-last-eyebrow">Último ensaio &middot;
+      {{ latest_post.date | date: "%-d %b %Y" | replace: "Jan", "jan" | replace: "Feb", "fev" | replace: "Mar", "mar" | replace: "Apr", "abr" | replace: "May", "mai" | replace: "Jun", "jun" | replace: "Jul", "jul" | replace: "Aug", "ago" | replace: "Sep", "set" | replace: "Oct", "out" | replace: "Nov", "nov" | replace: "Dec", "dez" }}
+    </p>
+    <div class="home-last-grid">
+      <div class="home-last-cover">
+        {% if latest_post.image %}
+          <img src="{{ latest_post.image | relative_url }}" alt="">
+        {% else %}
+          <span>{{ latest_post.title | downcase | truncate: 14 }}</span>
+        {% endif %}
+      </div>
+      <div>
+        <h3 class="home-last-title"><a href="{{ latest_post.url | relative_url }}">{{ latest_post.title }}</a></h3>
+        <p class="home-last-excerpt">
+          {% assign excerpt_text = latest_post.excerpt | strip_html | strip %}
+          {% if excerpt_text and excerpt_text != '' %}
+            {{ excerpt_text | truncatewords: 28 }}
+          {% else %}
+            {{ latest_post.content | strip_html | truncatewords: 28 }}
+          {% endif %}
+        </p>
+        {% if latest_post.category %}
+          <p class="home-last-meta">{{ latest_post.category | downcase }} &middot; {% include reading-time.html content=latest_post.content %}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
 </section>
