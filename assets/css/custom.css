@@ -1671,7 +1671,8 @@ article .post-meta a:hover {
   margin-top: var(--spacing-md);
 }
 
-.advocacia-eyebrow {
+.advocacia-eyebrow,
+.sobre-eyebrow {
   font-size: 0.85rem;
   font-variant: small-caps;
   letter-spacing: 0.15em;
@@ -1681,14 +1682,16 @@ article .post-meta a:hover {
   margin: 0 0 0.6rem 0;
 }
 
-.advocacia-institucional h1 {
+.advocacia-institucional h1,
+.sobre-page h1 {
   font-size: 3rem;
   margin: 0 0 0.3rem 0;
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
 
-.advocacia-oab {
+.advocacia-oab,
+.sobre-subtitle {
   font-size: 0.95rem;
   font-variant: small-caps;
   letter-spacing: 0.05em;
@@ -1696,14 +1699,23 @@ article .post-meta a:hover {
   margin: 0 0 var(--spacing-md) 0;
 }
 
-.advocacia-lede {
+.sobre-subtitle {
+  font-style: italic;
+  font-variant: normal;
+  letter-spacing: 0;
+  font-size: 1.2rem;
+}
+
+.advocacia-lede,
+.sobre-lede {
   font-size: 1.4rem;
-  line-height: 1.6;
+  line-height: 1.65;
   width: 55%;
   margin: 0 0 var(--spacing-md) 0;
 }
 
-.advocacia-lede .newthought {
+.advocacia-lede .newthought,
+.sobre-lede .newthought {
   font-variant: small-caps;
   font-size: 1.1em;
   letter-spacing: 0.05em;
@@ -1737,7 +1749,8 @@ article .post-meta a:hover {
   width: 100%;
 }
 
-.advocacia-section {
+.advocacia-section,
+.sobre-section {
   width: 55%;
   margin: var(--spacing-lg) 0;
   padding-top: var(--spacing-md);
@@ -1745,7 +1758,8 @@ article .post-meta a:hover {
 }
 
 .advocacia-section .home-lede-eyebrow,
-.advocacia-section .advocacia-eyebrow {
+.advocacia-section .advocacia-eyebrow,
+.sobre-section .sobre-eyebrow {
   margin-bottom: 0.6rem;
 }
 
@@ -1755,6 +1769,48 @@ article .post-meta a:hover {
   font-style: italic;
   margin: 0 0 1rem 0;
   line-height: 1.6;
+}
+
+.sobre-section p {
+  font-size: 1.3rem;
+  line-height: 1.7;
+  margin: 0 0 1.2rem 0;
+  width: 100%;
+}
+
+.sobre-section p:last-child {
+  margin-bottom: 0;
+}
+
+.sobre-contato {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  width: 55%;
+  margin-top: var(--spacing-md);
+}
+
+.sobre-contato dt {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.sobre-contato dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+@media (max-width: 760px) {
+  .sobre-section,
+  .sobre-lede,
+  .sobre-contato {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
 }
 
 .advocacia-contato {
