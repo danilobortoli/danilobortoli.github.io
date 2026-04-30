@@ -1,0 +1,22 @@
+---
+layout: null
+permalink: /search.json
+---
+{
+  "items": [
+    {%- assign all_items = site.posts | concat: site.notas -%}
+    {%- for item in all_items -%}
+      {
+        "id": {{ forloop.index }},
+        "type": {% if item.collection == "notas" %}"nota"{% else %}"post"{% endif %},
+        "title": {{ item.title | default: "" | jsonify }},
+        "subtitle": {{ item.subtitle | default: "" | jsonify }},
+        "url": {{ item.url | relative_url | jsonify }},
+        "date": {{ item.date | date: "%Y-%m-%d" | jsonify }},
+        "date_display": {{ item.date | date: "%d/%m/%Y" | jsonify }},
+        "categories": {{ item.categories | jsonify }},
+        "content": {{ item.content | strip_html | normalize_whitespace | jsonify }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
