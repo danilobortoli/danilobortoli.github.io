@@ -1458,7 +1458,7 @@ article .post-meta a:hover {
   flex-wrap: wrap;
   border-bottom: 2px solid var(--color-border);
   position: relative;
-  padding: var(--spacing-sm) 0 var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md) 0;
   margin-bottom: var(--spacing-lg);
 }
 
