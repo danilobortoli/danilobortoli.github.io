@@ -2165,6 +2165,69 @@ article .post-meta a:hover {
 }
 
 /* ==========================================================================
+   Redesign 2026 — Paginação tipográfica (sem caixas, estilo Tufte)
+   ========================================================================== */
+
+.pagination {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  width: 87.5%;
+  margin: var(--spacing-xl) 0 0 0;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-lighter);
+}
+
+.pagination:empty {
+  display: none;
+}
+
+.pagination-btn {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.pagination-btn.active {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
+.pagination-ellipsis {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  user-select: none;
+}
+
+@media (max-width: 760px) {
+  .pagination {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
    Redesign 2026 — /agora
    ========================================================================== */
 
