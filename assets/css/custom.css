@@ -726,58 +726,18 @@ article .post-meta a:hover {
 
 /* ==========================================================================
    13. Dark Mode Override (mantém light mode)
+   --------------------------------------------------------------------------
+   O site usa papel creme. Quando o OS entra em dark mode, o Tufte CSS tenta
+   inverter para fundo preto/texto claro. Como custom.css carrega DEPOIS do
+   Tufte, as regras normais já vencem por ordem; aqui só travamos o fundo
+   e a cor base. Não forçar a/h1..h6/p — isso destrói cores intencionais
+   (ex: títulos brancos sobre hero, links de título com cor de texto).
    ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
-  body {
+  html, body, article {
     background-color: var(--color-background) !important;
     color: var(--color-text) !important;
-  }
-
-  article {
-    background-color: var(--color-background) !important;
-    color: var(--color-text) !important;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--color-text) !important;
-  }
-
-  p {
-    color: var(--color-text) !important;
-  }
-
-  a {
-    color: var(--color-link) !important;
-  }
-
-  a:hover {
-    color: var(--color-link-hover) !important;
-  }
-
-  .navigation a {
-    color: var(--color-text-muted) !important;
-  }
-
-  .navigation a:hover {
-    color: var(--color-accent) !important;
-  }
-
-  .credit-section {
-    color: var(--color-text-light) !important;
-  }
-
-  .credit-section a {
-    color: var(--color-text-light) !important;
-  }
-
-  .credit-section a:hover {
-    color: var(--color-text) !important;
-  }
-
-  .post-date,
-  .post-meta {
-    color: var(--color-text-light) !important;
   }
 }
 
