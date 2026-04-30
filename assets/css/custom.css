@@ -1445,3 +1445,749 @@ article .post-meta a:hover {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   Redesign 2026 — wordmark + nav header
+   ========================================================================== */
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--color-border);
+  position: relative;
+  padding: var(--spacing-sm) 0 var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--color-accent);
+}
+
+.site-wordmark {
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.site-wordmark:hover {
+  color: inherit;
+}
+
+.site-wordmark-name {
+  font-family: var(--font-body);
+  font-size: 1.7rem;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.site-wordmark-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.site-header .navigation {
+  margin: 0;
+  padding: 0;
+  border: none;
+  flex-shrink: 0;
+}
+
+.site-header .navigation::after {
+  display: none;
+}
+
+.site-header .navigation ul {
+  gap: 1.3rem;
+}
+
+.site-header .navigation a {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 760px) {
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+  .site-header .navigation ul {
+    gap: 1rem;
+  }
+}
+
+/* ==========================================================================
+   Redesign 2026 — Homepage editorial lede (B)
+   ========================================================================== */
+
+.home-lede {
+  margin-top: var(--spacing-md);
+  overflow: visible;
+}
+
+.home-lede-eyebrow {
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin: 0 0 0.6rem 0;
+}
+
+.home-lede h1 {
+  font-size: 3.2rem;
+  margin: 0 0 0.3rem 0;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.home-lede-subtitle {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--spacing-md) 0;
+  letter-spacing: 0.02em;
+}
+
+.home-lede-body p {
+  font-size: 1.4rem;
+  line-height: 1.7;
+  width: 55%;
+  margin: 0 0 1.4rem 0;
+}
+
+.home-lede-body p .newthought {
+  font-variant: small-caps;
+  font-size: 1.15em;
+  letter-spacing: 0.05em;
+}
+
+.home-last {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-lighter);
+  width: 55%;
+}
+
+.home-last-eyebrow {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin: 0 0 0.7rem 0;
+}
+
+.home-last-grid {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.home-last-cover {
+  width: 110px;
+  height: 70px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #2e3a4a, #0e1520);
+  display: flex;
+  align-items: flex-end;
+  padding: 0.4rem 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-style: italic;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+}
+
+.home-last-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.home-last-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.2;
+}
+
+.home-last-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.home-last-title a:hover {
+  color: var(--color-accent);
+}
+
+.home-last-excerpt {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin: 0.3rem 0 0 0;
+  font-style: italic;
+  line-height: 1.5;
+  width: 100%;
+}
+
+.home-last-meta {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-light);
+}
+
+@media (max-width: 760px) {
+  .home-lede-body p,
+  .home-last {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Redesign 2026 — /advocacia institutional
+   ========================================================================== */
+
+.advocacia-institucional {
+  margin-top: var(--spacing-md);
+}
+
+.advocacia-eyebrow {
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin: 0 0 0.6rem 0;
+}
+
+.advocacia-institucional h1 {
+  font-size: 3rem;
+  margin: 0 0 0.3rem 0;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.advocacia-oab {
+  font-size: 0.95rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.advocacia-lede {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  width: 55%;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.advocacia-lede .newthought {
+  font-variant: small-caps;
+  font-size: 1.1em;
+  letter-spacing: 0.05em;
+}
+
+.advocacia-eixos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 87.5%;
+  margin: var(--spacing-md) 0 var(--spacing-lg) 0;
+}
+
+.advocacia-eixo {
+  border-top: 3px solid var(--color-accent);
+  padding-top: 0.9rem;
+}
+
+.advocacia-eixo h3 {
+  font-style: normal;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.advocacia-eixo p {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.55;
+  width: 100%;
+}
+
+.advocacia-section {
+  width: 55%;
+  margin: var(--spacing-lg) 0;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-lighter);
+}
+
+.advocacia-section .home-lede-eyebrow,
+.advocacia-section .advocacia-eyebrow {
+  margin-bottom: 0.6rem;
+}
+
+.advocacia-section p {
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+}
+
+.advocacia-contato {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  width: 55%;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-lighter);
+}
+
+.advocacia-contato dt {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.advocacia-contato dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+@media (max-width: 760px) {
+  .advocacia-eixos,
+  .advocacia-section,
+  .advocacia-lede,
+  .advocacia-contato {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Redesign 2026 — Tag pill cloud (shared by /escrita, /notas)
+   ========================================================================== */
+
+.tag-cloud {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 1.2rem 0 var(--spacing-md) 0;
+  width: 87.5%;
+}
+
+.tag-pill {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.7rem;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.tag-pill:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+}
+
+.tag-pill.active {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+  font-weight: 600;
+}
+
+.tag-pill .tag-count {
+  opacity: 0.7;
+  margin-left: 0.3rem;
+}
+
+/* ==========================================================================
+   Redesign 2026 — /escrita typographic index
+   ========================================================================== */
+
+.escrita-index {
+  margin-top: var(--spacing-md);
+}
+
+.escrita-eyebrow {
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
+}
+
+.escrita-index h1 {
+  font-size: 3rem;
+  margin: 0 0 0.3rem 0;
+  letter-spacing: -0.02em;
+}
+
+.escrita-subtitle {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--spacing-sm) 0;
+  width: 55%;
+}
+
+.escrita-year {
+  margin: var(--spacing-lg) 0 0 0;
+  padding-bottom: 0;
+  width: 87.5%;
+}
+
+.escrita-year-heading {
+  font-size: 1rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  border-top: none;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 0 0.4rem 0;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.escrita-item {
+  display: grid;
+  grid-template-columns: 6rem 1fr 10rem;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--color-border-lighter);
+  align-items: baseline;
+}
+
+.escrita-item.featured {
+  grid-template-columns: 6rem 1fr;
+  padding: 1.5rem 0;
+}
+
+.escrita-item.hidden {
+  display: none;
+}
+
+.escrita-item-date {
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.escrita-item-title {
+  font-size: 1.15rem;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  border: none;
+  line-height: 1.35;
+}
+
+.escrita-item-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.escrita-item-title a:hover {
+  color: var(--color-accent);
+}
+
+.escrita-item.featured .escrita-item-title {
+  font-size: 1.45rem;
+  font-weight: 500;
+}
+
+.escrita-item-excerpt {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0.35rem 0 0.4rem 0;
+  line-height: 1.5;
+  width: 100%;
+}
+
+.escrita-item-meta {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.escrita-item.featured .escrita-item-meta {
+  text-align: left;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 760px) {
+  .escrita-subtitle,
+  .escrita-year,
+  .tag-cloud {
+    width: 100%;
+  }
+  .escrita-item,
+  .escrita-item.featured {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+  .escrita-item-meta {
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   Redesign 2026 — /notas with kind tags + media pill
+   ========================================================================== */
+
+.notas-archive .nota-archive-item.hidden {
+  display: none;
+}
+
+.nota-archive-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+
+.nota-archive-kind {
+  font-size: 0.7rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.nota-media-pill {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  background: var(--color-background-alt);
+  border-left: 2px solid var(--color-accent);
+  border-radius: 0 3px 3px 0;
+  margin: 0.6rem 0 0 0;
+  text-decoration: none;
+  color: inherit;
+  font-style: normal;
+  width: fit-content;
+}
+
+.nota-media-pill:hover {
+  background: #f5f4f0;
+}
+
+.nota-media-pill-type {
+  font-size: 0.7rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.nota-media-pill-title {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  font-style: italic;
+}
+
+.nota-media-pill-rating {
+  font-size: 0.9rem;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Redesign 2026 — /agora
+   ========================================================================== */
+
+.agora-page {
+  margin-top: var(--spacing-md);
+}
+
+.agora-eyebrow {
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
+}
+
+.agora-page h1 {
+  font-size: 3rem;
+  margin: 0 0 0.3rem 0;
+  letter-spacing: -0.02em;
+}
+
+.agora-subtitle {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin: 0;
+  width: 55%;
+}
+
+.agora-stamp {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.6rem;
+  margin: 0.8rem 0 var(--spacing-md) 0;
+  width: 55%;
+}
+
+.agora-section {
+  margin: var(--spacing-md) 0;
+  width: 55%;
+}
+
+.agora-section h2 {
+  font-size: 1rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  font-weight: 600;
+  border-top: none;
+  border-bottom: 1px solid var(--color-border-lighter);
+  padding: 0 0 0.4rem 0;
+  margin: 0 0 0.7rem 0;
+  font-style: normal;
+}
+
+.agora-section p {
+  font-size: 1.2rem;
+  line-height: 1.65;
+  margin: 0 0 0.8rem 0;
+  width: 100%;
+}
+
+.agora-media-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 0.7rem;
+}
+
+.agora-cover {
+  flex: 0 0 auto;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: flex-end;
+  padding: 0.4rem 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-style: italic;
+  font-size: 0.75rem;
+}
+
+.agora-cover.book {
+  width: 70px;
+  height: 105px;
+  background: linear-gradient(135deg, #3a4a5a, #111820);
+}
+
+.agora-cover.album {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #6a5185, #1e1226);
+}
+
+.agora-cover.album-2 {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #1a1a2e, #050510);
+}
+
+.agora-media-label {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.agora-media-label em {
+  font-style: italic;
+}
+
+.agora-media-meta {
+  font-size: 0.75rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+}
+
+.agora-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-top: 0.7rem;
+}
+
+.agora-grid-2 .agora-media-row {
+  margin-top: 0;
+}
+
+.agora-footer {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  border-top: 1px solid var(--color-border-lighter);
+  padding-top: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  width: 55%;
+}
+
+@media (max-width: 760px) {
+  .agora-section,
+  .agora-subtitle,
+  .agora-stamp,
+  .agora-footer {
+    width: 100%;
+  }
+  .agora-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

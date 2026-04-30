@@ -1,0 +1,120 @@
+---
+layout: default
+title: Escrita
+---
+
+{%- assign all_posts = site.posts | sort: 'date' | reverse -%}
+
+{%- comment -%}
+  Build tag list from post.category (singular) — fallback "outros".
+{%- endcomment -%}
+{%- assign tag_pairs = "" | split: "" -%}
+{%- for post in all_posts -%}
+  {%- if post.category -%}
+    {%- assign t = post.category | downcase -%}
+  {%- else -%}
+    {%- assign t = "outros" -%}
+  {%- endif -%}
+  {%- assign tag_pairs = tag_pairs | push: t -%}
+{%- endfor -%}
+{%- assign tags = tag_pairs | uniq | sort -%}
+
+<section class="escrita-index">
+  <p class="escrita-eyebrow">Escrita &middot; arquivo</p>
+  <h1>Ensaios</h1>
+  <p class="escrita-subtitle">Textos longos sobre direito, cultura e leituras. Ver também <a href="{{ '/notas.html' | relative_url }}">notas</a> (texto curto).</p>
+
+  <div class="tag-cloud" id="escrita-tags" role="list">
+    <button class="tag-pill active" data-tag="todos" type="button">todos<span class="tag-count">{{ all_posts.size }}</span></button>
+    {% for t in tags %}
+      {% assign count = 0 %}
+      {% for p in all_posts %}
+        {% if p.category %}{% assign pt = p.category | downcase %}{% else %}{% assign pt = "outros" %}{% endif %}
+        {% if pt == t %}{% assign count = count | plus: 1 %}{% endif %}
+      {% endfor %}
+      <button class="tag-pill" data-tag="{{ t }}" type="button">{{ t }}<span class="tag-count">{{ count }}</span></button>
+    {% endfor %}
+  </div>
+
+  {%- comment -%} Group by year. Pick first post of each year as featured. {%- endcomment -%}
+  {%- assign years = "" | split: "" -%}
+  {%- for post in all_posts -%}
+    {%- assign y = post.date | date: '%Y' -%}
+    {%- assign years = years | push: y -%}
+  {%- endfor -%}
+  {%- assign years_uniq = years | uniq -%}
+
+  {% for y in years_uniq %}
+    <section class="escrita-year">
+      <h2 class="escrita-year-heading">{{ y }}</h2>
+
+      {%- assign year_posts = "" | split: "" -%}
+      {%- for post in all_posts -%}
+        {%- assign py = post.date | date: '%Y' -%}
+        {%- if py == y -%}
+          {%- assign year_posts = year_posts | push: post -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {% for post in year_posts %}
+        {% if post.category %}{% assign pt = post.category | downcase %}{% else %}{% assign pt = "outros" %}{% endif %}
+        {% if forloop.first %}
+          <article class="escrita-item featured" data-tag="{{ pt }}">
+            <div class="escrita-item-date">
+              {{ post.date | date: "%-d %b" | replace: "Jan", "jan" | replace: "Feb", "fev" | replace: "Mar", "mar" | replace: "Apr", "abr" | replace: "May", "mai" | replace: "Jun", "jun" | replace: "Jul", "jul" | replace: "Aug", "ago" | replace: "Sep", "set" | replace: "Oct", "out" | replace: "Nov", "nov" | replace: "Dec", "dez" }}
+            </div>
+            <div>
+              <h3 class="escrita-item-title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+              {% if post.subtitle %}
+                <p class="escrita-item-excerpt">{{ post.subtitle }}</p>
+              {% else %}
+                {% assign excerpt_text = post.excerpt | strip_html | strip %}
+                {% if excerpt_text and excerpt_text != '' %}
+                  <p class="escrita-item-excerpt">{{ excerpt_text | truncatewords: 24 }}</p>
+                {% endif %}
+              {% endif %}
+              <p class="escrita-item-meta">{{ pt }} &middot; {% include reading-time.html content=post.content %}</p>
+            </div>
+          </article>
+        {% else %}
+          <article class="escrita-item" data-tag="{{ pt }}">
+            <div class="escrita-item-date">
+              {{ post.date | date: "%-d %b" | replace: "Jan", "jan" | replace: "Feb", "fev" | replace: "Mar", "mar" | replace: "Apr", "abr" | replace: "May", "mai" | replace: "Jun", "jun" | replace: "Jul", "jul" | replace: "Aug", "ago" | replace: "Sep", "set" | replace: "Oct", "out" | replace: "Nov", "nov" | replace: "Dec", "dez" }}
+            </div>
+            <h3 class="escrita-item-title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+            <div class="escrita-item-meta">{{ pt }} &middot; {% include reading-time.html content=post.content %}</div>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </section>
+  {% endfor %}
+</section>
+
+<script>
+  (function () {
+    var pills = document.querySelectorAll('#escrita-tags .tag-pill');
+    var items = document.querySelectorAll('.escrita-item');
+
+    pills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        var tag = pill.getAttribute('data-tag');
+        pills.forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+
+        items.forEach(function (item) {
+          if (tag === 'todos' || item.getAttribute('data-tag') === tag) {
+            item.classList.remove('hidden');
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+
+        // Hide year sections that have no visible items.
+        document.querySelectorAll('.escrita-year').forEach(function (section) {
+          var visible = section.querySelectorAll('.escrita-item:not(.hidden)').length;
+          section.style.display = visible === 0 ? 'none' : '';
+        });
+      });
+    });
+  })();
+</script>
