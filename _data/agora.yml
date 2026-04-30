@@ -54,11 +54,11 @@ lendo:
 #                       3. Para canção: pegue o ID do "Recording"
 # ---------------------------------------------------------------------
 ouvindo:
-  - titulo: "One Stop"
-    artista: "Aldous Harding"
-    ano: "2026"
+  - titulo: "CRANK"
+    artista: "Slayyyter"
+    ano: "2025"
     tipo: "canção"
-    musicbrainz_id: "3219236f-0d0c-41a7-90cf-670ec34f1220"
+    musicbrainz_id: "907fc9cf-7e66-4feb-901e-e5536b1b1b66"
  
 # ---------------------------------------------------------------------
 # FILMES (opcional — se estiver assistindo algo)
