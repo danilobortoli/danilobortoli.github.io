@@ -3,60 +3,99 @@ layout: default
 title: Agora
 ---
 
+{%- assign a = site.data.agora -%}
+
 <section class="agora-page">
   <p class="agora-eyebrow">Página nova</p>
   <h1>Agora</h1>
   <p class="agora-subtitle">O que estou fazendo, lendo e ouvindo neste momento. Atualizada quando algo muda.</p>
-  <p class="agora-stamp">Atualizada em 30 de abril de 2026 &middot; Marília, São Paulo</p>
+  <p class="agora-stamp">Atualizada em {{ a.atualizada_em }} &middot; {{ a.local }}</p>
 
+  {% if a.advocacia and a.advocacia != "" %}
   <section class="agora-section">
     <h2>Advocacia</h2>
-    <p>
-      Consultoria regulatória para uma exportadora brasileira — estou imerso na Diretiva 2000/36/EC e em correlatos da União Europeia.
-      Um caso de recuperação judicial em curso, e o trabalho contínuo na <a href="https://matra.org.br" target="_blank">MATRA</a>.
-    </p>
+    {{ a.advocacia | markdownify }}
   </section>
+  {% endif %}
 
+  {% if a.escrevendo and a.escrevendo != "" %}
   <section class="agora-section">
     <h2>Escrevendo</h2>
-    <p>
-      Um ensaio em gestação sobre <em>pré-compromissos constitucionais</em> — continuação de <em>As amarras de Ulisses e o STF</em>.
-      Para o <em><a href="https://thesinglesjukebox.com">The Singles Jukebox</a></em>, review da semana.
-    </p>
+    {{ a.escrevendo | markdownify }}
   </section>
+  {% endif %}
 
+  {% if a.lendo and a.lendo.size > 0 %}
   <section class="agora-section">
     <h2>Lendo</h2>
+    {% for livro in a.lendo %}
     <div class="agora-media-row">
-      <div class="agora-cover book"><span>Wuthering Heights</span></div>
+      <div class="agora-cover book"
+           data-media-type="livro"
+           {% if livro.openlibrary_id %}data-openlibrary-id="{{ livro.openlibrary_id }}"{% endif %}>
+        <span class="agora-cover-fallback">{{ livro.titulo | truncate: 16 }}</span>
+      </div>
       <div>
-        <p class="agora-media-label"><em>Wuthering Heights</em> &middot; Emily Brontë</p>
-        <p class="agora-media-meta">metade do livro &middot; absorto</p>
+        <p class="agora-media-label"><em class="agora-media-titulo">{{ livro.titulo }}</em>{% if livro.autor %} &middot; <span class="agora-media-creator">{{ livro.autor }}</span>{% else %} <span class="agora-media-creator"></span>{% endif %}</p>
+        {% if livro.status %}<p class="agora-media-meta">{{ livro.status }}</p>{% endif %}
       </div>
     </div>
+    {% endfor %}
   </section>
+  {% endif %}
 
+  {% if a.ouvindo and a.ouvindo.size > 0 %}
   <section class="agora-section">
     <h2>Ouvindo</h2>
     <div class="agora-grid-2">
+      {% for item in a.ouvindo %}
+      {%- assign tipo = item.tipo | default: "álbum" -%}
       <div class="agora-media-row">
-        <div class="agora-cover album"></div>
+        <div class="agora-cover {% cycle 'album', 'album-2' %}"
+             data-media-type="{{ tipo }}"
+             {% if item.musicbrainz_id %}data-musicbrainz-id="{{ item.musicbrainz_id }}"{% endif %}>
+        </div>
         <div>
-          <p class="agora-media-label"><em>One Stop</em></p>
-          <p class="agora-media-meta">Aldous Harding &middot; 2026</p>
+          <p class="agora-media-label"><em class="agora-media-titulo">{{ item.titulo }}</em></p>
+          <p class="agora-media-meta">
+            <span class="agora-media-creator">{% if item.artista %}{{ item.artista }}{% endif %}</span>
+            {% if item.artista and item.ano %} &middot; {% endif %}
+            <span class="agora-media-year">{% if item.ano %}{{ item.ano }}{% endif %}</span>
+          </p>
         </div>
       </div>
-      <div class="agora-media-row">
-        <div class="agora-cover album-2"></div>
-        <div>
-          <p class="agora-media-label"><em>Untrue</em></p>
-          <p class="agora-media-meta">Burial &middot; 2007 (de novo)</p>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </section>
+  {% endif %}
 
-  <p class="agora-footer">
-    Inspirado em <a href="https://nownownow.com" target="_blank">nownownow.com</a> (Derek Sivers). Uma <em>now page</em> declara foco atual e fica desatualizada — sinal, não ruído.
-  </p>
+  {% if a.assistindo and a.assistindo.size > 0 %}
+  <section class="agora-section">
+    <h2>Assistindo</h2>
+    {% for filme in a.assistindo %}
+    <div class="agora-media-row">
+      <div class="agora-cover book"
+           data-media-type="filme"
+           {% if filme.tmdb_id %}data-tmdb-id="{{ filme.tmdb_id }}"{% endif %}>
+        <span class="agora-cover-fallback">{{ filme.titulo | truncate: 16 }}</span>
+      </div>
+      <div>
+        <p class="agora-media-label"><em class="agora-media-titulo">{{ filme.titulo }}</em>{% if filme.diretor %} &middot; <span class="agora-media-creator">{{ filme.diretor }}</span>{% endif %}</p>
+        {% if filme.ano %}<p class="agora-media-meta agora-media-year">{{ filme.ano }}</p>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if a.rodape and a.rodape != "" %}
+  <div class="agora-footer">
+    {{ a.rodape | markdownify }}
+  </div>
+  {% endif %}
 </section>
+
+<script>
+  window.TMDB_API_KEY = "{{ site.tmdb_api_key }}";
+</script>
+<script src="{{ '/assets/js/agora-fetch.js' | relative_url }}"></script>

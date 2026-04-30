@@ -1,0 +1,92 @@
+# =====================================================================
+# Página /agora — edite este arquivo para atualizar a now page.
+# Ao salvar e rebuildar (ou com `jekyll serve --livereload`), o site
+# reflete a mudança.
+# =====================================================================
+
+# Data da última atualização e cidade onde está.
+atualizada_em: "30 de abril de 2026"
+local: "Marília, São Paulo"
+
+# Cada seção aceita texto livre em Markdown:
+#   *itálico*  **negrito**  [texto do link](url)
+# Para esconder uma seção, deixe vazia: advocacia: ""
+
+advocacia: |
+  Consultoria regulatória para uma exportadora brasileira — estou imerso na
+  Diretiva 2000/36/EC e em correlatos da União Europeia. Um caso de
+  recuperação judicial em curso, e o trabalho contínuo na
+  [MATRA](https://matra.org.br).
+
+escrevendo: |
+  Um ensaio em gestação sobre *pré-compromissos constitucionais* —
+  continuação de *As amarras de Ulisses e o STF*. Para o
+  [The Singles Jukebox](https://thesinglesjukebox.com), review da semana.
+
+# ---------------------------------------------------------------------
+# LIVROS
+# ---------------------------------------------------------------------
+# Para cada livro, você pode preencher só o que tiver:
+#   titulo:           obrigatório
+#   autor:            opcional (vem do OpenLibrary se houver ID)
+#   status:           opcional ("metade do livro", "começando", etc.)
+#   openlibrary_id:   opcional — se preencher, a capa real aparece.
+#                     Como achar:
+#                       1. Abra https://openlibrary.org e busque o livro
+#                       2. Na URL da edição, copie o trecho tipo OL1394865W
+#                          (works) ou OL12345M (edição específica)
+# ---------------------------------------------------------------------
+lendo:
+  - titulo: "Wuthering Heights"
+    autor: "Emily Brontë"
+    status: "metade do livro · absorto"
+    openlibrary_id: "OL1394865W"
+
+# ---------------------------------------------------------------------
+# MÚSICA (álbuns ou canções)
+# ---------------------------------------------------------------------
+# Para cada item:
+#   titulo:           obrigatório
+#   artista:          opcional
+#   ano:              opcional
+#   tipo:             "álbum" ou "canção" (default: "álbum")
+#   musicbrainz_id:   opcional — se preencher, a capa real aparece.
+#                     Como achar:
+#                       1. Abra https://musicbrainz.org e busque
+#                       2. Para álbum: pegue o ID do "Release group"
+#                          (formato: 3219236f-0d0c-41a7-90cf-670ec34f1220)
+#                       3. Para canção: pegue o ID do "Recording"
+# ---------------------------------------------------------------------
+ouvindo:
+  - titulo: "One Stop"
+    artista: "Aldous Harding"
+    ano: "2026"
+    tipo: "canção"
+    musicbrainz_id: "3219236f-0d0c-41a7-90cf-670ec34f1220"
+  - titulo: "Untrue"
+    artista: "Burial"
+    ano: "2007 (de novo)"
+    tipo: "álbum"
+    # musicbrainz_id: ""   # quando souber, descomente e cole
+
+# ---------------------------------------------------------------------
+# FILMES (opcional — se estiver assistindo algo)
+# ---------------------------------------------------------------------
+# Para cada filme:
+#   titulo:    obrigatório
+#   diretor:   opcional
+#   ano:       opcional
+#   tmdb_id:   opcional — se preencher, o pôster real aparece.
+#              Como achar: abra https://www.themoviedb.org e busque;
+#              o ID está na URL (ex: themoviedb.org/movie/603-the-matrix
+#              → tmdb_id: 603).
+# Para esconder a seção, deixe a lista vazia: assistindo: []
+# ---------------------------------------------------------------------
+assistindo: []
+
+# ---------------------------------------------------------------------
+# Texto opcional do rodapé. Apague tudo (rodape: "") pra remover.
+# ---------------------------------------------------------------------
+rodape: |
+  Inspirado em [nownownow.com](https://nownownow.com) (Derek Sivers).
+  Uma *now page* declara foco atual e fica desatualizada — sinal, não ruído.
