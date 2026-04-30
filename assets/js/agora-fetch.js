@@ -182,6 +182,20 @@
 
         if (data.covers && data.covers.length > 0) {
           setCoverImage(cover, "https://covers.openlibrary.org/b/id/" + data.covers[0] + "-M.jpg", data.title);
+        } else if (isWork) {
+          // Work doesn't have a cover at the work level; fall back to its editions.
+          fetch("https://openlibrary.org/works/" + id + "/editions.json?limit=50")
+            .then(function (resp) { return resp.ok ? resp.json() : null; })
+            .then(function (eds) {
+              if (!eds || !eds.entries) return;
+              var edWithCover = eds.entries.find(function (e) {
+                return e.covers && e.covers.length > 0 && e.covers[0] > 0;
+              });
+              if (edWithCover) {
+                setCoverImage(cover, "https://covers.openlibrary.org/b/id/" + edWithCover.covers[0] + "-M.jpg", data.title);
+              }
+            })
+            .catch(function () { /* mantém gradient */ });
         }
 
         var dateStr = data.first_publish_date || data.publish_date || "";
