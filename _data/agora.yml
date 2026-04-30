@@ -13,16 +13,12 @@ local: "Marília, São Paulo"
 # Para esconder uma seção, deixe vazia: advocacia: ""
 
 advocacia: |
-  Consultoria regulatória para uma exportadora brasileira — estou imerso na
-  Diretiva 2000/36/EC e em correlatos da União Europeia. Um caso de
-  recuperação judicial em curso, e o trabalho contínuo na
-  [MATRA](https://matra.org.br).
+ O trabalho contínuo na
+  [MATRA](https://matra.org.br). Analisei, recentemente, a legalidade da contratação, por inexigibilidade, da pintura do Mural da Biblioteca da UNESP de Marília. Foi um trabalho interessante e que vai gerar, acredito, questionamentos interessantes.
 
 escrevendo: |
   Um ensaio em gestação sobre *pré-compromissos constitucionais* —
-  continuação de *As amarras de Ulisses e o STF*. Para o
-  [The Singles Jukebox](https://thesinglesjukebox.com), review da semana.
-
+  continuação de *As amarras de Ulisses e o STF*. 
 # ---------------------------------------------------------------------
 # LIVROS
 # ---------------------------------------------------------------------
@@ -37,10 +33,10 @@ escrevendo: |
 #                          (works) ou OL12345M (edição específica)
 # ---------------------------------------------------------------------
 lendo:
-  - titulo: "Wuthering Heights"
-    autor: "Emily Brontë"
-    status: "metade do livro · absorto"
-    openlibrary_id: "OL1394865W"
+  - titulo: "Yesteryear"
+    autor: "Caro Claire Burke"
+    status: "começando"
+    openlibrary_id: "OL45188144W"
 
 # ---------------------------------------------------------------------
 # MÚSICA (álbuns ou canções)
@@ -63,12 +59,7 @@ ouvindo:
     ano: "2026"
     tipo: "canção"
     musicbrainz_id: "3219236f-0d0c-41a7-90cf-670ec34f1220"
-  - titulo: "Untrue"
-    artista: "Burial"
-    ano: "2007 (de novo)"
-    tipo: "álbum"
-    # musicbrainz_id: ""   # quando souber, descomente e cole
-
+ 
 # ---------------------------------------------------------------------
 # FILMES (opcional — se estiver assistindo algo)
 # ---------------------------------------------------------------------
