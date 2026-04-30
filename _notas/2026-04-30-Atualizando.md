@@ -1,6 +1,6 @@
 ---
 title: Atualizando
-date: 2026-04-30
+date: 2026-04-30 09:54:59 -0300
 ---
 Uma atualização disso [aqui](https://danilobortoli.github.io/direito/2026/04/08/Rodadas.html):
 
