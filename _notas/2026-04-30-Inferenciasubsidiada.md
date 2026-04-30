@@ -1,0 +1,5 @@
+---
+title: Inferência subsidiada
+date: 2026-04-30
+---
+Não me escapa o fato da Anthropic, no que concerne ao *Claude*, adotar práticas contra consumidores e anticoncorrenciais que fariam, e fazem na verdade, a Apple sentir inveja. Isso, contudo, não me faz agir porque ainda não afeta o meu brio, talvez com a exceção da diminuição de *rate limits* no produto que, aparentemente, agora parece ter sido corrigida com mais inferência subsidiada por bilhões de dólares oriundos de fundos privados em jogadas arriscadas de investimento. O meu trabalho, longe de ser a programação ou desenvolvimento, engenharia de *software* ou coisa do tipo, não queima tantos *tokens*, o que alivia a minha barra no final das contas para os deuses do silício. Trabalho na área jurídica, o que não parece ter sido tão afetado tanto assim. Ainda. Sou, no limite, um burguês safado.
