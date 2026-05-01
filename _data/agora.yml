@@ -5,7 +5,7 @@
 # =====================================================================
 
 # Data da última atualização e cidade onde está.
-atualizada_em: "30 de abril de 2026"
+atualizada_em: "01º de maio de 2026"
 local: "Marília, São Paulo"
 
 # Cada seção aceita texto livre em Markdown:
@@ -37,6 +37,11 @@ lendo:
     autor: "Caro Claire Burke"
     status: "começando"
     openlibrary_id: "OL61614155M"
+
+  - titulo: "The Technological Republic: Hard Power, Soft Belief, and the Future of the West"
+    autor: "Alexander C. Karp e Nicholas W. Zamiska"
+    status: "começando"
+    openlibrary_id: "OL57568144M"
 
 # ---------------------------------------------------------------------
 # MÚSICA (álbuns ou canções)
