@@ -1,6 +1,6 @@
 ---
 title: Invasão e indecência
-date: 2026-05-01
+date: 2026-05-01 19:06:03 -0300
 ---
 No *Ars Technica*, "[Meta cuts contractors who reported seeing Ray-Ban Meta users have sex](https://arstechnica.com/gadgets/2026/04/meta-cuts-contractors-who-reported-seeing-ray-ban-meta-users-have-sex/)":
 
