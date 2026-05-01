@@ -84,7 +84,11 @@ ouvindo:
 #              → tmdb_id: 603).
 # Para esconder a seção, deixe a lista vazia: assistindo: []
 # ---------------------------------------------------------------------
-assistindo: []
+assistindo: 
+ - titulo: "Servant"
+   diretor: "M. Night Shyamalan"
+   ano: "2019"
+   tmdb_id: "88055"
 
 # ---------------------------------------------------------------------
 # Texto opcional do rodapé. Apague tudo (rodape: "") pra remover.
