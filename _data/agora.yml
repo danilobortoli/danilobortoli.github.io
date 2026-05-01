@@ -64,6 +64,12 @@ ouvindo:
     ano: "2025"
     tipo: "canção"
     musicbrainz_id: "907fc9cf-7e66-4feb-901e-e5536b1b1b66"
+
+  - titulo: "Middle of Nowhere"
+    artista: "Kacey Musgraves"
+    ano: "2026"
+    tipo: "álbum"
+    musicbrainz_id: "dd02fe28-52e0-4a65-88f4-2417329c22e9"
  
 # ---------------------------------------------------------------------
 # FILMES (opcional — se estiver assistindo algo)
