@@ -59,11 +59,11 @@ lendo:
 #                       3. Para canção: pegue o ID do "Recording"
 # ---------------------------------------------------------------------
 ouvindo:
-  - titulo: "CRANK"
-    artista: "Slayyyter"
-    ano: "2025"
-    tipo: "canção"
-    musicbrainz_id: "907fc9cf-7e66-4feb-901e-e5536b1b1b66"
+  - titulo: "Sd-3"
+    artista: "Loukeman"
+    ano: "2026"
+    tipo: "álbum"
+    musicbrainz_id: "f357c89e-131c-43b3-af51-0236289dc00e"
 
   - titulo: "Middle of Nowhere"
     artista: "Kacey Musgraves"
