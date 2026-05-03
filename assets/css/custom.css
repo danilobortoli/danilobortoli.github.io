@@ -1204,6 +1204,308 @@ article .post-meta a:hover {
   }
 }
 
+/* ==========================================================================
+   16b. Media Review — Variant B (Marginalia Tufte) and C (Floating Compact)
+   --------------------------------------------------------------------------
+   Inspired by The Dissolve / Tufte sidenotes — media floats alongside the
+   text instead of interrupting it as a centered card.
+   ========================================================================== */
+
+/* Contain the floated sidecar so subsequent content doesn't bleed into it. */
+.post-content,
+.nota-single-content {
+  display: flow-root;
+}
+
+/* Widen the nota column when there's a media sidecar so text + sidecar fit. */
+.nota-single:has(.media-review--compact),
+.nota-single:has(.media-review--marginalia) {
+  max-width: 800px;
+}
+
+/* ----- B. Marginalia Tufte — sem caixa, hairlines, regra preta no topo ---- */
+.media-review--marginalia {
+  display: block;
+  float: right;
+  clear: right;
+  width: 36%;
+  margin: 0 0 1.4rem 1.5rem;
+  padding: 0.8rem 0 0;
+  background: transparent;
+  border: none;
+  border-top: 2px solid #222;
+  border-radius: 0;
+  font-family: var(--font-body);
+}
+
+.media-review--marginalia .media-review-cover {
+  flex: none;
+  margin: 0 0 0.9rem 0;
+}
+
+.media-review--marginalia .media-review-img,
+.media-review--marginalia .media-review-placeholder {
+  width: 120px;
+  height: auto;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.media-review--marginalia .media-review-placeholder {
+  height: 170px;
+}
+
+.media-review--marginalia .media-review-info {
+  flex: none;
+  min-width: 0;
+}
+
+.media-review--marginalia .media-review-type {
+  display: block;
+  font-size: 0.7rem;
+  font-variant: small-caps;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.media-review--marginalia .media-review-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1.25;
+  margin: 0 0 0.8rem 0;
+  min-height: 0;
+}
+
+.media-review--marginalia .media-review-meta {
+  margin: 0;
+  padding: 0;
+}
+
+.media-review--marginalia .media-review-field {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.25rem 0;
+  margin: 0;
+  border-bottom: 1px solid var(--color-border-lighter);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.media-review--marginalia .media-review-field:last-of-type {
+  border-bottom: none;
+}
+
+.media-review--marginalia .media-review-field dt {
+  flex: 0 0 35%;
+  margin: 0;
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.media-review--marginalia .media-review-field dt::after {
+  content: '';
+}
+
+.media-review--marginalia .media-review-field dd {
+  margin: 0;
+  flex: 1;
+  color: var(--color-text);
+}
+
+.media-review--marginalia .media-review-rating {
+  margin-top: 0.9rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-border-lighter);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.media-review--marginalia .media-review-rating-value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.media-review--marginalia .media-review-rating-max {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+}
+
+.media-review--marginalia .media-review-rating-bar {
+  flex: 1 1 100%;
+  margin-top: 0.35rem;
+  height: 2px;
+  background: var(--color-border-light);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.media-review--marginalia .media-review-rating-fill {
+  border-radius: 0;
+}
+
+/* ----- C. Floating Compact — capa pequena + meta horizontal mínima -------- */
+.media-review--compact {
+  float: right;
+  clear: right;
+  width: 34%;
+  margin: 0 0 1.4rem 1.5rem;
+  padding: 0.35rem 0 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  display: flex;
+  gap: 0.9rem;
+  font-family: var(--font-body);
+}
+
+.media-review--compact .media-review-cover {
+  flex: 0 0 110px;
+}
+
+.media-review--compact .media-review-img,
+.media-review--compact .media-review-placeholder {
+  width: 110px;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+.media-review--compact .media-review-placeholder {
+  height: 155px;
+}
+
+.media-review--compact .media-review-info {
+  flex: 1;
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+.media-review--compact .media-review-type {
+  display: block;
+  font-size: 0.68rem;
+  font-variant: small-caps;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.media-review--compact .media-review-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1.25;
+  margin: 0 0 0.35rem 0;
+  min-height: 0;
+}
+
+.media-review--compact .media-review-meta {
+  display: block;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--color-text-light);
+  line-height: 1.4;
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+}
+
+.media-review--compact .media-review-field {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.media-review--compact .media-review-field dt {
+  display: none;
+}
+
+.media-review--compact .media-review-field dd {
+  display: inline;
+  margin: 0;
+  color: inherit;
+}
+
+.media-review--compact .media-review-field + .media-review-field::before {
+  content: ' · ';
+}
+
+.media-review--compact .media-review-rating {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 0.78rem;
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  color: var(--color-text-light);
+}
+
+.media-review--compact .media-review-rating-value {
+  font-style: normal;
+  font-variant: normal;
+  letter-spacing: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-right: 1px;
+  line-height: 1;
+}
+
+.media-review--compact .media-review-rating-max {
+  font-size: 0.78rem;
+  color: var(--color-text-light);
+}
+
+.media-review--compact .media-review-rating-bar {
+  display: none;
+}
+
+/* Mobile: variants collapse to full-width and stack normally. */
+@media (max-width: 760px) {
+  .media-review--marginalia,
+  .media-review--compact {
+    float: none;
+    width: 100%;
+    margin: var(--spacing-md) 0;
+  }
+
+  .media-review--marginalia {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .media-review--compact {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .media-review--compact .media-review-field,
+  .media-review--marginalia .media-review-field {
+    justify-content: flex-start;
+  }
+}
+
+@media print {
+  .media-review--marginalia,
+  .media-review--compact {
+    float: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+}
+
 @media print {
   .media-review {
     border: 1px solid #ccc;
