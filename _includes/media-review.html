@@ -1,5 +1,6 @@
 {% if page.media %}
-<aside class="media-review" data-media-type="{{ page.media.type }}"
+{% assign mr_variant = include.variant | default: 'compact' %}
+<aside class="media-review media-review--{{ mr_variant }}" data-media-type="{{ page.media.type }}"
   {% if page.media.tmdb_id %}data-tmdb-id="{{ page.media.tmdb_id }}"{% endif %}
   {% if page.media.musicbrainz_id %}data-musicbrainz-id="{{ page.media.musicbrainz_id }}"{% endif %}
   {% if page.media.openlibrary_id %}data-openlibrary-id="{{ page.media.openlibrary_id }}"{% endif %}>
