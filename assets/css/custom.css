@@ -56,11 +56,13 @@
 html {
   color-scheme: light;
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
   background-color: var(--color-background) !important;
   color: var(--color-text) !important;
+  overflow-x: clip;
 }
 
 /* Animação sutil ao carregar */
@@ -919,18 +921,16 @@ article .post-meta a:hover {
 }
 
 /* ==========================================================================
-   15. Post Hero - Imagem de capa (largura contida)
+   15. Post Hero - Full-bleed Image (Varyer Style)
    ========================================================================== */
 
 .post-hero {
   position: relative;
-  width: 100%;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  height: 60vh;
-  min-height: 360px;
-  max-height: 600px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 70vh;
+  min-height: 400px;
+  max-height: 700px;
   margin-bottom: var(--spacing-xl);
   overflow: hidden;
 }
@@ -1217,19 +1217,6 @@ article .post-meta a:hover {
 .post-content,
 .nota-single-content {
   display: flow-root;
-}
-
-/* Constrain post column width so images and text don't spread too wide. */
-.post-content {
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.post-content img,
-.nota-single-content img {
-  max-width: 100%;
-  height: auto;
 }
 
 /* Widen the nota column when there's a media sidecar so text + sidecar fit. */
