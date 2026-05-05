@@ -7,7 +7,7 @@ media:
   artista: Quiet Light
   ano: 2026
   nota: 5.6
-date: 2026-05-05
+date: 2026-05-05 18:06:37 -0300
 ---
 
 Não escutei muita coisa aqui. Nem sei se há algo, enfim, a ser escutado além do pop letárgico lugar-comum de hoje em dia. 
