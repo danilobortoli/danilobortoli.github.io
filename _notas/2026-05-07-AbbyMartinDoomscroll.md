@@ -1,6 +1,6 @@
 ---
 title: Occupy e 4chan
-date: 2026-05-07
+date: 2026-05-07 20:05:53 -0300
 ---
 <iframe width="866" height="487" src="https://www.youtube.com/embed/JJPitLiPsVw" title="Abby Martin: Deep State and US Empire | Doomscroll" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
