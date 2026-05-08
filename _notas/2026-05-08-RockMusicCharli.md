@@ -6,6 +6,7 @@ media:
   titulo: Rock Music
   artista: Charli XCX
   ano: 2026
+  nota: 7.9
 date: 2026-05-08 19:50:51 -0300
 ---
 
