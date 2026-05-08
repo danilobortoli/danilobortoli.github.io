@@ -6,7 +6,7 @@ media:
   titulo: Rock Music
   artista: Charli XCX
   ano: 2026
-date: 2026-05-08
+date: 2026-05-08 19:50:51 -0300
 ---
 
 Já vi de tudo na _timeline_ hoje: dizem que "Rock Music" é boba, _clickbait_, algo digno de um _troll_[^1]; que esse é o começo da irrelevância. 
