@@ -1,0 +1,442 @@
+/* ============================================================
+   Notas — page styles (redesign)
+   Single density (cozy) + single separator (fleuron) baked in.
+   ============================================================ */
+
+:root {
+  --notas-col: 640px;
+  --notas-margin-w: 240px;
+  --notas-margin-gap: 56px;
+
+  --notas-fs: 20px;
+  --notas-lh: 1.65;
+  --notas-gap: 4.5rem;
+  --notas-para: 1.15rem;
+}
+
+html, body { background: var(--color-background); }
+
+.notas-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 4rem 5rem 6rem;
+  position: relative;
+  animation: notasFade .5s ease-out;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+@keyframes notasFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Hide the site-wide nav on the notas index — the page draws its own. */
+.notas-page-host > .site-header,
+.notas-page-host > article > .site-header { display: none; }
+
+/* ----- Top navigation (minimal, matches design) ----- */
+.notas-nav {
+  display: flex; gap: 2rem;
+  padding: 1rem 0 1.4rem;
+  border-bottom: 2px solid var(--color-border);
+  position: relative;
+  margin-bottom: 4rem;
+}
+.notas-nav::after {
+  content: ""; position: absolute; left: 0; bottom: -2px;
+  width: 60px; height: 2px; background: var(--color-accent);
+}
+.notas-nav a {
+  font-size: .95rem;
+  font-variant: small-caps;
+  letter-spacing: .05em;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color .25s;
+}
+.notas-nav a:hover { color: var(--color-accent); }
+.notas-nav a.active { color: var(--color-text); font-weight: 600; }
+
+/* ----- Page header ----- */
+.notas-header {
+  margin-bottom: 3rem;
+  max-width: var(--notas-col);
+}
+.notas-header h1 {
+  font-size: 3.2rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  margin: 0 0 .9rem;
+  color: var(--color-text);
+}
+.notas-header .lede {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  max-width: 36em;
+  margin: 0;
+}
+.notas-header .meta {
+  margin-top: 1.4rem;
+  font-size: .8rem;
+  font-variant: small-caps;
+  letter-spacing: .08em;
+  color: var(--color-text-light);
+}
+.notas-header .meta b { color: var(--color-text); font-weight: 600; }
+.notas-header .meta .meta-sep { margin: 0 .6em; color: var(--color-border); }
+.notas-header .meta .feed-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-border);
+}
+.notas-header .meta .feed-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
+
+/* ----- Two-column layout: feed + sticky index ----- */
+.notas-layout {
+  display: grid;
+  grid-template-columns: minmax(0, calc(var(--notas-col) + var(--notas-margin-w) + var(--notas-margin-gap))) 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.notas-feed { position: relative; }
+
+/* ----- Index rail (sticky) ----- */
+.notas-index {
+  position: sticky;
+  top: 2.4rem;
+  font-size: .85rem;
+  color: var(--color-text-muted);
+  padding-top: .25rem;
+}
+.notas-index-head {
+  font-variant: small-caps;
+  letter-spacing: .1em;
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  padding-bottom: .6rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-lighter);
+  text-align: left;
+}
+.notas-index ul { list-style: none; padding: 0; margin: 0; }
+.notas-index .yr {
+  font-variant: small-caps;
+  letter-spacing: .06em;
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: .85rem;
+  margin: 1.4rem 0 .55rem;
+}
+.notas-index .yr:first-child { margin-top: 0; }
+.notas-index .mo {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: .25rem 0;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color .2s;
+  position: relative;
+}
+.notas-index .mo:hover { color: var(--color-accent); }
+.notas-index .mo.is-current { color: var(--color-text); font-weight: 600; }
+.notas-index .mo.is-current::before {
+  content: "›";
+  position: absolute;
+  left: -1.1rem;
+  color: var(--color-accent);
+}
+.notas-index .mo-name { font-variant: normal; }
+.notas-index .mo-count {
+  font-size: .7rem;
+  color: var(--color-text-light);
+  font-variant: small-caps;
+  letter-spacing: .03em;
+}
+.notas-index .ornament {
+  text-align: center;
+  color: var(--color-accent);
+  opacity: .35;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* ----- A nota entry ----- */
+.nota {
+  display: grid;
+  grid-template-columns: minmax(0, var(--notas-col)) var(--notas-margin-w);
+  gap: var(--notas-margin-gap);
+  scroll-margin-top: 80px;
+}
+.nota + .nota,
+.nota-sep + .nota { margin-top: var(--notas-gap); }
+
+/* Right margin: date + permalink (Tufte marginnote style) */
+.nota-margin {
+  grid-column: 2; grid-row: 1;
+  padding-top: .55rem;
+  font-size: .82rem;
+  line-height: 1.5;
+  color: var(--color-text-light);
+  font-variant: small-caps;
+  letter-spacing: .05em;
+  font-style: normal;
+}
+.nota-margin .day {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: .92rem;
+}
+.nota-margin .year {
+  display: block;
+  font-size: .72rem;
+  letter-spacing: .08em;
+  margin-top: .15rem;
+  color: var(--color-text-light);
+}
+.nota-margin .perma {
+  display: inline-block;
+  margin-top: .5rem;
+  font-size: .7rem;
+  color: var(--color-text-light);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-border);
+  padding-bottom: 1px;
+  transition: color .2s, border-color .2s;
+  cursor: pointer;
+}
+.nota-margin .perma:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.nota-margin .perma::before { content: "#"; opacity: .7; margin-right: .1em; }
+
+/* Body column */
+.nota-body { grid-column: 1; grid-row: 1; min-width: 0; }
+.nota-title {
+  font-size: 1.85rem;
+  line-height: 1.2;
+  font-weight: 600;
+  margin: 0 0 .6rem;
+  letter-spacing: -0.005em;
+  color: var(--color-text);
+}
+.nota-title a {
+  color: inherit;
+  text-decoration: none;
+  background-image: none;
+  transition: color .2s;
+}
+.nota-title a:hover { color: var(--color-accent); }
+.nota-subtitle {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--color-text-light);
+  margin: -.2rem 0 1rem;
+  line-height: 1.4;
+}
+
+/* Markdown rendered body */
+.nota-body .nota-content > * { font-family: var(--font-body); }
+.nota-body .nota-content p,
+.nota-body .nota-content li {
+  font-size: var(--notas-fs);
+  line-height: var(--notas-lh);
+  color: var(--color-text);
+  text-wrap: pretty;
+  hyphens: auto;
+}
+.nota-body .nota-content p {
+  margin: 0 0 var(--notas-para);
+}
+.nota-body .nota-content p:last-child { margin-bottom: 0; }
+.nota-body .nota-content blockquote {
+  font-style: italic;
+  color: var(--color-text-muted);
+  border-left: 2px solid var(--color-border);
+  padding-left: 1.2rem;
+  margin: 0 0 var(--notas-para);
+}
+.nota-body .nota-content a {
+  color: var(--color-link);
+  text-decoration: underline;
+  text-decoration-color: rgba(26,115,232,0.3);
+  text-underline-offset: 3px;
+}
+.nota-body .nota-content a:hover { color: var(--color-link-hover); }
+.nota-body .nota-content em { font-style: italic; }
+.nota-body .nota-content strong { font-weight: 600; }
+.nota-body .nota-content code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 0.2em 0.4em;
+  background: var(--color-background-alt);
+  color: var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+.nota-body .nota-content img {
+  max-width: 100%; height: auto;
+  border-radius: var(--radius-sm);
+}
+.nota-body .nota-content iframe {
+  max-width: 100%;
+}
+
+/* ----- Media stripe: one-line meta with tiny cover ----- */
+.nota-media {
+  display: flex; align-items: center; gap: .9rem;
+  margin: 1rem 0 1.2rem;
+  padding: .55rem .8rem .55rem .55rem;
+  background: var(--color-background-alt);
+  border-left: 2px solid var(--color-accent);
+  border-radius: 0 4px 4px 0;
+  font-size: .92rem;
+  line-height: 1.4;
+  width: fit-content;
+  max-width: 100%;
+}
+.nota-media-cover {
+  width: 30px; height: 42px;
+  border-radius: 2px;
+  flex: 0 0 30px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  background-size: cover;
+  background-position: center;
+}
+.nota-media-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.nota-media-line1 {
+  font-variant: small-caps;
+  letter-spacing: .08em;
+  font-size: .7rem;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.nota-media-line2 { color: var(--color-text); font-style: normal; }
+.nota-media-line2 b { font-weight: 600; }
+.nota-media-line2 em { font-style: italic; color: var(--color-text-muted); }
+.nota-media-rating {
+  font-variant: small-caps;
+  font-size: .72rem;
+  letter-spacing: .05em;
+  color: var(--color-text-muted);
+  margin-left: .35em;
+}
+.nota-media-rating b { color: var(--color-accent); font-weight: 600; }
+
+/* Default palettes per media type — used when no explicit colors set. */
+.nota-media-cover[data-mtype="filme"]   { background: linear-gradient(135deg, #7a3c3c 0%, #2a1111 100%); }
+.nota-media-cover[data-mtype="álbum"]   { background: linear-gradient(135deg, #a54a6f 0%, #3a1525 100%); }
+.nota-media-cover[data-mtype="canção"]  { background: linear-gradient(135deg, #6a5185 0%, #1e1226 100%); }
+.nota-media-cover[data-mtype="livro"]   { background: linear-gradient(135deg, #3a4a5a 0%, #111820 100%); }
+
+/* ----- Separators between notas (fleuron) ----- */
+.nota-sep {
+  text-align: center;
+  margin: var(--notas-gap) 0;
+  color: var(--color-accent);
+  opacity: .35;
+  font-size: 1.4rem;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ----- Pagination ----- */
+.notas-pager-wrap {
+  margin-top: 6rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border-lighter);
+  max-width: calc(var(--notas-col) + var(--notas-margin-w) + var(--notas-margin-gap));
+}
+.notas-pager-ornament {
+  text-align: center;
+  color: var(--color-accent);
+  opacity: .4;
+  font-size: 1.2rem;
+  margin-bottom: 1.4rem;
+}
+.notas-pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.2rem;
+  font-size: .95rem;
+  font-variant: small-caps;
+  letter-spacing: .05em;
+  color: var(--color-text-muted);
+}
+.notas-pager a {
+  color: var(--color-link);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(26,115,232,0.3);
+  padding-bottom: 1px;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+  background: none;
+  font: inherit;
+  font-variant: small-caps;
+  letter-spacing: .05em;
+}
+.notas-pager a:hover { color: var(--color-link-hover); border-color: var(--color-link-hover); }
+.notas-pager .disabled {
+  color: var(--color-border);
+  cursor: not-allowed;
+  pointer-events: none;
+  border-bottom-color: transparent;
+}
+.notas-pager .center { color: var(--color-text-light); }
+.notas-pager .center b { color: var(--color-text); font-weight: 600; }
+
+/* ----- Footer below pager ----- */
+.notas-foot {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  font-size: .85rem;
+  color: var(--color-text-light);
+  max-width: calc(var(--notas-col) + var(--notas-margin-w) + var(--notas-margin-gap));
+  text-align: center;
+}
+.notas-foot::before {
+  content: "❧"; display: block;
+  font-size: 1.3rem; color: var(--color-accent); opacity: .5;
+  margin-bottom: 1rem;
+}
+
+/* ----- Anchor highlight when permalink clicked ----- */
+.nota:target,
+.nota.anchor-flash {
+  animation: notaPing 1.6s ease;
+}
+@keyframes notaPing {
+  0%   { background: rgba(170,0,0,0); }
+  20%  { background: rgba(170,0,0,0.06); }
+  100% { background: rgba(170,0,0,0); }
+}
+
+/* Pagination hides notas server-rendered; JS toggles .is-page-visible. */
+.nota.is-paged-out,
+.nota-sep.is-paged-out { display: none; }
+
+/* ----- Mobile collapse ----- */
+@media (max-width: 980px) {
+  .notas-page { padding: 2rem 1.5rem 4rem; }
+  .notas-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .notas-index {
+    position: static;
+    border-top: 1px solid var(--color-border-lighter);
+    padding-top: 2rem;
+    margin-top: 3rem;
+    order: 2;
+  }
+  .nota { grid-template-columns: 1fr; gap: 0; }
+  .nota-margin {
+    grid-column: 1; grid-row: 1;
+    padding-top: 0;
+    margin-bottom: .35rem;
+    display: flex; align-items: baseline; gap: .8rem;
+  }
+  .nota-margin .year { display: inline; margin-top: 0; }
+  .nota-margin .perma { margin-top: 0; margin-left: auto; }
+  .nota-body { grid-column: 1; grid-row: 2; }
+  .notas-header h1 { font-size: 2.4rem; }
+}
