@@ -48,4 +48,5 @@ exclude:
   - _notas/_template.md
   - _posts/_template.md
   - _guia-media-review.html
+  - telegram-bot
 
