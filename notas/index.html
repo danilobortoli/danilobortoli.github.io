@@ -1,0 +1,331 @@
+---
+permalink: /notas/
+title: Notas
+sitemap:
+  changefreq: weekly
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Notas — {{ site.title }}</title>
+<link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
+<link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}"/>
+<link rel="stylesheet" href="{{ '/assets/css/notas.css' | relative_url }}"/>
+</head>
+<body>
+{%- assign meses = "janeiro,fevereiro,março,abril,maio,junho,julho,agosto,setembro,outubro,novembro,dezembro" | split: "," -%}
+{%- assign all_notas = site.notas | sort: 'date' | reverse -%}
+{%- assign oldest = all_notas | last -%}
+{%- assign oldest_m_idx = oldest.date | date: "%-m" | minus: 1 -%}
+{%- assign oldest_month_name = meses[oldest_m_idx] -%}
+{%- assign oldest_year = oldest.date | date: "%Y" -%}
+{%- assign months = all_notas | group_by_exp: "n", "n.date | date: '%Y-%m'" -%}
+
+<div class="notas-page" data-density="cozy" data-sep="fleuron">
+
+  <nav class="notas-nav" aria-label="Navegação">
+    <a href="{{ '/' | relative_url }}">Início</a>
+    <a href="{{ '/escrita.html' | relative_url }}">Escrita</a>
+    <a href="{{ '/notas/' | relative_url }}" class="active">Notas</a>
+    <a href="{{ '/advocacia.html' | relative_url }}">Advocacia</a>
+    <a href="{{ '/agora.html' | relative_url }}">Agora</a>
+    <a href="{{ '/sobre.html' | relative_url }}">Sobre</a>
+  </nav>
+
+  <header class="notas-header">
+    <h1>Notas</h1>
+    <p class="lede">
+      Pequenos pensamentos, links interessantes e observações rápidas
+      que não justificam um post completo — em ordem cronológica reversa,
+      de cima para baixo, como num caderno encadernado pelo fim.
+    </p>
+    <div class="meta">
+      <b>{{ all_notas.size }}</b> notas
+      <span class="meta-sep">·</span>
+      desde {{ oldest_month_name }} de {{ oldest_year }}
+      <span class="meta-sep">·</span>
+      <a class="feed-link" href="{{ '/feed.xml' | relative_url }}">feed rss</a>
+    </div>
+  </header>
+
+  <div class="notas-layout">
+    <div class="notas-feed" id="notas-feed">
+
+      {%- for nota in all_notas -%}
+        {%- assign anchor_id = nota.url | replace: "/notas/", "" | replace: "/", "" -%}
+        {%- assign month_key = nota.date | date: "%Y-%m" -%}
+        {%- assign day_n = nota.date | date: "%-d" -%}
+        {%- assign mo_idx = nota.date | date: "%-m" | minus: 1 -%}
+        {%- assign mo_name = meses[mo_idx] -%}
+        {%- assign yr = nota.date | date: "%Y" -%}
+        <article id="n-{{ anchor_id }}" class="nota" data-month="{{ month_key }}" data-anchor="{{ anchor_id }}">
+          <aside class="nota-margin">
+            <span class="day">{{ day_n }} de {{ mo_name }}</span>
+            <span class="year">{{ yr }}</span>
+            <a class="perma" href="#n-{{ anchor_id }}" data-perma="{{ anchor_id }}">permalink</a>
+          </aside>
+          <div class="nota-body">
+            {%- if nota.title and nota.title != "" -%}
+            <h2 class="nota-title">
+              <a href="{{ nota.url | relative_url }}">{{ nota.title }}</a>
+            </h2>
+            {%- endif -%}
+            {%- if nota.subtitle -%}
+            <div class="nota-subtitle">{{ nota.subtitle }}</div>
+            {%- endif -%}
+            {%- if nota.media and nota.media.type -%}
+              {%- assign mtype = nota.media.type | downcase -%}
+              {%- assign mtitle = nota.media.titulo -%}
+              {%- assign mcreator = nota.media.artista | default: nota.media.diretor | default: nota.media.autor -%}
+              {%- assign myear = nota.media.ano -%}
+              {%- assign mrating = nota.media.nota -%}
+              <a class="nota-media" href="{{ nota.url | relative_url }}">
+                <span class="nota-media-cover" data-mtype="{{ mtype }}"{% if nota.media.capa %} style="background-image:url('{{ nota.media.capa }}')"{% endif %}></span>
+                <span class="nota-media-info">
+                  <span class="nota-media-line1">{{ nota.media.type }}</span>
+                  <span class="nota-media-line2">
+                    {%- if mtitle -%}<em>{{ mtitle }}</em>{%- endif -%}
+                    {%- if mcreator -%}{%- if mtitle %} · {% endif -%}{{ mcreator }}{%- endif -%}
+                    {%- if myear -%}
+                      {%- if mtitle or mcreator -%}, {% endif -%}{{ myear }}
+                    {%- endif -%}
+                    {%- if mrating -%}<span class="nota-media-rating"> <b>{{ mrating }}</b>/10</span>{%- endif -%}
+                  </span>
+                </span>
+              </a>
+            {%- endif -%}
+            <div class="nota-content">
+              {{ nota.content }}
+            </div>
+          </div>
+        </article>
+        {%- unless forloop.last -%}
+        <div class="nota-sep" aria-hidden="true">❧</div>
+        {%- endunless -%}
+      {%- endfor -%}
+
+      <div class="notas-pager-wrap">
+        <div class="notas-pager-ornament">❧</div>
+        <nav class="notas-pager" id="notas-pager" aria-label="Paginação">
+          <a id="pager-prev" href="#" data-dir="prev">« anterior</a>
+          <span class="center">página <b id="pager-cur">1</b> de <b id="pager-total">1</b></span>
+          <a id="pager-next" href="#" data-dir="next">próxima »</a>
+        </nav>
+      </div>
+
+      <footer class="notas-foot">
+        Danilo Bortoli · OAB/SP 409.024<br/>
+        Marília, São Paulo
+      </footer>
+    </div>
+
+    <nav class="notas-index" id="notas-index" aria-label="Arquivo de notas">
+      <div class="ornament">❧</div>
+      <div class="notas-index-head">Arquivo</div>
+      {%- assign last_year = "" -%}
+      {%- for group in months -%}
+        {%- assign first_nota = group.items | first -%}
+        {%- assign g_year = first_nota.date | date: "%Y" -%}
+        {%- assign g_mo_idx = first_nota.date | date: "%-m" | minus: 1 -%}
+        {%- assign g_mo_name = meses[g_mo_idx] -%}
+        {%- assign g_first_anchor = first_nota.url | replace: "/notas/", "" | replace: "/", "" -%}
+        {%- if g_year != last_year -%}
+          {%- unless last_year == "" -%}</ul>{%- endunless -%}
+          <div class="yr">{{ g_year }}</div>
+          <ul>
+          {%- assign last_year = g_year -%}
+        {%- endif -%}
+          <li>
+            <a class="mo" data-month="{{ group.name }}" data-first-anchor="{{ g_first_anchor }}" href="#n-{{ g_first_anchor }}">
+              <span class="mo-name">{{ g_mo_name }}</span>
+              <span class="mo-count">{{ group.items.size }}</span>
+            </a>
+          </li>
+      {%- endfor -%}
+      {%- unless last_year == "" -%}</ul>{%- endunless -%}
+    </nav>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var PER_PAGE = 6;
+  var feed = document.getElementById('notas-feed');
+  if (!feed) return;
+
+  var notas = Array.prototype.slice.call(feed.querySelectorAll('.nota'));
+  var seps  = Array.prototype.slice.call(feed.querySelectorAll('.nota-sep'));
+  var totalPages = Math.max(1, Math.ceil(notas.length / PER_PAGE));
+  var current = 1;
+
+  var elCur = document.getElementById('pager-cur');
+  var elTotal = document.getElementById('pager-total');
+  var elPrev = document.getElementById('pager-prev');
+  var elNext = document.getElementById('pager-next');
+  elTotal.textContent = totalPages;
+
+  // --- Pagination ----------------------------------------------------------
+  function applyPage(p, scrollTop) {
+    if (p < 1) p = 1;
+    if (p > totalPages) p = totalPages;
+    current = p;
+    var start = (p - 1) * PER_PAGE;
+    var end = start + PER_PAGE;
+    notas.forEach(function (n, i) {
+      n.classList.toggle('is-paged-out', i < start || i >= end);
+    });
+    // Show a separator only when both surrounding notas are on this page.
+    seps.forEach(function (sep, i) {
+      var before = i;          // sep at index i sits after nota i
+      var after  = i + 1;
+      var visible = (before >= start && before < end) && (after >= start && after < end);
+      sep.classList.toggle('is-paged-out', !visible);
+    });
+    elCur.textContent = current;
+    elPrev.classList.toggle('disabled', current === 1);
+    elNext.classList.toggle('disabled', current === totalPages);
+    refreshCurrentMonth();
+    if (scrollTop) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function pageOf(idx) { return Math.floor(idx / PER_PAGE) + 1; }
+
+  function jumpToAnchor(anchor) {
+    var idx = notas.findIndex(function (n) { return n.dataset.anchor === anchor; });
+    if (idx === -1) return false;
+    var target = pageOf(idx);
+    if (target !== current) applyPage(target, false);
+    var el = document.getElementById('n-' + anchor);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.remove('anchor-flash');
+      void el.offsetWidth;
+      el.classList.add('anchor-flash');
+    }
+    history.replaceState(null, '', '#n-' + anchor);
+    return true;
+  }
+
+  // Pager buttons
+  elPrev.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (current > 1) applyPage(current - 1, true);
+  });
+  elNext.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (current < totalPages) applyPage(current + 1, true);
+  });
+
+  // Permalink clicks
+  feed.addEventListener('click', function (e) {
+    var perma = e.target.closest('.perma');
+    if (perma) {
+      e.preventDefault();
+      jumpToAnchor(perma.dataset.perma);
+    }
+  });
+
+  // Sidebar month jumps
+  var indexEl = document.getElementById('notas-index');
+  indexEl.addEventListener('click', function (e) {
+    var mo = e.target.closest('.mo');
+    if (!mo) return;
+    e.preventDefault();
+    jumpToAnchor(mo.dataset.firstAnchor);
+  });
+
+  // --- IntersectionObserver: highlight current month in sidebar ----------
+  var monthLinks = Array.prototype.slice.call(indexEl.querySelectorAll('.mo'));
+  function setCurrentMonth(monthKey) {
+    monthLinks.forEach(function (a) {
+      a.classList.toggle('is-current', a.dataset.month === monthKey);
+    });
+  }
+
+  function refreshCurrentMonth() {
+    // Pick the first visible nota on the page and mark its month as current.
+    for (var i = 0; i < notas.length; i++) {
+      if (!notas[i].classList.contains('is-paged-out')) {
+        setCurrentMonth(notas[i].dataset.month);
+        break;
+      }
+    }
+  }
+
+  var ratios = new Map();
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      ratios.set(en.target.dataset.month, en.isIntersecting ? en.intersectionRatio : 0);
+    });
+    var best = null, bestR = 0;
+    ratios.forEach(function (r, m) { if (r > bestR) { bestR = r; best = m; } });
+    if (best) setCurrentMonth(best);
+  }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+  notas.forEach(function (n) { obs.observe(n); });
+
+  // --- Initial state from hash --------------------------------------------
+  var initial = 1;
+  var hash = window.location.hash;
+  if (hash.indexOf('#n-') === 0) {
+    var anchor = hash.slice(3);
+    var idx = notas.findIndex(function (n) { return n.dataset.anchor === anchor; });
+    if (idx !== -1) initial = pageOf(idx);
+  }
+  applyPage(initial, false);
+  if (hash.indexOf('#n-') === 0) {
+    setTimeout(function () {
+      var el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }, 60);
+  }
+})();
+</script>
+
+<script>
+// Convert kramdown footnotes inside embedded notas into Tufte sidenotes.
+(function () {
+  'use strict';
+  var sections = document.querySelectorAll('.nota-content .footnotes');
+  if (!sections.length) return;
+  var counter = 0;
+  sections.forEach(function (sec) {
+    var host = sec.parentElement;
+    if (!host) return;
+    var refs = host.querySelectorAll('sup[id^="fnref:"]');
+    refs.forEach(function (ref) {
+      counter++;
+      var id = ref.id.replace('fnref:', '');
+      var item = sec.querySelector('li[id="fn:' + id + '"]');
+      if (!item) return;
+      var clone = item.cloneNode(true);
+      var back = clone.querySelector('.reversefootnote');
+      if (back) back.remove();
+      var html = clone.innerHTML.trim();
+      if (html.indexOf('<p>') === 0 && html.lastIndexOf('</p>') === html.length - 4) {
+        html = html.slice(3, -4);
+      }
+      var label = document.createElement('label');
+      label.setAttribute('for', 'sn-notas-' + counter);
+      label.className = 'margin-toggle sidenote-number';
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = 'sn-notas-' + counter;
+      input.className = 'margin-toggle';
+      var sn = document.createElement('span');
+      sn.className = 'sidenote';
+      sn.innerHTML = html;
+      ref.parentNode.insertBefore(label, ref);
+      ref.parentNode.insertBefore(input, ref);
+      ref.parentNode.insertBefore(sn, ref);
+      ref.remove();
+    });
+    sec.remove();
+  });
+})();
+</script>
+</body>
+</html>
