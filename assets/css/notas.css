@@ -35,18 +35,13 @@
   --notas-margin-w: 240px;
   --notas-margin-gap: 56px;
 
-  --notas-fs: 1.4rem;
-  --notas-lh: 1.65;
-  --notas-gap: 4.5rem;
-  --notas-para: 1.15rem;
+  --notas-gap: 4rem;
 }
 
 /* ----- Page shell -------------------------------------------------- */
 .notas-page {
   position: relative;
   animation: notasFade .5s ease-out;
-  padding-top: 1rem;
-  padding-bottom: 4rem;
 }
 @keyframes notasFade {
   from { opacity: 0; transform: translateY(8px); }
@@ -59,27 +54,22 @@
   max-width: 36em;
 }
 .notas-header h1 {
-  font-size: 3.2rem;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  font-weight: 400;
+  /* Inherit Tufte's h1 sizing (3.2rem / line-height 1) so it matches
+     the rest of the site; just trim the bottom margin. */
+  margin-bottom: 1rem;
   font-style: normal;
-  margin: 0 0 .9rem;
-  color: var(--color-text);
   width: auto;
 }
 .notas-header .lede {
-  font-size: 1.4rem;
   font-style: italic;
   color: var(--color-text-muted);
-  line-height: 1.5;
   max-width: 36em;
   width: auto;
   margin: 0;
 }
 .notas-header .meta {
   margin-top: 1.4rem;
-  font-size: .8rem;
+  font-size: 1rem;
   font-variant: small-caps;
   letter-spacing: .08em;
   color: var(--color-text-light);
@@ -214,6 +204,8 @@
 /* Body column */
 .nota-body { grid-column: 1; grid-row: 1; min-width: 0; }
 .nota-title {
+  /* Lighter than Tufte's h2 — no top border, no italic, smaller leading.
+     Sized to read as a sub-section title within the blog flow. */
   font-size: 1.9rem;
   line-height: 1.2;
   font-weight: 600;
@@ -240,8 +232,9 @@
   line-height: 1.4;
 }
 
-/* Markdown rendered body — override Tufte's 55% paragraph width
-   so the blog flow fills the reading column. */
+/* Markdown rendered body — inherits Tufte/custom typography (font-size,
+   line-height, paragraph margin) so the rhythm matches posts. The only
+   overrides are widths, since Tufte caps p/blockquote/list at 55%. */
 .nota-body .nota-content > * { font-family: var(--font-body); }
 .nota-body .nota-content p,
 .nota-body .nota-content ul,
@@ -253,45 +246,14 @@
   width: auto;
   max-width: 100%;
 }
-.nota-body .nota-content p {
-  font-size: var(--notas-fs);
-  line-height: var(--notas-lh);
-  color: var(--color-text);
-  margin: 0 0 var(--notas-para);
-  text-wrap: pretty;
-  hyphens: auto;
-}
-.nota-body .nota-content p:last-child { margin-bottom: 0; }
 .nota-body .nota-content blockquote {
   font-style: italic;
   color: var(--color-text-muted);
   border-left: 2px solid var(--color-border);
   padding-left: 1.2rem;
-  margin: 0 0 var(--notas-para);
-}
-.nota-body .nota-content blockquote p {
-  font-size: var(--notas-fs);
-  line-height: var(--notas-lh);
-  margin: 0 0 .8rem;
+  margin: 0 0 1.4rem;
 }
 .nota-body .nota-content blockquote p:last-child { margin-bottom: 0; }
-.nota-body .nota-content a {
-  color: var(--color-link);
-  text-decoration: underline;
-  text-decoration-color: rgba(26,115,232,0.3);
-  text-underline-offset: 3px;
-}
-.nota-body .nota-content a:hover { color: var(--color-link-hover); }
-.nota-body .nota-content em { font-style: italic; }
-.nota-body .nota-content strong { font-weight: 600; }
-.nota-body .nota-content code {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  padding: 0.2em 0.4em;
-  background: var(--color-background-alt);
-  color: var(--color-accent);
-  border-radius: var(--radius-sm);
-}
 .nota-body .nota-content img {
   max-width: 100%; height: auto;
   border-radius: var(--radius-sm);
