@@ -10,6 +10,9 @@
 
   <!-- Custom Enhancements -->
   <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}"/>
+  {% if page.extra_css %}
+  <link rel="stylesheet" href="{{ '/assets/css/' | append: page.extra_css | relative_url }}"/>
+  {% endif %}
 
   <!-- MathJax for LaTeX equations -->
   <script>
