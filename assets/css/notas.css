@@ -3,6 +3,30 @@
    Single density (cozy) + single separator (fleuron) baked in.
    ============================================================ */
 
+/* et-book — Tufte body face. Declared here so the page doesn't
+   depend on tufte.css having loaded by the time we render. */
+@font-face {
+  font-family: "et-book";
+  src: url("https://edwardtufte.github.io/tufte-css/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("https://edwardtufte.github.io/tufte-css/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("https://edwardtufte.github.io/tufte-css/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --notas-col: 640px;
   --notas-margin-w: 240px;
@@ -14,7 +38,25 @@
   --notas-para: 1.15rem;
 }
 
+/* Tufte's html { font-size: 15px } is what makes all the rems on
+   this page resolve correctly — restate it so rendering does not
+   depend on tufte.css being applied. */
+html { font-size: 15px; }
 html, body { background: var(--color-background); }
+
+/* Reset body for this page: tufte's body adds 87.5% width with a
+   12.5% left padding which conflicts with the centered design. */
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: none;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  font-size: 1.4rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
 
 .notas-page {
   max-width: 1180px;
@@ -30,10 +72,6 @@ html, body { background: var(--color-background); }
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
-
-/* Hide the site-wide nav on the notas index — the page draws its own. */
-.notas-page-host > .site-header,
-.notas-page-host > article > .site-header { display: none; }
 
 /* ----- Top navigation (minimal, matches design) ----- */
 .notas-nav {
