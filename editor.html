@@ -41,7 +41,8 @@ sitemap: false
       </div>
       <div class="ed-actions">
         <button type="button" id="ed-action-help" title="Atalhos (?)">?</button>
-        <button type="button" id="ed-action-new" title="Limpar tudo">Limpar</button>
+        <button type="button" id="ed-action-drafts" title="Rascunhos (⌘⇧D)">Rascunhos</button>
+        <button type="button" id="ed-action-new" title="Novo rascunho">Novo</button>
         <button type="button" id="ed-action-copy" title="Copiar markdown (⌘⇧C)">Copiar</button>
         <button type="button" id="ed-action-download" class="primary" title="Baixar .md (⌘S)">Baixar .md</button>
       </div>
@@ -219,6 +220,7 @@ sitemap: false
         <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>P</kbd></dt><dd>Modo split (markdown + preview)</dd>
         <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>M</kbd></dt><dd>Só markdown</dd>
         <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>T</kbd></dt><dd>Escrever direto no Tufte</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>D</kbd></dt><dd>Abrir rascunhos</dd>
         <dt><kbd>/</kbd></dt><dd>No início da linha, abre menu de blocos</dd>
         <dt><kbd>?</kbd></dt><dd>Mostrar/esconder este painel</dd>
       </dl>
@@ -230,6 +232,23 @@ sitemap: false
         <li><strong>Epigraph</strong>: <code>{% raw %}{% include epigraph.html quote="..." author="..." %}{% endraw %}</code></li>
         <li><strong>Figura</strong>: <code>{% raw %}{% include figure.html src="..." alt="..." caption="..." %}{% endraw %}</code></li>
       </ul>
+    </div>
+  </div>
+
+  <div id="ed-drafts" class="ed-modal" hidden>
+    <div class="ed-modal-card ed-drafts-card">
+      <header class="ed-modal-header">
+        <h2>Rascunhos</h2>
+        <button type="button" id="ed-drafts-close" class="ed-modal-close" title="Fechar">×</button>
+      </header>
+      <p class="ed-drafts-help">
+        Rascunhos ficam salvos automaticamente neste navegador.
+        Clique em um pra continuar editando, ou crie um novo.
+      </p>
+      <div class="ed-drafts-actions">
+        <button type="button" id="ed-drafts-new" class="ed-drafts-new-btn">+ Novo rascunho</button>
+      </div>
+      <ul id="ed-drafts-list" class="ed-drafts-list"></ul>
     </div>
   </div>
 
