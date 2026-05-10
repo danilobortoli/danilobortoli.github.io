@@ -1,0 +1,1 @@
+# Sem dependências externas — o handler usa apenas a stdlib do Python 3.12.

@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Bot do Telegram que recebe mensagens via webhook e publica notas no
+  repositório Jekyll usando a API do GitHub.
+
+Parameters:
+  TelegramBotToken:
+    Type: String
+    NoEcho: true
+    Description: Token do bot fornecido pelo @BotFather.
+  TelegramSecretToken:
+    Type: String
+    NoEcho: true
+    Description: >
+      String aleatória passada no header X-Telegram-Bot-Api-Secret-Token
+      pelo Telegram. Use 32+ caracteres alfanuméricos.
+  AllowedChatId:
+    Type: String
+    Description: chat_id numérico autorizado a publicar (descubra com /start).
+  GitHubToken:
+    Type: String
+    NoEcho: true
+    Description: Personal Access Token (fine-grained) com Contents Write no repo.
+  GitHubRepo:
+    Type: String
+    Default: danilobortoli/danilobortoli.github.io
+    Description: owner/repo onde as notas serão criadas.
+  GitHubBranch:
+    Type: String
+    Default: main
+    Description: Branch alvo dos commits.
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 30
+    MemorySize: 256
+    Architectures:
+      - arm64
+
+Resources:
+  WebhookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: telegram-note-publisher
+      CodeUri: src/
+      Handler: handler.handler
+      Environment:
+        Variables:
+          TELEGRAM_BOT_TOKEN: !Ref TelegramBotToken
+          TELEGRAM_SECRET_TOKEN: !Ref TelegramSecretToken
+          ALLOWED_CHAT_ID: !Ref AllowedChatId
+          GITHUB_TOKEN: !Ref GitHubToken
+          GITHUB_REPO: !Ref GitHubRepo
+          GITHUB_BRANCH: !Ref GitHubBranch
+      Events:
+        Webhook:
+          Type: HttpApi
+          Properties:
+            Path: /webhook
+            Method: post
+
+Outputs:
+  WebhookUrl:
+    Description: URL pública do webhook (use com setWebhook do Telegram).
+    Value: !Sub https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/webhook
+  FunctionName:
+    Description: Nome da função Lambda (útil para logs).
+    Value: !Ref WebhookFunction

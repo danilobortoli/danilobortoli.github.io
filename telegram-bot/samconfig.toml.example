@@ -1,0 +1,20 @@
+# Copie este arquivo para samconfig.toml e ajuste.
+# samconfig.toml está no .gitignore — NUNCA comite secrets.
+version = 0.1
+
+[default.global.parameters]
+stack_name = "telegram-note-publisher"
+
+[default.deploy.parameters]
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+resolve_s3 = true
+parameter_overrides = """
+TelegramBotToken=PREENCHA
+TelegramSecretToken=PREENCHA
+AllowedChatId=PREENCHA
+GitHubToken=PREENCHA
+GitHubRepo=danilobortoli/danilobortoli.github.io
+GitHubBranch=main
+"""
