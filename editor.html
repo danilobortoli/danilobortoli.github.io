@@ -1,0 +1,242 @@
+---
+layout: null
+permalink: /editor/
+sitemap: false
+---
+<!DOCTYPE html>
+<html lang="pt-BR" data-doc="post" data-mode="split">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Editor — Danilo Bortoli</title>
+
+  <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
+  <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/editor.css' | relative_url }}"/>
+</head>
+<body class="editor-body">
+
+  <header class="ed-topbar">
+    <div class="ed-topbar-left">
+      <a href="{{ '/' | relative_url }}" class="ed-wordmark" title="Voltar ao site">
+        <span class="ed-wordmark-name">Danilo Bortoli</span>
+        <span class="ed-wordmark-subtitle">Editor</span>
+      </a>
+    </div>
+
+    <div class="ed-topbar-center">
+      <div class="ed-segmented" data-segmented="doc" role="tablist" aria-label="Tipo de documento">
+        <button type="button" data-doc="post" class="active">Post</button>
+        <button type="button" data-doc="nota">Nota</button>
+        <button type="button" data-doc="media">Mídia</button>
+      </div>
+    </div>
+
+    <div class="ed-topbar-right">
+      <div class="ed-segmented" data-segmented="mode" role="tablist" aria-label="Modo de visualização">
+        <button type="button" data-mode="markdown" title="Só markdown (⌘⇧M)">MD</button>
+        <button type="button" data-mode="split" class="active" title="Lado a lado (⌘⇧P)">Split</button>
+        <button type="button" data-mode="tufte" title="Escrever direto no Tufte (⌘⇧T)">Tufte</button>
+      </div>
+      <div class="ed-actions">
+        <button type="button" id="ed-action-help" title="Atalhos (?)">?</button>
+        <button type="button" id="ed-action-new" title="Limpar tudo">Limpar</button>
+        <button type="button" id="ed-action-copy" title="Copiar markdown (⌘⇧C)">Copiar</button>
+        <button type="button" id="ed-action-download" class="primary" title="Baixar .md (⌘S)">Baixar .md</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="ed-meta" aria-label="Metadados">
+    <div class="ed-meta-row">
+      <label class="ed-meta-grow">
+        <span>Título</span>
+        <input type="text" id="meta-title" placeholder="Sem título"/>
+      </label>
+      <label class="ed-only-post ed-meta-grow">
+        <span>Subtítulo</span>
+        <input type="text" id="meta-subtitle" placeholder="Opcional"/>
+      </label>
+      <label>
+        <span>Data</span>
+        <input type="datetime-local" id="meta-date"/>
+      </label>
+    </div>
+
+    <div class="ed-meta-row ed-only-post">
+      <label class="ed-meta-grow">
+        <span>Categoria</span>
+        <input type="text" id="meta-category" placeholder="Literatura, Tecnologia…"/>
+      </label>
+      <label class="ed-meta-grow ed-meta-grow-2">
+        <span>Imagem hero (URL)</span>
+        <input type="text" id="meta-image" placeholder="https://…"/>
+      </label>
+    </div>
+
+    <div class="ed-meta-row ed-only-media">
+      <label>
+        <span>Tipo de mídia</span>
+        <select id="meta-media-type">
+          <option value="livro">Livro</option>
+          <option value="filme">Filme</option>
+          <option value="álbum">Álbum</option>
+          <option value="canção">Canção</option>
+        </select>
+      </label>
+      <label class="ed-meta-grow">
+        <span>Título da obra</span>
+        <input type="text" id="meta-media-titulo"/>
+      </label>
+      <label class="ed-meta-grow" id="meta-media-creator-wrap">
+        <span data-creator-label>Autor</span>
+        <input type="text" id="meta-media-creator"/>
+      </label>
+      <label>
+        <span>Ano</span>
+        <input type="text" id="meta-media-ano" placeholder="2026"/>
+      </label>
+    </div>
+
+    <div class="ed-meta-row ed-only-media">
+      <label class="ed-meta-grow">
+        <span>Gêneros</span>
+        <input type="text" id="meta-media-generos" placeholder="ficção, ensaio…"/>
+      </label>
+      <label class="ed-meta-grow ed-meta-publisher">
+        <span>Editora</span>
+        <input type="text" id="meta-media-publisher"/>
+      </label>
+      <label class="ed-meta-grow ed-meta-album" hidden>
+        <span>Álbum</span>
+        <input type="text" id="meta-media-album"/>
+      </label>
+      <label class="ed-meta-grow ed-meta-grow-2">
+        <span>Capa (URL)</span>
+        <input type="text" id="meta-media-capa" placeholder="https://…"/>
+      </label>
+      <label>
+        <span>Nota /10</span>
+        <input type="number" id="meta-media-nota" min="0" max="10" step="0.1"/>
+      </label>
+    </div>
+  </section>
+
+  <nav class="ed-toolbar" aria-label="Barra de ferramentas">
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="bold" title="Negrito (⌘B)"><b>B</b></button>
+      <button type="button" data-cmd="italic" title="Itálico (⌘I)"><i>I</i></button>
+      <button type="button" data-cmd="strike" title="Tachado">S̶</button>
+      <button type="button" data-cmd="code" title="Código inline">{ }</button>
+    </div>
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="h1" title="Título 1">H₁</button>
+      <button type="button" data-cmd="h2" title="Título 2">H₂</button>
+      <button type="button" data-cmd="h3" title="Título 3">H₃</button>
+    </div>
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="link" title="Link (⌘K)">↗</button>
+      <button type="button" data-cmd="image" title="Imagem">img</button>
+      <button type="button" data-cmd="ul" title="Lista">•</button>
+      <button type="button" data-cmd="ol" title="Lista numerada">1.</button>
+      <button type="button" data-cmd="quote" title="Citação">”</button>
+      <button type="button" data-cmd="codeblock" title="Bloco de código">⌗</button>
+      <button type="button" data-cmd="hr" title="Régua">―</button>
+    </div>
+    <div class="ed-toolbar-group ed-toolbar-tufte">
+      <span class="ed-toolbar-label">Tufte</span>
+      <button type="button" data-cmd="newthought" title="Newthought (small-caps de início)">N.T.</button>
+      <button type="button" data-cmd="sidenote" title="Sidenote numerada">¹ side</button>
+      <button type="button" data-cmd="marginnote" title="Marginnote (livre)">⊞ margin</button>
+      <button type="button" data-cmd="epigraph" title="Epígrafo">❝ epi</button>
+      <button type="button" data-cmd="figure" title="Figura com legenda">▭ fig</button>
+      <button type="button" data-cmd="fullwidth" title="Figura full-width">▦ full</button>
+    </div>
+  </nav>
+
+  <main class="ed-main">
+    <section class="ed-pane ed-pane-md" aria-label="Editor markdown">
+      <textarea
+        id="ed-source"
+        spellcheck="true"
+        autocapitalize="off"
+        autocomplete="off"
+        autocorrect="off"
+        placeholder="Comece a escrever…&#10;&#10;Dica: digite / no início da linha pra abrir o menu de blocos."
+      ></textarea>
+    </section>
+
+    <section class="ed-pane ed-pane-preview" aria-label="Preview Tufte">
+      <article class="ed-preview-article">
+
+        <div class="ed-preview-hero" id="ed-preview-hero" hidden>
+          <div class="ed-preview-hero-image" id="ed-preview-hero-image"></div>
+          <div class="ed-preview-hero-overlay"></div>
+          <div class="ed-preview-hero-content">
+            <p class="post-hero-categories" id="ed-preview-categories"></p>
+            <h1 class="post-hero-title" id="ed-preview-hero-title"></h1>
+            <p class="post-hero-subtitle" id="ed-preview-hero-subtitle"></p>
+            <p class="post-hero-meta" id="ed-preview-hero-meta"></p>
+          </div>
+        </div>
+
+        <div class="ed-preview-body">
+          <header class="ed-preview-header" id="ed-preview-header">
+            <p class="ed-preview-eyebrow" id="ed-preview-eyebrow"></p>
+            <h1 class="ed-preview-title" id="ed-preview-title"></h1>
+            <p class="ed-preview-subtitle" id="ed-preview-subtitle"></p>
+            <p class="ed-preview-date" id="ed-preview-date"></p>
+          </header>
+
+          <aside id="ed-preview-media" class="media-review media-review--marginalia" hidden></aside>
+
+          <div class="ed-preview-content post-content nota-single-content" id="ed-preview-content"></div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="ed-statusbar">
+    <span id="ed-status-words">0 palavras</span>
+    <span id="ed-status-reading">0 min</span>
+    <span id="ed-status-saved">não salvo</span>
+    <span id="ed-status-filename" class="ed-mono"></span>
+  </footer>
+
+  <div id="ed-help" class="ed-modal" hidden>
+    <div class="ed-modal-card">
+      <header class="ed-modal-header">
+        <h2>Atalhos</h2>
+        <button type="button" id="ed-help-close" class="ed-modal-close" title="Fechar">×</button>
+      </header>
+      <dl class="ed-shortcuts">
+        <dt><kbd>⌘</kbd>+<kbd>B</kbd></dt><dd>Negrito</dd>
+        <dt><kbd>⌘</kbd>+<kbd>I</kbd></dt><dd>Itálico</dd>
+        <dt><kbd>⌘</kbd>+<kbd>K</kbd></dt><dd>Inserir link</dd>
+        <dt><kbd>⌘</kbd>+<kbd>S</kbd></dt><dd>Baixar arquivo .md</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>C</kbd></dt><dd>Copiar markdown</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>P</kbd></dt><dd>Modo split (markdown + preview)</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>M</kbd></dt><dd>Só markdown</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>T</kbd></dt><dd>Escrever direto no Tufte</dd>
+        <dt><kbd>/</kbd></dt><dd>No início da linha, abre menu de blocos</dd>
+        <dt><kbd>?</kbd></dt><dd>Mostrar/esconder este painel</dd>
+      </dl>
+      <h3>Convenções Tufte</h3>
+      <ul class="ed-help-list">
+        <li><strong>Sidenote</strong>: footnote kramdown <code>[^1]</code> + <code>[^1]: nota</code> ao final.</li>
+        <li><strong>Newthought</strong>: <code>{% raw %}{% include newthought.html text="..." %}{% endraw %}</code></li>
+        <li><strong>Marginnote</strong>: <code>{% raw %}{% include marginnote.html id="mn-1" text="..." %}{% endraw %}</code></li>
+        <li><strong>Epigraph</strong>: <code>{% raw %}{% include epigraph.html quote="..." author="..." %}{% endraw %}</code></li>
+        <li><strong>Figura</strong>: <code>{% raw %}{% include figure.html src="..." alt="..." caption="..." %}{% endraw %}</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="ed-slash" class="ed-popover" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/turndown@7.2.0/dist/turndown.js"></script>
+  <script src="{{ '/assets/js/editor.js' | relative_url }}"></script>
+</body>
+</html>
