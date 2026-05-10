@@ -12,6 +12,7 @@
   // ===========================================================================
 
   const state = {
+    draftId: null,         // id do rascunho atual no localStorage
     doc: 'post',          // 'post' | 'nota' | 'media'
     mode: 'split',         // 'markdown' | 'split' | 'tufte'
     source: '',
@@ -742,6 +743,11 @@
     $('#ed-help').addEventListener('click', (e) => { if (e.target.id === 'ed-help') $('#ed-help').hidden = true; });
     $('#ed-action-new').addEventListener('click', confirmNew);
 
+    $('#ed-action-drafts').addEventListener('click', showDraftsModal);
+    $('#ed-drafts-close').addEventListener('click', hideDraftsModal);
+    $('#ed-drafts').addEventListener('click', (e) => { if (e.target.id === 'ed-drafts') hideDraftsModal(); });
+    $('#ed-drafts-new').addEventListener('click', () => { newDraft(); hideDraftsModal(); });
+
     document.addEventListener('keydown', handleKeydown);
     source.addEventListener('keydown', handleSourceKeydown);
   }
@@ -772,11 +778,13 @@
     else if (mod && e.shiftKey && key === 'p') { e.preventDefault(); setMode('split'); }
     else if (mod && e.shiftKey && key === 'm') { e.preventDefault(); setMode('markdown'); }
     else if (mod && e.shiftKey && key === 't') { e.preventDefault(); setMode('tufte'); }
+    else if (mod && e.shiftKey && key === 'd') { e.preventDefault(); showDraftsModal(); }
     else if (e.key === '?' && !isTyping(e.target)) {
       e.preventDefault();
       $('#ed-help').hidden = !$('#ed-help').hidden;
     } else if (e.key === 'Escape') {
       $('#ed-help').hidden = true;
+      hideDraftsModal();
       hideSlashMenu();
     }
   }
@@ -997,21 +1005,52 @@
   }
 
   // ===========================================================================
-  // 12. Persist / load / export
+  // 12. Persist / load / drafts
   // ===========================================================================
 
-  const STORAGE_KEY = 'editor:state:v1';
+  const LEGACY_KEY = 'editor:state:v1';
+  const DRAFTS_KEY = 'editor:drafts:v1';
+  const CURRENT_DRAFT_KEY = 'editor:current-draft:v1';
 
-  function persist() {
-    const data = {
+  function readDrafts() {
+    try {
+      const raw = localStorage.getItem(DRAFTS_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+
+  function writeDrafts(drafts) {
+    try { localStorage.setItem(DRAFTS_KEY, JSON.stringify(drafts)); } catch (e) {}
+  }
+
+  function newDraftId() {
+    return 'd-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);
+  }
+
+  function snapshot() {
+    return {
+      id: state.draftId,
       doc: state.doc,
       source: state.source,
       meta: {
         ...state.meta,
         date: state.meta.date instanceof Date ? state.meta.date.toISOString() : state.meta.date,
       },
+      updatedAt: new Date().toISOString(),
     };
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  function persist() {
+    if (!state.draftId) state.draftId = newDraftId();
+    const drafts = readDrafts();
+    const snap = snapshot();
+    const existing = drafts[state.draftId];
+    drafts[state.draftId] = {
+      ...snap,
+      createdAt: (existing && existing.createdAt) || snap.updatedAt,
+    };
+    writeDrafts(drafts);
+    try { localStorage.setItem(CURRENT_DRAFT_KEY, state.draftId); } catch (e) {}
   }
 
   let autosaveTimer = null;
@@ -1026,25 +1065,177 @@
     }, 500);
   }
 
-  function load() {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      state.meta.date = new Date();
-      return;
-    }
+  function loadDraftFromStorage(id) {
+    const drafts = readDrafts();
+    const d = drafts[id];
+    if (!d) return false;
+    state.draftId = id;
+    state.doc = d.doc || 'post';
+    state.source = d.source || '';
+    state.meta = {
+      title: '', subtitle: '', date: new Date(), category: '', image: '',
+      ...(d.meta || {}),
+      date: d.meta && d.meta.date ? new Date(d.meta.date) : new Date(),
+      media: {
+        type: 'livro', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '',
+        ...((d.meta && d.meta.media) || {}),
+      },
+    };
+    try { localStorage.setItem(CURRENT_DRAFT_KEY, id); } catch (e) {}
+    return true;
+  }
+
+  function migrateLegacy() {
+    const drafts = readDrafts();
+    if (Object.keys(drafts).length > 0) return;
+    const legacy = localStorage.getItem(LEGACY_KEY);
+    if (!legacy) return;
     try {
-      const data = JSON.parse(raw);
-      state.doc = data.doc || 'post';
-      state.source = data.source || '';
-      state.meta = {
-        ...state.meta,
-        ...data.meta,
-        date: data.meta && data.meta.date ? new Date(data.meta.date) : new Date(),
-        media: { ...state.meta.media, ...((data.meta && data.meta.media) || {}) },
+      const data = JSON.parse(legacy);
+      const id = newDraftId();
+      const now = new Date().toISOString();
+      drafts[id] = {
+        id,
+        doc: data.doc || 'post',
+        source: data.source || '',
+        meta: data.meta || {},
+        createdAt: now,
+        updatedAt: now,
       };
-    } catch (e) {
-      state.meta.date = new Date();
+      writeDrafts(drafts);
+      try { localStorage.setItem(CURRENT_DRAFT_KEY, id); } catch (e) {}
+    } catch (e) {}
+  }
+
+  function load() {
+    migrateLegacy();
+    const currentId = localStorage.getItem(CURRENT_DRAFT_KEY);
+    if (currentId && loadDraftFromStorage(currentId)) return;
+    state.draftId = null;
+    state.meta.date = new Date();
+  }
+
+  function listDrafts() {
+    const drafts = readDrafts();
+    return Object.values(drafts).sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
+  }
+
+  function loadDraft(id) {
+    if (id === state.draftId) return;
+    persist();
+    if (loadDraftFromStorage(id)) {
+      applyStateToDom();
+      render();
+      if (state.mode === 'tufte') setMode('tufte');
+      else if (state.mode !== 'markdown') source.focus();
     }
+  }
+
+  function newDraft(silent) {
+    if (state.draftId) persist();
+    state.draftId = null;
+    state.source = '';
+    state.meta = {
+      title: '', subtitle: '', date: new Date(), category: '', image: '',
+      media: { type: 'livro', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '' },
+    };
+    applyStateToDom();
+    render();
+    persist();
+    if (!silent) {
+      toast('Novo rascunho criado');
+      source.focus();
+    }
+  }
+
+  function deleteDraft(id) {
+    const drafts = readDrafts();
+    delete drafts[id];
+    writeDrafts(drafts);
+    if (state.draftId === id) {
+      state.draftId = null;
+      const list = listDrafts();
+      if (list.length) {
+        loadDraftFromStorage(list[0].id);
+        applyStateToDom();
+        render();
+      } else {
+        newDraft(true);
+      }
+    }
+  }
+
+  function countWords(s) {
+    const t = (s || '').replace(/[`*#>_\[\]\(\)\-\!]+/g, ' ').replace(/\s+/g, ' ').trim();
+    return t ? t.split(' ').length : 0;
+  }
+
+  function formatRelativeDate(iso) {
+    if (!iso) return 'agora';
+    const d = new Date(iso);
+    const now = new Date();
+    const diffMs = now - d;
+    const min = Math.floor(diffMs / 60000);
+    const hr = Math.floor(min / 60);
+    const day = Math.floor(hr / 24);
+    if (min < 1) return 'agora mesmo';
+    if (min < 60) return `há ${min} min`;
+    if (hr < 24) return `há ${hr}h`;
+    if (day < 7) return `há ${day} dia${day > 1 ? 's' : ''}`;
+    return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
+  }
+
+  function showDraftsModal() {
+    renderDraftsList();
+    $('#ed-drafts').hidden = false;
+  }
+  function hideDraftsModal() { $('#ed-drafts').hidden = true; }
+
+  function renderDraftsList() {
+    persist();
+    const list = listDrafts();
+    const ul = $('#ed-drafts-list');
+    ul.innerHTML = list.map(d => {
+      const title = d.meta && d.meta.title
+        ? escapeHtml(d.meta.title)
+        : '<em>Sem título</em>';
+      const docLabel = d.doc === 'post' ? 'Post' : d.doc === 'media' ? 'Mídia' : 'Nota';
+      const updated = formatRelativeDate(d.updatedAt);
+      const words = countWords(d.source || '');
+      const isCurrent = d.id === state.draftId ? ' current' : '';
+      return `
+        <li class="ed-draft-item${isCurrent}" data-draft-id="${d.id}">
+          <span class="ed-draft-type">${docLabel}</span>
+          <div class="ed-draft-body">
+            <p class="ed-draft-title">${title}</p>
+            <p class="ed-draft-meta">
+              <span class="ed-draft-date">${updated}</span>
+              <span class="ed-draft-words">${words} palavra${words !== 1 ? 's' : ''}</span>
+            </p>
+          </div>
+          <button type="button" class="ed-draft-delete" data-delete-id="${d.id}" title="Apagar rascunho">×</button>
+        </li>`;
+    }).join('');
+
+    ul.querySelectorAll('.ed-draft-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.ed-draft-delete')) return;
+        loadDraft(item.dataset.draftId);
+        hideDraftsModal();
+      });
+    });
+    ul.querySelectorAll('.ed-draft-delete').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.deleteId;
+        const drafts = readDrafts();
+        const d = drafts[id];
+        const title = (d && d.meta && d.meta.title) || 'sem título';
+        if (!confirm(`Apagar rascunho "${title}"? Esta ação não pode ser desfeita.`)) return;
+        deleteDraft(id);
+        renderDraftsList();
+      });
+    });
   }
 
   function applyStateToDom() {
@@ -1097,15 +1288,8 @@
   }
 
   function confirmNew() {
-    if (!confirm('Limpar tudo? O conteúdo atual será perdido.')) return;
-    state.source = '';
-    state.meta = {
-      title: '', subtitle: '', date: new Date(), category: '', image: '',
-      media: { type: 'livro', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '' },
-    };
-    applyStateToDom();
-    render();
-    persist();
+    // Comportamento "Novo": cria novo rascunho preservando o atual
+    newDraft();
   }
 
   // ===========================================================================
@@ -1117,6 +1301,8 @@
     applyStateToDom();
     setupBindings();
     render();
+    // Garantir que sempre exista um draft id pra autosave gravar
+    if (!state.draftId) persist();
     if (state.mode === 'tufte') {
       setMode('tufte');
     } else {

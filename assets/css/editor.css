@@ -196,6 +196,9 @@ body.editor-body > article { all: unset; display: contents; }
   font-weight: 500;
 }
 
+/* Reset: garantir que [hidden] vença regras de display: flex (ex: .media-review) */
+.editor-body [hidden] { display: none !important; }
+
 /* show/hide based on doc type */
 [data-doc="post"] .ed-only-media { display: none !important; }
 [data-doc="nota"] .ed-only-post,
@@ -681,6 +684,138 @@ body.editor-body > article { all: unset; display: contents; }
   font-size: 0.78rem;
   padding: 0.1em 0.3em;
 }
+
+/* ==========================================================================
+   8b. Drafts modal
+   ========================================================================== */
+
+.ed-drafts-card {
+  max-width: 640px;
+}
+
+.ed-drafts-help {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0.2rem 0 1rem;
+  line-height: 1.5;
+}
+
+.ed-drafts-actions {
+  margin-bottom: 0.8rem;
+}
+
+.ed-drafts-new-btn {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  background: var(--color-text);
+  color: var(--color-background);
+  border: 1px solid var(--color-text);
+  border-radius: var(--radius-md);
+  padding: 0.45rem 0.95rem;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+.ed-drafts-new-btn:hover { opacity: 0.85; }
+
+.ed-drafts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--color-border-lighter);
+}
+
+.ed-drafts-list:empty::after {
+  content: "Nenhum rascunho. Comece a escrever.";
+  display: block;
+  text-align: center;
+  font-style: italic;
+  color: var(--color-text-light);
+  padding: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.ed-draft-item {
+  display: grid;
+  grid-template-columns: 4rem 1fr auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.7rem 0.2rem;
+  border-bottom: 1px solid var(--color-border-lighter);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.ed-draft-item:hover { background: var(--color-background-alt); }
+.ed-draft-item.current {
+  background: rgba(170, 0, 0, 0.04);
+  border-left: 3px solid var(--color-accent);
+  padding-left: 0.5rem;
+  margin-left: -0.7rem;
+}
+
+.ed-draft-type {
+  font-size: 0.7rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  font-weight: 600;
+  text-align: center;
+  padding: 0.15rem 0.3rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.ed-draft-body { min-width: 0; }
+
+.ed-draft-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.15rem 0;
+  line-height: 1.3;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ed-draft-title em {
+  font-style: italic;
+  color: var(--color-text-light);
+  font-weight: 400;
+}
+
+.ed-draft-meta {
+  font-size: 0.72rem;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  color: var(--color-text-light);
+}
+.ed-draft-meta .ed-draft-words::before { content: " · "; }
+
+.ed-draft-delete {
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  opacity: 0.5;
+  transition: all var(--transition-fast);
+}
+.ed-draft-item:hover .ed-draft-delete { opacity: 1; }
+.ed-draft-delete:hover { color: var(--color-accent); background: rgba(170, 0, 0, 0.08); }
+
+#ed-status-draft {
+  font-style: italic;
+  font-variant: normal;
+  letter-spacing: 0;
+  color: var(--color-text-light);
+  cursor: pointer;
+}
+#ed-status-draft:hover { color: var(--color-text); }
 
 /* ==========================================================================
    9. Slash menu (popover)
