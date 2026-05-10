@@ -1,20 +1,11 @@
 ---
-permalink: /notas/
+layout: default
 title: Notas
+permalink: /notas/
+extra_css: notas.css
 sitemap:
   changefreq: weekly
 ---
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Notas — {{ site.title }}</title>
-<link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
-<link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}"/>
-<link rel="stylesheet" href="{{ '/assets/css/notas.css' | relative_url }}"/>
-</head>
-<body>
 {%- assign meses = "janeiro,fevereiro,março,abril,maio,junho,julho,agosto,setembro,outubro,novembro,dezembro" | split: "," -%}
 {%- assign all_notas = site.notas | sort: 'date' | reverse -%}
 {%- assign oldest = all_notas | last -%}
@@ -24,15 +15,6 @@ sitemap:
 {%- assign months = all_notas | group_by_exp: "n", "n.date | date: '%Y-%m'" -%}
 
 <div class="notas-page" data-density="cozy" data-sep="fleuron">
-
-  <nav class="notas-nav" aria-label="Navegação">
-    <a href="{{ '/' | relative_url }}">Início</a>
-    <a href="{{ '/escrita.html' | relative_url }}">Escrita</a>
-    <a href="{{ '/notas/' | relative_url }}" class="active">Notas</a>
-    <a href="{{ '/advocacia.html' | relative_url }}">Advocacia</a>
-    <a href="{{ '/agora.html' | relative_url }}">Agora</a>
-    <a href="{{ '/sobre.html' | relative_url }}">Sobre</a>
-  </nav>
 
   <header class="notas-header">
     <h1>Notas</h1>
@@ -168,7 +150,6 @@ sitemap:
   var elNext = document.getElementById('pager-next');
   elTotal.textContent = totalPages;
 
-  // --- Pagination ----------------------------------------------------------
   function applyPage(p, scrollTop) {
     if (p < 1) p = 1;
     if (p > totalPages) p = totalPages;
@@ -178,9 +159,8 @@ sitemap:
     notas.forEach(function (n, i) {
       n.classList.toggle('is-paged-out', i < start || i >= end);
     });
-    // Show a separator only when both surrounding notas are on this page.
     seps.forEach(function (sep, i) {
-      var before = i;          // sep at index i sits after nota i
+      var before = i;
       var after  = i + 1;
       var visible = (before >= start && before < end) && (after >= start && after < end);
       sep.classList.toggle('is-paged-out', !visible);
@@ -210,7 +190,6 @@ sitemap:
     return true;
   }
 
-  // Pager buttons
   elPrev.addEventListener('click', function (e) {
     e.preventDefault();
     if (current > 1) applyPage(current - 1, true);
@@ -220,7 +199,6 @@ sitemap:
     if (current < totalPages) applyPage(current + 1, true);
   });
 
-  // Permalink clicks
   feed.addEventListener('click', function (e) {
     var perma = e.target.closest('.perma');
     if (perma) {
@@ -229,7 +207,6 @@ sitemap:
     }
   });
 
-  // Sidebar month jumps
   var indexEl = document.getElementById('notas-index');
   indexEl.addEventListener('click', function (e) {
     var mo = e.target.closest('.mo');
@@ -238,16 +215,13 @@ sitemap:
     jumpToAnchor(mo.dataset.firstAnchor);
   });
 
-  // --- IntersectionObserver: highlight current month in sidebar ----------
   var monthLinks = Array.prototype.slice.call(indexEl.querySelectorAll('.mo'));
   function setCurrentMonth(monthKey) {
     monthLinks.forEach(function (a) {
       a.classList.toggle('is-current', a.dataset.month === monthKey);
     });
   }
-
   function refreshCurrentMonth() {
-    // Pick the first visible nota on the page and mark its month as current.
     for (var i = 0; i < notas.length; i++) {
       if (!notas[i].classList.contains('is-paged-out')) {
         setCurrentMonth(notas[i].dataset.month);
@@ -267,7 +241,6 @@ sitemap:
   }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
   notas.forEach(function (n) { obs.observe(n); });
 
-  // --- Initial state from hash --------------------------------------------
   var initial = 1;
   var hash = window.location.hash;
   if (hash.indexOf('#n-') === 0) {
@@ -284,48 +257,3 @@ sitemap:
   }
 })();
 </script>
-
-<script>
-// Convert kramdown footnotes inside embedded notas into Tufte sidenotes.
-(function () {
-  'use strict';
-  var sections = document.querySelectorAll('.nota-content .footnotes');
-  if (!sections.length) return;
-  var counter = 0;
-  sections.forEach(function (sec) {
-    var host = sec.parentElement;
-    if (!host) return;
-    var refs = host.querySelectorAll('sup[id^="fnref:"]');
-    refs.forEach(function (ref) {
-      counter++;
-      var id = ref.id.replace('fnref:', '');
-      var item = sec.querySelector('li[id="fn:' + id + '"]');
-      if (!item) return;
-      var clone = item.cloneNode(true);
-      var back = clone.querySelector('.reversefootnote');
-      if (back) back.remove();
-      var html = clone.innerHTML.trim();
-      if (html.indexOf('<p>') === 0 && html.lastIndexOf('</p>') === html.length - 4) {
-        html = html.slice(3, -4);
-      }
-      var label = document.createElement('label');
-      label.setAttribute('for', 'sn-notas-' + counter);
-      label.className = 'margin-toggle sidenote-number';
-      var input = document.createElement('input');
-      input.type = 'checkbox';
-      input.id = 'sn-notas-' + counter;
-      input.className = 'margin-toggle';
-      var sn = document.createElement('span');
-      sn.className = 'sidenote';
-      sn.innerHTML = html;
-      ref.parentNode.insertBefore(label, ref);
-      ref.parentNode.insertBefore(input, ref);
-      ref.parentNode.insertBefore(sn, ref);
-      ref.remove();
-    });
-    sec.remove();
-  });
-})();
-</script>
-</body>
-</html>
