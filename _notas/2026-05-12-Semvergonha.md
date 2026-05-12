@@ -1,0 +1,9 @@
+---
+title: Sem vergonha
+date: 2026-05-12 10:38:39 -0300
+---
+> This album is a real piece of shit. Why even write about it? For years, traditional media has been tiptoeing around the popularity of Chris Brown, and in reality, that benefits nobody but him. The lack of critical engagement with his music has allowed him to contextualize his own redemption with statistics and sob stories. But if I hadn’t read Greg Tate’s hilarious teardown of the racial sellout energy of Michael Jackson’s Bad or dream hampton’s furious op-ed on Dr. Dre’s violence and hip-hop culture misogyny, I would have never known that not everyone in the moment was buying what they were selling. As Chris Brown prepares for a joint stadium tour with Usher and aims to complete his redemption with something like a Vegas residency or the Super Bowl halftime show, it’s worth documenting these feelings in real time, especially as information only gets harder to find. Not every musical legend deserves to be a martyr.
+>
+>So maybe one day, when Forever: The Chris Brown Story hits the cineplex, and a son turns to his dad and asks, “Pop, if Chris Brown was so talented, why was the world so mean to him?” they can pull up some shit to read like I did. Or maybe everything negative will be scrubbed from the internet by then, and dad will feed his boy the good ol’ fashioned, “That’s what happens to you when you’re a man in this country,” as they fire up a video of Chris Brown landing a backflip on beat.
+
+Alphonse Pierre, na *Pitchfork*, sobre o [álbum novo](https://pitchfork.com/reviews/albums/chris-brown-brown/) de Chris Brown. Diz muito sobre Michael Jackson também.
