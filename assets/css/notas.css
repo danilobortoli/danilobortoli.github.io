@@ -1,22 +1,22 @@
 /* ============================================================
-   Notas — editorial redesign 2026
-   Single reading column + slim sticky archive rail.
-   Tighter typographic scale, hairlines instead of fleurons,
-   media constrained to the prose column.
+   Notas — editorial redesign 2026 (v2)
+   - Generous reading column on Tufte's natural scale.
+   - Compact sticky archive rail.
+   - High-specificity selectors so /assets/css/custom.css `a:link`
+     rules don't leak into the archive list.
    ============================================================ */
 
 :root {
-  --notas-col: 640px;
-  --notas-rail: 180px;
-  --notas-gap: 72px;
-  --notas-rhythm: 2.6rem;
+  --notas-col: 720px;
+  --notas-rail: 200px;
+  --notas-gap: 64px;
+  --notas-rhythm: 3rem;
 }
 
 /* ----- Page shell -------------------------------------------- */
 .notas-page {
   position: relative;
   animation: notasFade .35s ease-out;
-  max-width: calc(var(--notas-col) + var(--notas-rail) + var(--notas-gap));
   margin: 0;
 }
 @keyframes notasFade {
@@ -25,59 +25,67 @@
 }
 
 /* ----- Header ------------------------------------------------ */
-.notas-head {
-  margin: 0 0 2.4rem 0;
+.notas-page .notas-head {
+  margin: 0 0 2.8rem 0;
   max-width: 36em;
 }
-.notas-eyebrow {
-  font-size: 0.78rem;
+.notas-page .notas-eyebrow {
+  font-size: 0.85rem;
   font-variant: small-caps;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--color-accent);
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.6rem 0;
   width: auto;
+  font-style: normal;
 }
-.notas-title {
-  font-size: 2.4rem !important;
-  line-height: 1.1;
+.notas-page h1.notas-title {
+  font-size: 3rem;
+  line-height: 1.05;
   letter-spacing: -0.02em;
-  margin: 0 0 0.4rem 0 !important;
+  margin: 0 0 0.5rem 0;
   padding: 0;
   border: none;
   font-style: normal;
+  font-variant: normal;
+  text-transform: none;
   font-weight: 400;
+  color: var(--color-text);
   width: auto;
 }
-.notas-lede {
-  font-size: 1.05rem;
+.notas-page .notas-lede {
+  font-size: 1.3rem;
   font-style: italic;
   color: var(--color-text-muted);
   line-height: 1.55;
-  margin: 0 0 0.9rem 0;
+  margin: 0 0 1rem 0;
   max-width: 32em;
   width: auto;
 }
-.notas-meta {
-  font-size: 0.78rem;
+.notas-page .notas-meta {
+  font-size: 0.85rem;
   font-variant: small-caps;
   letter-spacing: 0.08em;
   color: var(--color-text-light);
   margin: 0;
   width: auto;
 }
-.notas-meta b { color: var(--color-text); font-weight: 600; }
-.notas-meta .meta-sep { margin: 0 .5em; color: var(--color-border); }
-.notas-meta .feed-link {
+.notas-page .notas-meta b { color: var(--color-text); font-weight: 600; }
+.notas-page .notas-meta .meta-sep { margin: 0 .5em; color: var(--color-border); }
+.notas-page .notas-meta .feed-link {
   color: inherit;
   text-decoration: none;
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 1px;
+  background-image: none;
 }
-.notas-meta .feed-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.notas-page .notas-meta .feed-link:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
 
-/* ----- Two-column: feed + slim sticky archive ----------------- */
+/* ----- Two-column layout: feed + archive rail ---------------- */
 .notas-grid {
   display: grid;
   grid-template-columns: minmax(0, var(--notas-col)) var(--notas-rail);
@@ -91,286 +99,305 @@
 }
 
 /* ----- A single nota ----------------------------------------- */
-.nota {
+.notas-feed .nota {
   margin: 0;
   padding: var(--notas-rhythm) 0;
   border-top: 1px solid var(--color-border-lighter);
   scroll-margin-top: 80px;
 }
-.nota:first-of-type {
+.notas-feed .nota:first-of-type {
   padding-top: 0;
   border-top: none;
 }
 
-.nota .nota-head {
+.notas-feed .nota-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.6rem 0;
   max-width: none;
 }
 
-.nota-date {
-  font-size: 0.75rem;
+.notas-feed .nota-date {
+  font-size: 0.95rem;
   font-variant: small-caps;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--color-text-light);
   text-transform: lowercase;
   font-weight: 600;
   font-feature-settings: normal;
 }
 
-.nota-perma {
-  font-size: 0.9rem;
+.notas-feed a.nota-perma:link,
+.notas-feed a.nota-perma:visited {
+  font-size: 1rem;
   color: var(--color-text-light);
   text-decoration: none;
+  background-image: none;
   line-height: 1;
-  padding: 0.15rem 0.35rem;
+  padding: 0.2rem 0.4rem;
   border-radius: 3px;
-  transition: color .15s, background .15s;
+  border: none;
+  transition: color .15s, background .15s, opacity .15s;
   cursor: pointer;
   opacity: 0;
   font-feature-settings: normal;
 }
-.nota:hover .nota-perma,
-.nota-perma:focus { opacity: 1; }
-.nota-perma:hover { color: var(--color-accent); background: var(--color-background-alt); }
+.notas-feed .nota:hover a.nota-perma,
+.notas-feed a.nota-perma:focus { opacity: 1; }
+.notas-feed a.nota-perma:hover {
+  color: var(--color-accent);
+  background: var(--color-background-alt);
+}
 
-.nota-h2 {
-  font-size: 1.45rem;
-  line-height: 1.25;
+.notas-feed h2.nota-h2 {
+  font-size: 1.85rem;
+  line-height: 1.2;
   font-weight: 600;
   font-style: normal;
-  margin: 0 0 0.6rem 0;
+  font-variant: normal;
+  text-transform: none;
+  margin: 0 0 0.7rem 0;
   padding: 0;
   border: none;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
   color: var(--color-text);
   width: auto;
 }
-.nota-h2 a {
+.notas-feed h2.nota-h2 a:link,
+.notas-feed h2.nota-h2 a:visited {
   color: inherit;
   text-decoration: none;
   background-image: none;
+  border: none;
   transition: color .15s;
 }
-.nota-h2 a:hover { color: var(--color-accent); }
+.notas-feed h2.nota-h2 a:hover { color: var(--color-accent); }
 
-.nota-sub {
-  font-size: 1.05rem;
+.notas-feed .nota-sub {
+  font-size: 1.2rem;
   font-style: italic;
   color: var(--color-text-light);
-  margin: -0.25rem 0 0.8rem 0;
+  margin: -0.3rem 0 0.9rem 0;
   line-height: 1.4;
   width: auto;
   max-width: 32em;
 }
 
 /* ----- Prose (markdown content of each nota) ------------------ */
-.nota-prose { font-family: var(--font-body); }
-.nota-prose > * { font-family: inherit; }
+.notas-feed .nota-prose { font-family: var(--font-body); }
+.notas-feed .nota-prose > * { font-family: inherit; }
 
-.nota-prose p,
-.nota-prose ul,
-.nota-prose ol,
-.nota-prose figure,
-.nota-prose blockquote,
-.nota-prose blockquote p,
-.nota-prose blockquote footer {
+.notas-feed .nota-prose p,
+.notas-feed .nota-prose ul,
+.notas-feed .nota-prose ol,
+.notas-feed .nota-prose figure,
+.notas-feed .nota-prose blockquote,
+.notas-feed .nota-prose blockquote p,
+.notas-feed .nota-prose blockquote footer {
   width: auto;
   max-width: 100%;
 }
 
-.nota-prose p {
-  font-size: 1.05rem;
+.notas-feed .nota-prose p {
+  font-size: 1.25rem;
   line-height: 1.65;
-  margin: 0 0 0.9rem 0;
+  margin: 0 0 1.1rem 0;
   color: var(--color-text);
 }
-.nota-prose p:last-child { margin-bottom: 0; }
+.notas-feed .nota-prose p:last-child { margin-bottom: 0; }
 
-.nota-prose ul,
-.nota-prose ol {
-  font-size: 1.05rem;
+.notas-feed .nota-prose ul,
+.notas-feed .nota-prose ol {
+  font-size: 1.25rem;
   line-height: 1.65;
-  margin: 0 0 0.9rem 1.2rem;
+  margin: 0 0 1.1rem 1.4rem;
   padding: 0;
 }
-.nota-prose li { margin-bottom: 0.3rem; }
+.notas-feed .nota-prose li { margin-bottom: 0.4rem; }
 
-.nota-prose blockquote {
+.notas-feed .nota-prose blockquote {
   font-style: italic;
   color: var(--color-text-muted);
   border-left: 2px solid var(--color-border);
-  padding: 0 0 0 1.1rem;
-  margin: 0.6rem 0 1rem 0;
+  padding: 0 0 0 1.2rem;
+  margin: 0.7rem 0 1.2rem 0;
 }
-.nota-prose blockquote::before { content: none; }
-.nota-prose blockquote p {
-  font-size: 1.05rem;
+.notas-feed .nota-prose blockquote::before { content: none; }
+.notas-feed .nota-prose blockquote p {
+  font-size: 1.2rem;
   font-style: italic;
   color: var(--color-text-muted);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
+  line-height: 1.55;
 }
-.nota-prose blockquote p:last-child { margin-bottom: 0; }
+.notas-feed .nota-prose blockquote p:last-child { margin-bottom: 0; }
 
-.nota-prose a { color: var(--color-link); }
-.nota-prose a:hover { color: var(--color-link-hover); }
+.notas-feed .nota-prose a:link,
+.notas-feed .nota-prose a:visited { color: var(--color-link); }
+.notas-feed .nota-prose a:hover { color: var(--color-link-hover); }
 
-.nota-prose img,
-.nota-prose video {
+.notas-feed .nota-prose img,
+.notas-feed .nota-prose video {
   display: block;
   max-width: 100%;
   height: auto;
-  margin: 0.6rem 0 0.9rem 0;
+  margin: 0.8rem 0 1rem 0;
   border-radius: var(--radius-sm);
 }
 
-/* Iframes (YouTube, Vimeo, etc.): always responsive 16:9 inside the column. */
-.nota-prose iframe {
+/* Iframes (YouTube, Vimeo, etc.): responsive 16:9 inside the column. */
+.notas-feed .nota-prose iframe {
   display: block;
   width: 100%;
   max-width: 100%;
   height: auto;
   aspect-ratio: 16 / 9;
-  margin: 0.6rem 0 0.9rem 0;
+  margin: 0.8rem 0 1rem 0;
   border: 0;
   border-radius: var(--radius-sm);
   background: #000;
 }
 
-/* Twitter / X embeds, Instagram, etc. — center and contain. */
-.nota-prose .twitter-tweet,
-.nota-prose blockquote.twitter-tweet,
-.nota-prose .instagram-media {
-  max-width: 100% !important;
-  margin: 0.6rem 0 0.9rem 0 !important;
-}
-
 /* ----- Media stripe (nota.media front-matter) ----------------- */
-.nota-media {
+.notas-feed a.nota-media:link,
+.notas-feed a.nota-media:visited {
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  margin: 0.6rem 0 0.9rem 0;
-  padding: 0.45rem 0.75rem 0.45rem 0.5rem;
+  gap: 0.8rem;
+  margin: 0.8rem 0 1rem 0;
+  padding: 0.5rem 0.85rem 0.5rem 0.55rem;
   background: var(--color-background-alt);
   border-left: 2px solid var(--color-accent);
   border-radius: 0 3px 3px 0;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   line-height: 1.4;
   text-decoration: none;
+  background-image: none;
+  color: var(--color-text);
   max-width: 100%;
 }
-.nota-media:hover { background: #f5f4ef; }
+.notas-feed a.nota-media:hover { background: #f5f4ef; }
 
-.nota-media-cover {
-  width: 26px; height: 36px;
+.notas-feed .nota-media-cover {
+  width: 30px; height: 42px;
   display: block;
   border-radius: 2px;
-  flex: 0 0 26px;
+  flex: 0 0 30px;
   box-shadow: 0 1px 3px rgba(0,0,0,.15);
   background-size: cover;
   background-position: center;
 }
-.nota-media-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.nota-media-line1 {
+.notas-feed .nota-media-info {
+  display: flex; flex-direction: column; gap: 1px; min-width: 0;
+}
+.notas-feed .nota-media-line1 {
   font-variant: small-caps;
   letter-spacing: 0.08em;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   color: var(--color-accent);
   font-weight: 600;
 }
-.nota-media-line2 { color: var(--color-text); font-style: normal; font-size: 0.95rem; }
-.nota-media-line2 em { font-style: italic; color: var(--color-text); }
-.nota-media-rating {
+.notas-feed .nota-media-line2 {
+  color: var(--color-text); font-style: normal; font-size: 1.05rem;
+}
+.notas-feed .nota-media-line2 em { font-style: italic; color: var(--color-text); }
+.notas-feed .nota-media-rating {
   font-variant: small-caps;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   letter-spacing: 0.05em;
   color: var(--color-text-muted);
   margin-left: 0.35em;
 }
-.nota-media-rating b { color: var(--color-accent); font-weight: 600; }
+.notas-feed .nota-media-rating b { color: var(--color-accent); font-weight: 600; }
 
-.nota-media-cover[data-mtype="filme"]   { background: linear-gradient(135deg, #7a3c3c 0%, #2a1111 100%); }
-.nota-media-cover[data-mtype="álbum"]   { background: linear-gradient(135deg, #a54a6f 0%, #3a1525 100%); }
-.nota-media-cover[data-mtype="canção"]  { background: linear-gradient(135deg, #6a5185 0%, #1e1226 100%); }
-.nota-media-cover[data-mtype="livro"]   { background: linear-gradient(135deg, #3a4a5a 0%, #111820 100%); }
+.notas-feed .nota-media-cover[data-mtype="filme"]   { background: linear-gradient(135deg, #7a3c3c 0%, #2a1111 100%); }
+.notas-feed .nota-media-cover[data-mtype="álbum"]   { background: linear-gradient(135deg, #a54a6f 0%, #3a1525 100%); }
+.notas-feed .nota-media-cover[data-mtype="canção"]  { background: linear-gradient(135deg, #6a5185 0%, #1e1226 100%); }
+.notas-feed .nota-media-cover[data-mtype="livro"]   { background: linear-gradient(135deg, #3a4a5a 0%, #111820 100%); }
 
 /* ----- Archive rail (sticky) --------------------------------- */
-.notas-index {
+.notas-page .notas-index {
   position: sticky;
   top: 2rem;
-  padding-top: 0.1rem;
-  font-size: 0.92rem;
+  padding-top: 0.2rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
   font-feature-settings: normal;
 }
-.notas-index-head {
-  font-size: 0.7rem;
+.notas-page .notas-index-head {
+  font-size: 0.75rem;
   font-variant: small-caps;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--color-text-light);
   font-weight: 600;
-  margin: 0 0 0.9rem 0;
-  padding: 0 0 0.4rem 0;
+  margin: 0 0 1rem 0;
+  padding: 0 0 0.45rem 0;
   border-bottom: 1px solid var(--color-border-lighter);
 }
-.notas-index-yr {
-  font-size: 0.95rem;
+.notas-page .notas-index-yr {
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--color-text);
   letter-spacing: 0.01em;
-  margin: 1.2rem 0 0.3rem 0;
+  margin: 1.3rem 0 0.35rem 0;
 }
-.notas-index-yr:first-of-type { margin-top: 0; }
-.notas-index-list {
+.notas-page .notas-index-yr:first-of-type { margin-top: 0; }
+.notas-page .notas-index-list {
   list-style: none;
   padding: 0;
   margin: 0;
   width: auto;
 }
-.notas-index-list li { margin: 0; }
+.notas-page .notas-index-list li { margin: 0; }
 
-.notas-index-mo {
+/* High-specificity link styles so a:link in custom.css does not leak in. */
+.notas-page a.notas-index-mo:link,
+.notas-page a.notas-index-mo:visited {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 0.6rem;
-  padding: 0.18rem 0.5rem 0.18rem 0.6rem;
+  padding: 0.22rem 0.5rem 0.22rem 0.6rem;
   margin: 0 0 0 -0.6rem;
+  border: none;
   border-left: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  background-image: none;
   color: var(--color-text-muted);
   text-decoration: none;
-  background-image: none;
   transition: color .15s, border-color .15s, background .15s;
   font-feature-settings: normal;
   line-height: 1.4;
+  font-size: 1rem;
+  font-style: normal;
 }
-.notas-index-mo:hover {
+.notas-page a.notas-index-mo:hover {
   color: var(--color-text);
   background: var(--color-background-alt);
+  text-decoration: none;
 }
-.notas-index-mo.is-current {
+.notas-page a.notas-index-mo.is-current,
+.notas-page a.notas-index-mo.is-current:link,
+.notas-page a.notas-index-mo.is-current:visited {
   color: var(--color-text);
   font-weight: 600;
   border-left-color: var(--color-accent);
   background: var(--color-background-alt);
 }
 
-.notas-index-mo .mo-name {
+.notas-page a.notas-index-mo .mo-name {
   font-variant: normal;
   letter-spacing: 0;
   font-style: normal;
-  /* Disable ligatures here — et-book renders some letter pairs as discretionary
-     ligatures that look like glyph artifacts at this size. */
   font-feature-settings: "kern" 1, "liga" 0, "dlig" 0;
   -webkit-font-feature-settings: "kern" 1, "liga" 0, "dlig" 0;
 }
-.notas-index-mo .mo-count {
-  font-size: 0.75rem;
+.notas-page a.notas-index-mo .mo-count {
+  font-size: 0.85rem;
   color: var(--color-text-light);
   font-variant: tabular-nums;
   font-feature-settings: "tnum" 1;
@@ -379,43 +406,46 @@
 }
 
 /* ----- Pagination -------------------------------------------- */
-.notas-pager {
+.notas-feed .notas-pager {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 1rem;
-  margin: 3.5rem 0 0 0;
-  padding-top: 1.4rem;
+  margin: 4rem 0 0 0;
+  padding-top: 1.6rem;
   border-top: 1px solid var(--color-border-lighter);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-variant: small-caps;
   letter-spacing: 0.06em;
   color: var(--color-text-muted);
 }
-.notas-pager a {
+.notas-feed .notas-pager a:link,
+.notas-feed .notas-pager a:visited {
   color: var(--color-text-muted);
   text-decoration: none;
+  background-image: none;
+  border: none;
   border-bottom: 1px solid transparent;
   padding-bottom: 1px;
   cursor: pointer;
   transition: color .15s, border-color .15s;
   font: inherit;
 }
-.notas-pager a:hover {
+.notas-feed .notas-pager a:hover {
   color: var(--color-accent);
   border-bottom-color: var(--color-accent);
 }
-.notas-pager .is-disabled {
+.notas-feed .notas-pager .is-disabled {
   color: var(--color-border);
   cursor: not-allowed;
   pointer-events: none;
 }
-.notas-pager .pager-center { color: var(--color-text-light); }
-.notas-pager .pager-center b { color: var(--color-text); font-weight: 600; }
+.notas-feed .notas-pager .pager-center { color: var(--color-text-light); }
+.notas-feed .notas-pager .pager-center b { color: var(--color-text); font-weight: 600; }
 
 /* ----- Anchor flash ------------------------------------------ */
-.nota:target,
-.nota.is-flashing {
+.notas-feed .nota:target,
+.notas-feed .nota.is-flashing {
   animation: notaPing 1.4s ease;
 }
 @keyframes notaPing {
@@ -424,32 +454,35 @@
   100% { background: rgba(170,0,0,0); }
 }
 
-.nota.is-paged-out { display: none; }
+.notas-feed .nota.is-paged-out { display: none; }
 
 /* ----- Mobile ------------------------------------------------ */
-@media (max-width: 960px) {
-  :root { --notas-gap: 2rem; --notas-rhythm: 2rem; }
-  .notas-page { max-width: 100%; }
+@media (max-width: 980px) {
+  :root { --notas-gap: 2rem; --notas-rhythm: 2.2rem; }
   .notas-grid {
     grid-template-columns: 1fr;
     gap: 0;
   }
-  .notas-index {
+  .notas-page .notas-index {
     position: static;
     margin-top: 3rem;
     padding-top: 1.4rem;
     border-top: 1px solid var(--color-border-lighter);
     order: 2;
   }
-  .notas-index-list { columns: 2; column-gap: 1.4rem; }
-  .notas-index-list li { break-inside: avoid; }
+  .notas-page .notas-index-list { columns: 2; column-gap: 1.4rem; }
+  .notas-page .notas-index-list li { break-inside: avoid; }
 }
 
 @media (max-width: 600px) {
-  .notas-title { font-size: 2rem !important; }
-  .nota-h2 { font-size: 1.3rem; }
-  .nota-prose p, .nota-prose ul, .nota-prose ol { font-size: 1rem; }
-  .notas-pager { flex-wrap: wrap; justify-content: center; }
-  .notas-pager .pager-center { order: -1; flex: 1 1 100%; text-align: center; }
-  .nota-perma { opacity: 1; }
+  .notas-page h1.notas-title { font-size: 2.2rem; }
+  .notas-page .notas-lede { font-size: 1.15rem; }
+  .notas-feed h2.nota-h2 { font-size: 1.5rem; }
+  .notas-feed .nota-prose p,
+  .notas-feed .nota-prose ul,
+  .notas-feed .nota-prose ol { font-size: 1.15rem; }
+  .notas-feed .notas-pager { flex-wrap: wrap; justify-content: center; }
+  .notas-feed .notas-pager .pager-center { order: -1; flex: 1 1 100%; text-align: center; }
+  .notas-feed a.nota-perma:link,
+  .notas-feed a.nota-perma:visited { opacity: 1; }
 }
