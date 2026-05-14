@@ -1,306 +1,295 @@
 /* ============================================================
-   Notas — page styles (redesign).
-   Renders inside the site's default layout, so Tufte's body/article
-   geometry already positions the page. This file only adds the
-   blog-flow specific styles + overrides for Tufte rules that would
-   otherwise constrain paragraphs and blockquotes to 55%.
+   Notas — editorial redesign 2026
+   Single reading column + slim sticky archive rail.
+   Tighter typographic scale, hairlines instead of fleurons,
+   media constrained to the prose column.
    ============================================================ */
-
-/* et-book — safety net in case tufte.css fails to load.
-   Same files used by the rest of the site. */
-@font-face {
-  font-family: "et-book";
-  src: url("https://edwardtufte.github.io/tufte-css/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "et-book";
-  src: url("https://edwardtufte.github.io/tufte-css/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff") format("woff");
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: "et-book";
-  src: url("https://edwardtufte.github.io/tufte-css/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff") format("woff");
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
 
 :root {
   --notas-col: 640px;
-  --notas-margin-w: 240px;
-  --notas-margin-gap: 56px;
-
-  --notas-gap: 4rem;
+  --notas-rail: 180px;
+  --notas-gap: 72px;
+  --notas-rhythm: 2.6rem;
 }
 
-/* ----- Page shell -------------------------------------------------- */
+/* ----- Page shell -------------------------------------------- */
 .notas-page {
   position: relative;
-  animation: notasFade .5s ease-out;
+  animation: notasFade .35s ease-out;
+  max-width: calc(var(--notas-col) + var(--notas-rail) + var(--notas-gap));
+  margin: 0;
 }
 @keyframes notasFade {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: none; }
 }
 
-/* ----- Header ------------------------------------------------------ */
-.notas-header {
-  margin-bottom: 3rem;
+/* ----- Header ------------------------------------------------ */
+.notas-head {
+  margin: 0 0 2.4rem 0;
   max-width: 36em;
 }
-.notas-header h1 {
-  /* Inherit Tufte's h1 sizing (3.2rem / line-height 1) so it matches
-     the rest of the site; just trim the bottom margin. */
-  margin-bottom: 1rem;
-  font-style: normal;
+.notas-eyebrow {
+  font-size: 0.78rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
   width: auto;
 }
-.notas-header .lede {
+.notas-title {
+  font-size: 2.4rem !important;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem 0 !important;
+  padding: 0;
+  border: none;
+  font-style: normal;
+  font-weight: 400;
+  width: auto;
+}
+.notas-lede {
+  font-size: 1.05rem;
   font-style: italic;
   color: var(--color-text-muted);
-  max-width: 36em;
+  line-height: 1.55;
+  margin: 0 0 0.9rem 0;
+  max-width: 32em;
   width: auto;
-  margin: 0;
 }
-.notas-header .meta {
-  margin-top: 1.4rem;
-  font-size: 1rem;
+.notas-meta {
+  font-size: 0.78rem;
   font-variant: small-caps;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
   color: var(--color-text-light);
+  margin: 0;
   width: auto;
 }
-.notas-header .meta b { color: var(--color-text); font-weight: 600; }
-.notas-header .meta .meta-sep { margin: 0 .6em; color: var(--color-border); }
-.notas-header .meta .feed-link {
+.notas-meta b { color: var(--color-text); font-weight: 600; }
+.notas-meta .meta-sep { margin: 0 .5em; color: var(--color-border); }
+.notas-meta .feed-link {
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px dotted var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1px;
 }
-.notas-header .meta .feed-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
+.notas-meta .feed-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
 
-/* ----- Two-column layout: feed + sticky index --------------------- */
-.notas-layout {
+/* ----- Two-column: feed + slim sticky archive ----------------- */
+.notas-grid {
   display: grid;
-  grid-template-columns: minmax(0, calc(var(--notas-col) + var(--notas-margin-w) + var(--notas-margin-gap))) 1fr;
-  gap: 56px;
+  grid-template-columns: minmax(0, var(--notas-col)) var(--notas-rail);
+  gap: var(--notas-gap);
   align-items: start;
 }
-.notas-feed { position: relative; min-width: 0; }
 
-/* ----- Index rail (sticky) ---------------------------------------- */
-.notas-index {
-  position: sticky;
-  top: 2.4rem;
-  font-size: 1rem;
-  color: var(--color-text-muted);
-  padding-top: .25rem;
-}
-.notas-index-head {
-  font-variant: small-caps;
-  letter-spacing: .1em;
-  font-size: .8rem;
-  font-weight: 600;
-  color: var(--color-text-light);
-  padding-bottom: .6rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid var(--color-border-lighter);
-  text-align: left;
-}
-.notas-index ul { list-style: none; padding: 0; margin: 0; width: auto; }
-.notas-index .yr {
-  font-variant: small-caps;
-  letter-spacing: .06em;
-  font-weight: 600;
-  color: var(--color-text);
-  font-size: 1rem;
-  margin: 1.4rem 0 .55rem;
-}
-.notas-index .yr:first-child { margin-top: 0; }
-.notas-index .mo {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: .25rem 0;
-  cursor: pointer;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  transition: color .2s;
+.notas-feed {
   position: relative;
-}
-.notas-index .mo:hover { color: var(--color-accent); }
-.notas-index .mo.is-current { color: var(--color-text); font-weight: 600; }
-.notas-index .mo.is-current::before {
-  content: "›";
-  position: absolute;
-  left: -1.1rem;
-  color: var(--color-accent);
-}
-.notas-index .mo-name { font-variant: normal; }
-.notas-index .mo-count {
-  font-size: .8rem;
-  color: var(--color-text-light);
-  font-variant: small-caps;
-  letter-spacing: .03em;
-}
-.notas-index .ornament {
-  text-align: center;
-  color: var(--color-accent);
-  opacity: .35;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
+  min-width: 0;
 }
 
-/* ----- A nota entry ----------------------------------------------- */
+/* ----- A single nota ----------------------------------------- */
 .nota {
-  display: grid;
-  grid-template-columns: minmax(0, var(--notas-col)) var(--notas-margin-w);
-  gap: var(--notas-margin-gap);
+  margin: 0;
+  padding: var(--notas-rhythm) 0;
+  border-top: 1px solid var(--color-border-lighter);
   scroll-margin-top: 80px;
 }
-.nota + .nota,
-.nota-sep + .nota { margin-top: var(--notas-gap); }
+.nota:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
 
-/* Right margin: date + permalink (Tufte marginnote style) */
-.nota-margin {
-  grid-column: 2; grid-row: 1;
-  padding-top: .55rem;
-  font-size: .9rem;
-  line-height: 1.5;
-  color: var(--color-text-light);
+.nota .nota-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 0.5rem 0;
+  max-width: none;
+}
+
+.nota-date {
+  font-size: 0.75rem;
   font-variant: small-caps;
-  letter-spacing: .05em;
-  font-style: normal;
-}
-.nota-margin .day {
-  color: var(--color-text-muted);
-  font-weight: 600;
-  font-size: 1rem;
-}
-.nota-margin .year {
-  display: block;
-  font-size: .8rem;
-  letter-spacing: .08em;
-  margin-top: .15rem;
+  letter-spacing: 0.1em;
   color: var(--color-text-light);
+  text-transform: lowercase;
+  font-weight: 600;
+  font-feature-settings: normal;
 }
-.nota-margin .perma {
-  display: inline-block;
-  margin-top: .5rem;
-  font-size: .8rem;
+
+.nota-perma {
+  font-size: 0.9rem;
   color: var(--color-text-light);
   text-decoration: none;
-  border-bottom: 1px dotted var(--color-border);
-  padding-bottom: 1px;
-  transition: color .2s, border-color .2s;
+  line-height: 1;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  transition: color .15s, background .15s;
   cursor: pointer;
+  opacity: 0;
+  font-feature-settings: normal;
 }
-.nota-margin .perma:hover { color: var(--color-accent); border-color: var(--color-accent); }
-.nota-margin .perma::before { content: "#"; opacity: .7; margin-right: .1em; }
+.nota:hover .nota-perma,
+.nota-perma:focus { opacity: 1; }
+.nota-perma:hover { color: var(--color-accent); background: var(--color-background-alt); }
 
-/* Body column */
-.nota-body { grid-column: 1; grid-row: 1; min-width: 0; }
-.nota-title {
-  /* Lighter than Tufte's h2 — no top border, no italic, smaller leading.
-     Sized to read as a sub-section title within the blog flow. */
-  font-size: 1.9rem;
-  line-height: 1.2;
+.nota-h2 {
+  font-size: 1.45rem;
+  line-height: 1.25;
   font-weight: 600;
   font-style: normal;
-  margin: 0 0 .6rem;
-  padding-top: 0;
-  border-top: 0;
+  margin: 0 0 0.6rem 0;
+  padding: 0;
+  border: none;
   letter-spacing: -0.005em;
   color: var(--color-text);
   width: auto;
 }
-.nota-title a {
+.nota-h2 a {
   color: inherit;
   text-decoration: none;
   background-image: none;
-  transition: color .2s;
+  transition: color .15s;
 }
-.nota-title a:hover { color: var(--color-accent); }
-.nota-subtitle {
-  font-size: 1.3rem;
+.nota-h2 a:hover { color: var(--color-accent); }
+
+.nota-sub {
+  font-size: 1.05rem;
   font-style: italic;
   color: var(--color-text-light);
-  margin: -.2rem 0 1rem;
+  margin: -0.25rem 0 0.8rem 0;
   line-height: 1.4;
+  width: auto;
+  max-width: 32em;
 }
 
-/* Markdown rendered body — inherits Tufte/custom typography (font-size,
-   line-height, paragraph margin) so the rhythm matches posts. The only
-   overrides are widths, since Tufte caps p/blockquote/list at 55%. */
-.nota-body .nota-content > * { font-family: var(--font-body); }
-.nota-body .nota-content p,
-.nota-body .nota-content ul,
-.nota-body .nota-content ol,
-.nota-body .nota-content figure,
-.nota-body .nota-content blockquote,
-.nota-body .nota-content blockquote p,
-.nota-body .nota-content blockquote footer {
+/* ----- Prose (markdown content of each nota) ------------------ */
+.nota-prose { font-family: var(--font-body); }
+.nota-prose > * { font-family: inherit; }
+
+.nota-prose p,
+.nota-prose ul,
+.nota-prose ol,
+.nota-prose figure,
+.nota-prose blockquote,
+.nota-prose blockquote p,
+.nota-prose blockquote footer {
   width: auto;
   max-width: 100%;
 }
-.nota-body .nota-content blockquote {
+
+.nota-prose p {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  margin: 0 0 0.9rem 0;
+  color: var(--color-text);
+}
+.nota-prose p:last-child { margin-bottom: 0; }
+
+.nota-prose ul,
+.nota-prose ol {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  margin: 0 0 0.9rem 1.2rem;
+  padding: 0;
+}
+.nota-prose li { margin-bottom: 0.3rem; }
+
+.nota-prose blockquote {
   font-style: italic;
   color: var(--color-text-muted);
   border-left: 2px solid var(--color-border);
-  padding-left: 1.2rem;
-  margin: 0 0 1.4rem;
+  padding: 0 0 0 1.1rem;
+  margin: 0.6rem 0 1rem 0;
 }
-.nota-body .nota-content blockquote p:last-child { margin-bottom: 0; }
-.nota-body .nota-content img {
-  max-width: 100%; height: auto;
+.nota-prose blockquote::before { content: none; }
+.nota-prose blockquote p {
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+.nota-prose blockquote p:last-child { margin-bottom: 0; }
+
+.nota-prose a { color: var(--color-link); }
+.nota-prose a:hover { color: var(--color-link-hover); }
+
+.nota-prose img,
+.nota-prose video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.6rem 0 0.9rem 0;
   border-radius: var(--radius-sm);
 }
-.nota-body .nota-content iframe { max-width: 100%; }
 
-/* ----- Media stripe ------------------------------------------------ */
+/* Iframes (YouTube, Vimeo, etc.): always responsive 16:9 inside the column. */
+.nota-prose iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  margin: 0.6rem 0 0.9rem 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: #000;
+}
+
+/* Twitter / X embeds, Instagram, etc. — center and contain. */
+.nota-prose .twitter-tweet,
+.nota-prose blockquote.twitter-tweet,
+.nota-prose .instagram-media {
+  max-width: 100% !important;
+  margin: 0.6rem 0 0.9rem 0 !important;
+}
+
+/* ----- Media stripe (nota.media front-matter) ----------------- */
 .nota-media {
-  display: flex; align-items: center; gap: .9rem;
-  margin: 1rem 0 1.2rem;
-  padding: .55rem .8rem .55rem .55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.6rem 0 0.9rem 0;
+  padding: 0.45rem 0.75rem 0.45rem 0.5rem;
   background: var(--color-background-alt);
   border-left: 2px solid var(--color-accent);
-  border-radius: 0 4px 4px 0;
-  font-size: 1rem;
+  border-radius: 0 3px 3px 0;
+  font-size: 0.95rem;
   line-height: 1.4;
-  width: fit-content;
-  max-width: 100%;
   text-decoration: none;
+  max-width: 100%;
 }
-.nota-media:hover { background: var(--color-background-alt); }
+.nota-media:hover { background: #f5f4ef; }
+
 .nota-media-cover {
-  width: 30px; height: 42px;
+  width: 26px; height: 36px;
   display: block;
   border-radius: 2px;
-  flex: 0 0 30px;
-  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  flex: 0 0 26px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
   background-size: cover;
   background-position: center;
 }
 .nota-media-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .nota-media-line1 {
   font-variant: small-caps;
-  letter-spacing: .08em;
-  font-size: .8rem;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
   color: var(--color-accent);
   font-weight: 600;
 }
-.nota-media-line2 { color: var(--color-text); font-style: normal; }
-.nota-media-line2 b { font-weight: 600; }
-.nota-media-line2 em { font-style: italic; color: var(--color-text-muted); }
+.nota-media-line2 { color: var(--color-text); font-style: normal; font-size: 0.95rem; }
+.nota-media-line2 em { font-style: italic; color: var(--color-text); }
 .nota-media-rating {
   font-variant: small-caps;
-  font-size: .8rem;
-  letter-spacing: .05em;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
   color: var(--color-text-muted);
-  margin-left: .35em;
+  margin-left: 0.35em;
 }
 .nota-media-rating b { color: var(--color-accent); font-weight: 600; }
 
@@ -309,108 +298,158 @@
 .nota-media-cover[data-mtype="canção"]  { background: linear-gradient(135deg, #6a5185 0%, #1e1226 100%); }
 .nota-media-cover[data-mtype="livro"]   { background: linear-gradient(135deg, #3a4a5a 0%, #111820 100%); }
 
-/* ----- Separators between notas (fleuron) ------------------------- */
-.nota-sep {
-  text-align: center;
-  margin: var(--notas-gap) 0;
-  color: var(--color-accent);
-  opacity: .35;
-  font-size: 1.4rem;
-  line-height: 1;
-  user-select: none;
+/* ----- Archive rail (sticky) --------------------------------- */
+.notas-index {
+  position: sticky;
+  top: 2rem;
+  padding-top: 0.1rem;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  font-feature-settings: normal;
+}
+.notas-index-head {
+  font-size: 0.7rem;
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  font-weight: 600;
+  margin: 0 0 0.9rem 0;
+  padding: 0 0 0.4rem 0;
+  border-bottom: 1px solid var(--color-border-lighter);
+}
+.notas-index-yr {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.01em;
+  margin: 1.2rem 0 0.3rem 0;
+}
+.notas-index-yr:first-of-type { margin-top: 0; }
+.notas-index-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: auto;
+}
+.notas-index-list li { margin: 0; }
+
+.notas-index-mo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.18rem 0.5rem 0.18rem 0.6rem;
+  margin: 0 0 0 -0.6rem;
+  border-left: 2px solid transparent;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  background-image: none;
+  transition: color .15s, border-color .15s, background .15s;
+  font-feature-settings: normal;
+  line-height: 1.4;
+}
+.notas-index-mo:hover {
+  color: var(--color-text);
+  background: var(--color-background-alt);
+}
+.notas-index-mo.is-current {
+  color: var(--color-text);
+  font-weight: 600;
+  border-left-color: var(--color-accent);
+  background: var(--color-background-alt);
 }
 
-/* ----- Pagination ------------------------------------------------- */
-.notas-pager-wrap {
-  margin-top: 6rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-border-lighter);
+.notas-index-mo .mo-name {
+  font-variant: normal;
+  letter-spacing: 0;
+  font-style: normal;
+  /* Disable ligatures here — et-book renders some letter pairs as discretionary
+     ligatures that look like glyph artifacts at this size. */
+  font-feature-settings: "kern" 1, "liga" 0, "dlig" 0;
+  -webkit-font-feature-settings: "kern" 1, "liga" 0, "dlig" 0;
 }
-.notas-pager-ornament {
-  text-align: center;
-  color: var(--color-accent);
-  opacity: .4;
-  font-size: 1.3rem;
-  margin-bottom: 1.4rem;
+.notas-index-mo .mo-count {
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+  font-variant: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: 0;
+  flex-shrink: 0;
 }
+
+/* ----- Pagination -------------------------------------------- */
 .notas-pager {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 1.2rem;
-  font-size: 1rem;
+  gap: 1rem;
+  margin: 3.5rem 0 0 0;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--color-border-lighter);
+  font-size: 0.85rem;
   font-variant: small-caps;
-  letter-spacing: .05em;
+  letter-spacing: 0.06em;
   color: var(--color-text-muted);
 }
 .notas-pager a {
-  color: var(--color-link);
+  color: var(--color-text-muted);
   text-decoration: none;
-  border-bottom: 1px solid rgba(26,115,232,0.3);
+  border-bottom: 1px solid transparent;
   padding-bottom: 1px;
   cursor: pointer;
-  transition: color .2s, border-color .2s;
+  transition: color .15s, border-color .15s;
   font: inherit;
-  font-variant: small-caps;
-  letter-spacing: .05em;
 }
-.notas-pager a:hover { color: var(--color-link-hover); border-color: var(--color-link-hover); }
-.notas-pager .disabled {
+.notas-pager a:hover {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+.notas-pager .is-disabled {
   color: var(--color-border);
   cursor: not-allowed;
   pointer-events: none;
-  border-bottom-color: transparent;
 }
-.notas-pager .center { color: var(--color-text-light); }
-.notas-pager .center b { color: var(--color-text); font-weight: 600; }
+.notas-pager .pager-center { color: var(--color-text-light); }
+.notas-pager .pager-center b { color: var(--color-text); font-weight: 600; }
 
-/* ----- Footer below pager ----------------------------------------- */
-.notas-foot {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  font-size: 1rem;
-  color: var(--color-text-light);
-  text-align: center;
-}
-.notas-foot::before {
-  content: "❧"; display: block;
-  font-size: 1.4rem; color: var(--color-accent); opacity: .5;
-  margin-bottom: 1rem;
-}
-
-/* ----- Anchor highlight ------------------------------------------- */
+/* ----- Anchor flash ------------------------------------------ */
 .nota:target,
-.nota.anchor-flash {
-  animation: notaPing 1.6s ease;
+.nota.is-flashing {
+  animation: notaPing 1.4s ease;
 }
 @keyframes notaPing {
   0%   { background: rgba(170,0,0,0); }
-  20%  { background: rgba(170,0,0,0.06); }
+  25%  { background: rgba(170,0,0,0.05); }
   100% { background: rgba(170,0,0,0); }
 }
 
-.nota.is-paged-out,
-.nota-sep.is-paged-out { display: none; }
+.nota.is-paged-out { display: none; }
 
-/* ----- Mobile collapse -------------------------------------------- */
-@media (max-width: 980px) {
-  .notas-layout { grid-template-columns: 1fr; gap: 2rem; }
+/* ----- Mobile ------------------------------------------------ */
+@media (max-width: 960px) {
+  :root { --notas-gap: 2rem; --notas-rhythm: 2rem; }
+  .notas-page { max-width: 100%; }
+  .notas-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
   .notas-index {
     position: static;
-    border-top: 1px solid var(--color-border-lighter);
-    padding-top: 2rem;
     margin-top: 3rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--color-border-lighter);
     order: 2;
   }
-  .nota { grid-template-columns: 1fr; gap: 0; }
-  .nota-margin {
-    grid-column: 1; grid-row: 1;
-    padding-top: 0;
-    margin-bottom: .35rem;
-    display: flex; align-items: baseline; gap: .8rem;
-  }
-  .nota-margin .year { display: inline; margin-top: 0; }
-  .nota-margin .perma { margin-top: 0; margin-left: auto; }
-  .nota-body { grid-column: 1; grid-row: 2; }
-  .notas-header h1 { font-size: 2.4rem; }
+  .notas-index-list { columns: 2; column-gap: 1.4rem; }
+  .notas-index-list li { break-inside: avoid; }
+}
+
+@media (max-width: 600px) {
+  .notas-title { font-size: 2rem !important; }
+  .nota-h2 { font-size: 1.3rem; }
+  .nota-prose p, .nota-prose ul, .nota-prose ol { font-size: 1rem; }
+  .notas-pager { flex-wrap: wrap; justify-content: center; }
+  .notas-pager .pager-center { order: -1; flex: 1 1 100%; text-align: center; }
+  .nota-perma { opacity: 1; }
 }
