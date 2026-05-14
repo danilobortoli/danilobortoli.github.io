@@ -9,231 +9,55 @@ sitemap:
 {%- assign meses = "janeiro,fevereiro,março,abril,maio,junho,julho,agosto,setembro,outubro,novembro,dezembro" | split: "," -%}
 {%- assign meses_abrev = "jan,fev,mar,abr,mai,jun,jul,ago,set,out,nov,dez" | split: "," -%}
 {%- assign all_notas = site.notas | sort: 'date' | reverse -%}
-{%- assign oldest = all_notas | last -%}
-{%- assign oldest_m_idx = oldest.date | date: "%-m" | minus: 1 -%}
-{%- assign oldest_month_name = meses[oldest_m_idx] -%}
-{%- assign oldest_year = oldest.date | date: "%Y" -%}
 {%- assign months = all_notas | group_by_exp: "n", "n.date | date: '%Y-%m'" -%}
 
-<section class="notas-page">
+<section class="notas-page var-diario">
 
-  <header class="notas-head">
-    <p class="notas-eyebrow">Caderno · arquivo cronológico</p>
-    <h1 class="notas-title">Notas</h1>
-    <p class="notas-lede">
-      Pequenos pensamentos, links interessantes e observações rápidas
-      que não justificam um post completo.
+  <header class="notas-header">
+    <h1>Notas</h1>
+    <p class="lede">
+      Pequenos pensamentos, recortes, observações rápidas que não justificam
+      um post completo &mdash; mas que merecem ser lembradas.
     </p>
-    <p class="notas-meta">
-      <b>{{ all_notas.size }}</b> notas
-      <span class="meta-sep">·</span>
-      desde {{ oldest_month_name }} de {{ oldest_year }}
-      <span class="meta-sep">·</span>
-      <a class="feed-link" href="{{ '/feed.xml' | relative_url }}">feed rss</a>
-    </p>
+    <span class="count">{{ all_notas.size }} notas · arquivo</span>
   </header>
 
-  <div class="notas-grid">
-    <div class="notas-feed" id="notas-feed">
-
-      {%- for nota in all_notas -%}
-        {%- assign anchor_id = nota.url | replace: "/notas/", "" | replace: "/", "" -%}
-        {%- assign month_key = nota.date | date: "%Y-%m" -%}
-        {%- assign day_n = nota.date | date: "%-d" -%}
-        {%- assign mo_idx = nota.date | date: "%-m" | minus: 1 -%}
-        {%- assign mo_short = meses_abrev[mo_idx] -%}
-        {%- assign yr = nota.date | date: "%Y" -%}
-        <article id="n-{{ anchor_id }}" class="nota" data-month="{{ month_key }}" data-anchor="{{ anchor_id }}">
-          <header class="nota-head">
-            <time class="nota-date" datetime="{{ nota.date | date_to_xmlschema }}">{{ day_n }} {{ mo_short }} {{ yr }}</time>
-            <a class="nota-perma" href="#n-{{ anchor_id }}" data-perma="{{ anchor_id }}" aria-label="Permalink">#</a>
-          </header>
-          {%- if nota.title and nota.title != "" -%}
-          <h2 class="nota-h2">
-            <a href="{{ nota.url | relative_url }}">{{ nota.title }}</a>
-          </h2>
+  <section class="archive">
+    {%- for group in months -%}
+      {%- assign first_nota = group.items | first -%}
+      {%- assign g_year = first_nota.date | date: "%Y" -%}
+      {%- assign g_mo_idx = first_nota.date | date: "%-m" | minus: 1 -%}
+      {%- assign g_mo_name = meses[g_mo_idx] -%}
+      <section class="month">
+        <div class="month-label">
+          <h2>{{ g_mo_name }} · {{ g_year }}</h2>
+        </div>
+        {%- for nota in group.items -%}
+          {%- assign day_n = nota.date | date: "%-d" -%}
+          {%- assign mo_idx = nota.date | date: "%-m" | minus: 1 -%}
+          {%- assign mo_short = meses_abrev[mo_idx] -%}
+          {%- assign entry_title = nota.title | default: "(sem título)" -%}
+          {%- if nota.subtitle and nota.subtitle != "" -%}
+            {%- assign entry_excerpt = nota.subtitle -%}
+          {%- else -%}
+            {%- assign raw_excerpt = nota.excerpt | strip_html | strip -%}
+            {%- assign entry_excerpt = raw_excerpt | truncatewords: 30 -%}
           {%- endif -%}
-          {%- if nota.subtitle -%}
-          <p class="nota-sub">{{ nota.subtitle }}</p>
-          {%- endif -%}
-          {%- if nota.media and nota.media.type -%}
-            {%- assign mtype = nota.media.type | downcase -%}
-            {%- assign mtitle = nota.media.titulo -%}
-            {%- assign mcreator = nota.media.artista | default: nota.media.diretor | default: nota.media.autor -%}
-            {%- assign myear = nota.media.ano -%}
-            {%- assign mrating = nota.media.nota -%}
-            <a class="nota-media" href="{{ nota.url | relative_url }}">
-              <span class="nota-media-cover" data-mtype="{{ mtype }}"{% if nota.media.capa %} style="background-image:url('{{ nota.media.capa }}')"{% endif %}></span>
-              <span class="nota-media-info">
-                <span class="nota-media-line1">{{ nota.media.type }}</span>
-                <span class="nota-media-line2">
-                  {%- if mtitle -%}<em>{{ mtitle }}</em>{%- endif -%}
-                  {%- if mcreator -%}{%- if mtitle %} · {% endif -%}{{ mcreator }}{%- endif -%}
-                  {%- if myear -%}
-                    {%- if mtitle or mcreator -%}, {% endif -%}{{ myear }}
-                  {%- endif -%}
-                  {%- if mrating -%}<span class="nota-media-rating"> <b>{{ mrating }}</b>/10</span>{%- endif -%}
-                </span>
-              </span>
-            </a>
-          {%- endif -%}
-          <div class="nota-prose">
-            {{ nota.content }}
-          </div>
-        </article>
-      {%- endfor -%}
+          <a class="entry" href="{{ nota.url | relative_url }}">
+            <div class="day">
+              {{ day_n }}
+              <span class="day-suffix">{{ mo_short }}</span>
+            </div>
+            <div class="entry-body">
+              <h3 class="e-title">{{ entry_title }}</h3>
+              {%- if entry_excerpt and entry_excerpt != "" -%}
+                <p class="e-body">{{ entry_excerpt }}</p>
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      </section>
+    {%- endfor -%}
+  </section>
 
-      <nav class="notas-pager" id="notas-pager" aria-label="Paginação">
-        <a id="pager-prev" href="#" data-dir="prev">‹ anterior</a>
-        <span class="pager-center">página <b id="pager-cur">1</b> de <b id="pager-total">1</b></span>
-        <a id="pager-next" href="#" data-dir="next">próxima ›</a>
-      </nav>
-
-    </div>
-
-    <aside class="notas-index" id="notas-index" aria-label="Arquivo de notas">
-      <div class="notas-index-head">Arquivo</div>
-      {%- assign last_year = "" -%}
-      {%- for group in months -%}
-        {%- assign first_nota = group.items | first -%}
-        {%- assign g_year = first_nota.date | date: "%Y" -%}
-        {%- assign g_mo_idx = first_nota.date | date: "%-m" | minus: 1 -%}
-        {%- assign g_mo_name = meses[g_mo_idx] -%}
-        {%- assign g_first_anchor = first_nota.url | replace: "/notas/", "" | replace: "/", "" -%}
-        {%- if g_year != last_year -%}
-          {%- unless last_year == "" -%}</ul>{%- endunless -%}
-          <div class="notas-index-yr">{{ g_year }}</div>
-          <ul class="notas-index-list">
-          {%- assign last_year = g_year -%}
-        {%- endif -%}
-          <li>
-            <a class="notas-index-mo" data-month="{{ group.name }}" data-first-anchor="{{ g_first_anchor }}" href="#n-{{ g_first_anchor }}">
-              <span class="mo-name">{{ g_mo_name }}</span>
-              <span class="mo-count">{{ group.items.size }}</span>
-            </a>
-          </li>
-      {%- endfor -%}
-      {%- unless last_year == "" -%}</ul>{%- endunless -%}
-    </aside>
-  </div>
 </section>
-
-<script>
-(function () {
-  'use strict';
-
-  var PER_PAGE = 8;
-  var feed = document.getElementById('notas-feed');
-  if (!feed) return;
-
-  var notas = Array.prototype.slice.call(feed.querySelectorAll('.nota'));
-  var totalPages = Math.max(1, Math.ceil(notas.length / PER_PAGE));
-  var current = 1;
-
-  var elCur = document.getElementById('pager-cur');
-  var elTotal = document.getElementById('pager-total');
-  var elPrev = document.getElementById('pager-prev');
-  var elNext = document.getElementById('pager-next');
-  elTotal.textContent = totalPages;
-
-  function applyPage(p, scrollTop) {
-    if (p < 1) p = 1;
-    if (p > totalPages) p = totalPages;
-    current = p;
-    var start = (p - 1) * PER_PAGE;
-    var end = start + PER_PAGE;
-    notas.forEach(function (n, i) {
-      n.classList.toggle('is-paged-out', i < start || i >= end);
-    });
-    elCur.textContent = current;
-    elPrev.classList.toggle('is-disabled', current === 1);
-    elNext.classList.toggle('is-disabled', current === totalPages);
-    refreshCurrentMonth();
-    if (scrollTop) window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function pageOf(idx) { return Math.floor(idx / PER_PAGE) + 1; }
-
-  function jumpToAnchor(anchor) {
-    var idx = notas.findIndex(function (n) { return n.dataset.anchor === anchor; });
-    if (idx === -1) return false;
-    var target = pageOf(idx);
-    if (target !== current) applyPage(target, false);
-    var el = document.getElementById('n-' + anchor);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      el.classList.remove('is-flashing');
-      void el.offsetWidth;
-      el.classList.add('is-flashing');
-    }
-    history.replaceState(null, '', '#n-' + anchor);
-    return true;
-  }
-
-  elPrev.addEventListener('click', function (e) {
-    e.preventDefault();
-    if (current > 1) applyPage(current - 1, true);
-  });
-  elNext.addEventListener('click', function (e) {
-    e.preventDefault();
-    if (current < totalPages) applyPage(current + 1, true);
-  });
-
-  feed.addEventListener('click', function (e) {
-    var perma = e.target.closest('.nota-perma');
-    if (perma) {
-      e.preventDefault();
-      jumpToAnchor(perma.dataset.perma);
-    }
-  });
-
-  var indexEl = document.getElementById('notas-index');
-  indexEl.addEventListener('click', function (e) {
-    var mo = e.target.closest('.notas-index-mo');
-    if (!mo) return;
-    e.preventDefault();
-    jumpToAnchor(mo.dataset.firstAnchor);
-  });
-
-  var monthLinks = Array.prototype.slice.call(indexEl.querySelectorAll('.notas-index-mo'));
-  function setCurrentMonth(monthKey) {
-    monthLinks.forEach(function (a) {
-      a.classList.toggle('is-current', a.dataset.month === monthKey);
-    });
-  }
-  function refreshCurrentMonth() {
-    for (var i = 0; i < notas.length; i++) {
-      if (!notas[i].classList.contains('is-paged-out')) {
-        setCurrentMonth(notas[i].dataset.month);
-        break;
-      }
-    }
-  }
-
-  var ratios = new Map();
-  var obs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      ratios.set(en.target.dataset.month, en.isIntersecting ? en.intersectionRatio : 0);
-    });
-    var best = null, bestR = 0;
-    ratios.forEach(function (r, m) { if (r > bestR) { bestR = r; best = m; } });
-    if (best) setCurrentMonth(best);
-  }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
-  notas.forEach(function (n) { obs.observe(n); });
-
-  var initial = 1;
-  var hash = window.location.hash;
-  if (hash.indexOf('#n-') === 0) {
-    var anchor = hash.slice(3);
-    var idx = notas.findIndex(function (n) { return n.dataset.anchor === anchor; });
-    if (idx !== -1) initial = pageOf(idx);
-  }
-  applyPage(initial, false);
-  if (hash.indexOf('#n-') === 0) {
-    setTimeout(function () {
-      var el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' });
-    }, 60);
-  }
-})();
-</script>
