@@ -1,81 +1,31 @@
 ---
 layout: default
 ---
+{%- capture cat -%}{% include notas-category.html title=page.title subtitle=page.subtitle content=content media_type=page.media.type %}{%- endcapture -%}
 
-<article class="nota-single">
-  <header class="nota-single-header">
-    <p class="nota-single-back">
-      <a href="{{ '/notas/' | relative_url }}">&larr; Voltar para Notas</a>
+<section class="notas-page var-ny var-ny1 single">
+  <p class="p-back">
+    <a href="{{ '/notas/' | relative_url }}">&larr; Voltar para Notas</a>
+  </p>
+
+  <article class="post">
+    <p class="p-section">{{ cat }}</p>
+    {%- if page.title and page.title != "" -%}
+    <h1 class="p-title">{{ page.title }}</h1>
+    {%- endif -%}
+    {%- if page.subtitle and page.subtitle != "" -%}
+    <p class="p-subtitle">{{ page.subtitle }}</p>
+    {%- endif -%}
+    <p class="p-byline">
+      <span class="by">por</span>
+      <span class="author">Danilo Bortoli</span>
+      &nbsp;·&nbsp;
+      <time datetime="{{ page.date | date_to_xmlschema }}">{% include data-pt.html date=page.date %}</time>
     </p>
-    <time class="nota-single-date" datetime="{{ page.date | date_to_xmlschema }}">
-      {% include data-pt.html date=page.date %}
-    </time>
-    {% if page.title %}
-    <h1 class="nota-single-title">{{ page.title }}</h1>
-    {% endif %}
-  </header>
 
-  <div class="nota-single-content">
-    {% include media-review.html variant='compact' %}
-    {{ content }}
-  </div>
-</article>
-
-<style>
-  .nota-single {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .nota-single-header {
-    margin-bottom: var(--spacing-md);
-  }
-
-  .nota-single-back {
-    font-size: 0.9rem;
-    margin-bottom: var(--spacing-sm);
-  }
-
-  .nota-single-back a {
-    color: var(--color-text-light);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-  }
-
-  .nota-single-back a:hover {
-    color: var(--color-accent);
-  }
-
-  .nota-single-date {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--color-text-light);
-    font-variant: small-caps;
-    letter-spacing: 0.05em;
-    margin-bottom: var(--spacing-sm);
-  }
-
-  .nota-single-title {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin: 0 0 var(--spacing-md) 0;
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 1px solid var(--color-border-lighter);
-    line-height: 1.3;
-  }
-
-  .nota-single-content {
-    font-size: 1.3rem;
-    line-height: 1.7;
-    color: var(--color-text);
-  }
-
-  .nota-single-content p {
-    margin-bottom: 1.3rem;
-  }
-
-  .nota-single-content p:last-child {
-    margin-bottom: 0;
-  }
-</style>
+    <div class="p-body nota-single-content">
+      {% include media-review.html variant='compact' %}
+      {{ content }}
+    </div>
+  </article>
+</section>
