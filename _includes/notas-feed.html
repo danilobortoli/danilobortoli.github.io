@@ -1,0 +1,67 @@
+{%- assign per_page = 15 -%}
+{%- assign current_page = page.page_num | default: 1 -%}
+{%- assign all_notas = site.notas | sort: 'date' | reverse -%}
+{%- assign total_notas = all_notas.size -%}
+{%- assign total_pages = total_notas | divided_by: per_page -%}
+{%- assign remainder = total_notas | modulo: per_page -%}
+{%- if remainder > 0 -%}{%- assign total_pages = total_pages | plus: 1 -%}{%- endif -%}
+{%- assign skip = current_page | minus: 1 | times: per_page -%}
+
+<section class="notas-page var-ny var-ny1">
+
+  <header class="ny-masthead">
+    <p class="kicker">Danilo Bortoli &middot; o blog</p>
+    <h1>The <em>Notas</em></h1>
+    <p class="dateline">notas &amp; comentários · {% if current_page == 1 %}{{ total_notas }} no arquivo{% else %}página {{ current_page }} de {{ total_pages }}{% endif %}</p>
+  </header>
+
+  <section class="feed">
+    {%- for nota in all_notas offset: skip limit: per_page -%}
+      {%- capture cat -%}{% include notas-category.html title=nota.title subtitle=nota.subtitle content=nota.content media_type=nota.media.type %}{%- endcapture -%}
+      <article class="post" id="{{ nota.url | split: '/' | last }}">
+        <p class="p-section">{{ cat }}</p>
+        {%- if nota.title and nota.title != "" -%}
+        <h2 class="p-title"><a href="{{ nota.url | relative_url }}">{{ nota.title }}</a></h2>
+        {%- endif -%}
+        {%- if nota.subtitle and nota.subtitle != "" -%}
+        <p class="p-subtitle">{{ nota.subtitle }}</p>
+        {%- endif -%}
+        <p class="p-byline">
+          <span class="by">por</span>
+          <span class="author">Danilo Bortoli</span>
+          &nbsp;·&nbsp;
+          <a class="permalink" href="{{ nota.url | relative_url }}">{% include data-pt.html date=nota.date %}</a>
+        </p>
+        <div class="p-body">
+          {{ nota.content }}
+        </div>
+      </article>
+    {%- endfor -%}
+  </section>
+
+  {%- if total_pages > 1 -%}
+  <nav class="paginator" aria-label="Paginação das notas">
+    <div class="paginator-inner">
+      {%- if current_page > 1 -%}
+        {%- assign prev_page = current_page | minus: 1 -%}
+        {%- if prev_page == 1 -%}
+          {%- assign prev_url = '/notas/' -%}
+        {%- else -%}
+          {%- capture prev_url -%}/notas/page/{{ prev_page }}/{%- endcapture -%}
+        {%- endif -%}
+        <a class="prev" href="{{ prev_url | relative_url }}">&larr; Notas mais novas</a>
+      {%- else -%}
+        <span class="prev disabled">&nbsp;</span>
+      {%- endif -%}
+      <span class="indicator">página {{ current_page }} de {{ total_pages }}</span>
+      {%- if current_page < total_pages -%}
+        {%- assign next_page = current_page | plus: 1 -%}
+        <a class="next" href="{{ '/notas/page/' | append: next_page | append: '/' | relative_url }}">Notas mais antigas &rarr;</a>
+      {%- else -%}
+        <span class="next disabled">&nbsp;</span>
+      {%- endif -%}
+    </div>
+  </nav>
+  {%- endif -%}
+
+</section>
