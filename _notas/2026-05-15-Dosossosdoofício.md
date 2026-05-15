@@ -8,13 +8,11 @@ Vivendo e aprendendo com os ossos do ofício: fizemos representação ao Tribuna
 
 O superdimensionamento[^1] é, em si, óbvio, não? Some-se a isso o fato de que Marília, por lei municipal[^2], quase nunca realiza o estudo técnico preliminar que, entre outras coisas, forçaria essa contenção de uma dimensão de compra exacerbada.
 
-Pois bem. Batemos à porta do TCE, que negou a cautelar de suspensão do certame. O conselheiro disse, entre outras coisas, que o estudo técnico preliminar, apesar da literalidade da Lei de Licitações, não era realmente necessário no caso e que, quanto ao superdimensionamento, ele seria avaliado caso as compras ocorram nessas proporções, de fato, na execução contratual do porvir. Afinal, como também foi dito, a avaliação dos Tribunais de Contas são, em regra, *a posteriori*. Chegam tarde demais, é dizer[^3]. 
+Pois bem. Batemos à porta do TCE, que negou a cautelar de suspensão do certame. O conselheiro disse, entre outras coisas, que o estudo técnico preliminar, apesar da literalidade da Lei de Licitações, não era realmente necessário no caso e que, quanto ao superdimensionamento, ele seria avaliado caso as compras ocorram nessas proporções, de fato, na execução contratual do porvir. Afinal, como também foi dito, a avaliação dos Tribunais de Contas é, em regra, *a posteriori*. Chegam tarde demais, é dizer[^3]. 
 
 Todo dia constitui um novo aprendizado. Basta, agora, fiscalizar a execução do contrato, apesar das inerentes dificuldades de correr atrás do prejuízo. 
 
-[^1]: Do art. 6º, da Lei de Licitações: "LVII - superfaturamento: dano provocado ao patrimônio da Administração, caracterizado, entre outras situações, por:
-
-a) medição de quantidades superiores às efetivamente executadas ou fornecidas;"
+[^1]: Do art. 6º, da Lei de Licitações: "LVII - superfaturamento: dano provocado ao patrimônio da Administração, caracterizado, entre outras situações, por: a) medição de quantidades superiores às efetivamente executadas ou fornecidas;"
 
 [^2]: Lei municipal que, por força de representação da OSCIP MATRA, é questionada pela Procuradoria-Geral de Justiça em sede de ADI no TJSP.
 
