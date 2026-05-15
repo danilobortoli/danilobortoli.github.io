@@ -22,23 +22,7 @@ sitemap:
 
   <section class="feed">
     {%- for nota in all_notas -%}
-      {%- capture cat_blob -%}{{ nota.title }} {{ nota.subtitle }} {{ nota.content | strip_html }}{%- endcapture -%}
-      {%- assign blob = cat_blob | downcase -%}
-      {%- if blob contains "poema" or blob contains "paris review" or blob contains "wahn yoon" -%}
-        {%- assign cat = "POEMA DO MÊS" -%}
-      {%- elsif blob contains "burial" or blob contains "aldous" or blob contains "harding" or blob contains "música" or blob contains "álbum" or blob contains "disco" or blob contains "pitchfork" -%}
-        {%- assign cat = "LISTENING ROOM" -%}
-      {%- elsif blob contains "regulação" or blob contains "diretiva" or blob contains "consultoria" or blob contains "oab" or blob contains "tribunal" or blob contains "jurídic" -%}
-        {%- assign cat = "NOTAS DE OFÍCIO" -%}
-      {%- elsif blob contains "inverno" or blob contains "estocolmo" or blob contains "sergels" or blob contains "marília" or blob contains "cidade" or blob contains "janela" -%}
-        {%- assign cat = "PAISAGENS" -%}
-      {%- elsif blob contains "clipe" or blob contains "swift" or blob contains "publicidade" -%}
-        {%- assign cat = "DEPARTAMENTO DE CULTURA" -%}
-      {%- elsif blob contains "willis" or blob contains "recorte" or blob contains "leitur" -%}
-        {%- assign cat = "MARGINÁLIA" -%}
-      {%- else -%}
-        {%- assign cat = "NOTAS &amp; COMENTÁRIOS" -%}
-      {%- endif -%}
+      {%- capture cat -%}{% include notas-category.html title=nota.title subtitle=nota.subtitle content=nota.content media_type=nota.media.type %}{%- endcapture -%}
       <article class="post" id="{{ nota.url | split: '/' | last }}">
         <p class="p-section">{{ cat }}</p>
         {%- if nota.title and nota.title != "" -%}

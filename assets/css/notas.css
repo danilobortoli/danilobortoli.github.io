@@ -90,6 +90,40 @@
   margin-top: 3rem;
 }
 
+/* ---------- Single nota page (same M chrome, no feed wrapper) ---- */
+.notas-page.single .post {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 0 3rem;
+}
+/* Widen when there's a floated media-review sidecar so it has room. */
+.notas-page.single:has(.media-review--compact) .post,
+.notas-page.single:has(.media-review--marginalia) .post {
+  max-width: 800px;
+}
+
+.notas-page .p-back {
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto 2.5rem;
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.12em;
+  text-align: left;
+}
+.notas-page.single:has(.media-review--compact) .p-back,
+.notas-page.single:has(.media-review--marginalia) .p-back {
+  max-width: 800px;
+}
+.notas-page .p-back a:link,
+.notas-page .p-back a:visited {
+  color: var(--color-text-light);
+  text-decoration: none;
+  background: none;
+  transition: color .2s;
+}
+.notas-page .p-back a:hover { color: var(--color-accent); }
+
 /* Section eyebrow */
 .notas-page .p-section {
   font-variant: small-caps;
@@ -167,6 +201,9 @@
   border-bottom-color: var(--color-accent);
 }
 
+/* Contain floated sidecars (media-review--compact) so the body wraps them. */
+.notas-page .p-body { display: flow-root; }
+
 /* Body — let the post breathe; override Tufte's narrow paragraphs */
 .notas-page .p-body p {
   font-family: var(--font-body);
@@ -178,7 +215,7 @@
   width: auto;
 }
 .notas-page .p-body p:last-child { margin-bottom: 0; }
-.notas-page .p-body > p:first-child::first-letter {
+.notas-page .p-body > p:first-of-type::first-letter {
   font-family: "Playfair Display", Didot, var(--font-body);
   font-weight: 900;
   font-size: 4.4rem;
@@ -187,7 +224,7 @@
   padding: 0.3rem 0.55rem 0 0;
   color: var(--color-text);
 }
-.notas-page .p-body > p:first-child::first-line {
+.notas-page .p-body > p:first-of-type::first-line {
   font-variant: small-caps;
   letter-spacing: 0.05em;
 }
