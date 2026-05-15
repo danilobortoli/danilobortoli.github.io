@@ -3,60 +3,60 @@ layout: default
 title: Notas
 permalink: /notas/
 extra_css: notas.css
+extra_head: >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
 sitemap:
   changefreq: weekly
 ---
-{%- assign meses = "janeiro,fevereiro,março,abril,maio,junho,julho,agosto,setembro,outubro,novembro,dezembro" | split: "," -%}
-{%- assign meses_abrev = "jan,fev,mar,abr,mai,jun,jul,ago,set,out,nov,dez" | split: "," -%}
 {%- assign all_notas = site.notas | sort: 'date' | reverse -%}
-{%- assign months = all_notas | group_by_exp: "n", "n.date | date: '%Y-%m'" -%}
 
-<section class="notas-page var-diario">
+<section class="notas-page var-ny var-ny1">
 
-  <header class="notas-header">
-    <h1>Notas</h1>
-    <p class="lede">
-      Pequenos pensamentos, recortes, observações rápidas que não justificam
-      um post completo &mdash; mas que merecem ser lembradas.
-    </p>
-    <span class="count">{{ all_notas.size }} notas · arquivo</span>
+  <header class="ny-masthead">
+    <p class="kicker">Danilo Bortoli &middot; o blog</p>
+    <h1>The <em>Notas</em></h1>
+    <p class="dateline">notas &amp; comentários · arquivo</p>
   </header>
 
-  <section class="archive">
-    {%- for group in months -%}
-      {%- assign first_nota = group.items | first -%}
-      {%- assign g_year = first_nota.date | date: "%Y" -%}
-      {%- assign g_mo_idx = first_nota.date | date: "%-m" | minus: 1 -%}
-      {%- assign g_mo_name = meses[g_mo_idx] -%}
-      <section class="month">
-        <div class="month-label">
-          <h2>{{ g_mo_name }} · {{ g_year }}</h2>
+  <section class="feed">
+    {%- for nota in all_notas -%}
+      {%- capture cat_blob -%}{{ nota.title }} {{ nota.subtitle }} {{ nota.content | strip_html }}{%- endcapture -%}
+      {%- assign blob = cat_blob | downcase -%}
+      {%- if blob contains "poema" or blob contains "paris review" or blob contains "wahn yoon" -%}
+        {%- assign cat = "POEMA DO MÊS" -%}
+      {%- elsif blob contains "burial" or blob contains "aldous" or blob contains "harding" or blob contains "música" or blob contains "álbum" or blob contains "disco" or blob contains "pitchfork" -%}
+        {%- assign cat = "LISTENING ROOM" -%}
+      {%- elsif blob contains "regulação" or blob contains "diretiva" or blob contains "consultoria" or blob contains "oab" or blob contains "tribunal" or blob contains "jurídic" -%}
+        {%- assign cat = "NOTAS DE OFÍCIO" -%}
+      {%- elsif blob contains "inverno" or blob contains "estocolmo" or blob contains "sergels" or blob contains "marília" or blob contains "cidade" or blob contains "janela" -%}
+        {%- assign cat = "PAISAGENS" -%}
+      {%- elsif blob contains "clipe" or blob contains "swift" or blob contains "publicidade" -%}
+        {%- assign cat = "DEPARTAMENTO DE CULTURA" -%}
+      {%- elsif blob contains "willis" or blob contains "recorte" or blob contains "leitur" -%}
+        {%- assign cat = "MARGINÁLIA" -%}
+      {%- else -%}
+        {%- assign cat = "NOTAS &amp; COMENTÁRIOS" -%}
+      {%- endif -%}
+      <article class="post" id="{{ nota.url | split: '/' | last }}">
+        <p class="p-section">{{ cat }}</p>
+        {%- if nota.title and nota.title != "" -%}
+        <h2 class="p-title"><a href="{{ nota.url | relative_url }}">{{ nota.title }}</a></h2>
+        {%- endif -%}
+        {%- if nota.subtitle and nota.subtitle != "" -%}
+        <p class="p-subtitle">{{ nota.subtitle }}</p>
+        {%- endif -%}
+        <p class="p-byline">
+          <span class="by">por</span>
+          <span class="author">Danilo Bortoli</span>
+          &nbsp;·&nbsp;
+          <a class="permalink" href="{{ nota.url | relative_url }}">{% include data-pt.html date=nota.date %}</a>
+        </p>
+        <div class="p-body">
+          {{ nota.content }}
         </div>
-        {%- for nota in group.items -%}
-          {%- assign day_n = nota.date | date: "%-d" -%}
-          {%- assign mo_idx = nota.date | date: "%-m" | minus: 1 -%}
-          {%- assign mo_short = meses_abrev[mo_idx] -%}
-          {%- assign entry_title = nota.title | default: "(sem título)" -%}
-          {%- if nota.subtitle and nota.subtitle != "" -%}
-            {%- assign entry_excerpt = nota.subtitle -%}
-          {%- else -%}
-            {%- assign raw_excerpt = nota.excerpt | strip_html | strip -%}
-            {%- assign entry_excerpt = raw_excerpt | truncatewords: 30 -%}
-          {%- endif -%}
-          <a class="entry" href="{{ nota.url | relative_url }}">
-            <div class="day">
-              {{ day_n }}
-              <span class="day-suffix">{{ mo_short }}</span>
-            </div>
-            <div class="entry-body">
-              <h3 class="e-title">{{ entry_title }}</h3>
-              {%- if entry_excerpt and entry_excerpt != "" -%}
-                <p class="e-body">{{ entry_excerpt }}</p>
-              {%- endif -%}
-            </div>
-          </a>
-        {%- endfor -%}
-      </section>
+      </article>
     {%- endfor -%}
   </section>
 

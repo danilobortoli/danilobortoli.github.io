@@ -13,6 +13,9 @@
   {% if page.extra_css %}
   <link rel="stylesheet" href="{{ '/assets/css/' | append: page.extra_css | relative_url }}"/>
   {% endif %}
+  {% if page.extra_head %}
+  {{ page.extra_head }}
+  {% endif %}
 
   <!-- MathJax for LaTeX equations -->
   <script>
