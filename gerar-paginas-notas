@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Gera os arquivos /notas/page/N/index.html para a paginação da listagem.
+# Roda localmente e dentro do GitHub Action antes do build do Jekyll.
+set -euo pipefail
+
+PER_PAGE=15
+NOTAS_DIR="_notas"
+OUT_DIR="notas/page"
+
+if [ ! -d "$NOTAS_DIR" ]; then
+  echo "❌ Diretório $NOTAS_DIR não encontrado. Rode na raiz do site." >&2
+  exit 1
+fi
+
+count=$(find "$NOTAS_DIR" -maxdepth 1 -name '*.md' ! -name '_template.md' | wc -l | tr -d ' ')
+total_pages=$(( (count + PER_PAGE - 1) / PER_PAGE ))
+
+rm -rf "$OUT_DIR"
+
+if [ "$total_pages" -le 1 ]; then
+  echo "ℹ️  $count notas → 1 página apenas; nenhum arquivo extra gerado."
+  exit 0
+fi
+
+for ((i = 2; i <= total_pages; i++)); do
+  mkdir -p "$OUT_DIR/$i"
+  cat > "$OUT_DIR/$i/index.html" <<EOF
+---
+layout: default
+title: Notas — página $i
+permalink: /notas/page/$i/
+extra_css: notas.css
+extra_head: |
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+page_num: $i
+sitemap:
+  changefreq: weekly
+---
+{% include notas-feed.html %}
+EOF
+done
+
+echo "✅ $count notas → $total_pages páginas (1 + $(($total_pages - 1)) extras em $OUT_DIR/)."

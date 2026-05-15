@@ -41,6 +41,11 @@ jobs:
             git push
           fi
 
+      - name: Gerar páginas paginadas das notas
+        run: |
+          chmod +x ./gerar-paginas-notas
+          ./gerar-paginas-notas
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
