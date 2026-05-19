@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Metáforas
-date: 2026-05-19
+date: 2026-05-19 17:38:03 -0300
 ---
 <span class="newthought">Tenho pensado em algo inusitado:
 </span>
