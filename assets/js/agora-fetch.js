@@ -30,8 +30,8 @@
     var mbId = cover.dataset.musicbrainzId;
     var olId = cover.dataset.openlibraryId;
 
-    if (type === "filme" && tmdbId) {
-      fetchTMDB(cover, tmdbId);
+    if ((type === "filme" || type === "série") && tmdbId) {
+      fetchTMDB(cover, tmdbId, type);
     } else if ((type === "álbum" || type === "canção") && mbId) {
       mbQueue.push(function (done) {
         fetchMusicBrainz(cover, mbId, type, done);
@@ -69,12 +69,13 @@
     }
   }
 
-  function fetchTMDB(cover, id) {
+  function fetchTMDB(cover, id, mediaType) {
     var key = window.TMDB_API_KEY;
     if (!key) return;
 
+    var endpoint = mediaType === "série" ? "tv" : "movie";
     var url =
-      "https://api.themoviedb.org/3/movie/" + id +
+      "https://api.themoviedb.org/3/" + endpoint + "/" + id +
       "?api_key=" + key +
       "&language=pt-BR&append_to_response=credits";
 
@@ -82,21 +83,37 @@
       .then(function (r) { if (!r.ok) throw new Error("TMDB " + r.status); return r.json(); })
       .then(function (data) {
         var r = row(cover);
+        var title = data.title || data.name || data.original_title || data.original_name;
         if (data.poster_path) {
-          setCoverImage(cover, "https://image.tmdb.org/t/p/w200" + data.poster_path, data.title);
+          setCoverImage(cover, "https://image.tmdb.org/t/p/w200" + data.poster_path, title);
         }
-        fillIfEmpty(r, ".agora-media-titulo", data.title || data.original_title);
-        if (data.credits && data.credits.crew) {
-          var directors = data.credits.crew.filter(function (c) { return c.job === "Director"; });
-          if (directors.length) {
-            fillIfEmpty(r, ".agora-media-creator", directors.map(function (d) { return d.name; }).join(", "));
-          }
+        fillIfEmpty(r, ".agora-media-titulo", title);
+        var creator = tmdbCreator(data, mediaType);
+        if (creator) {
+          fillIfEmpty(r, ".agora-media-creator", creator);
         }
-        if (data.release_date) {
-          fillIfEmpty(r, ".agora-media-year", data.release_date.substring(0, 4));
+        var date = data.release_date || data.first_air_date;
+        if (date) {
+          fillIfEmpty(r, ".agora-media-year", date.substring(0, 4));
         }
       })
       .catch(function (err) { console.warn("TMDB:", err); });
+  }
+
+  function tmdbCreator(data, mediaType) {
+    if (mediaType === "série") {
+      if (data.created_by && data.created_by.length) {
+        return data.created_by.map(function (p) { return p.name; }).join(", ");
+      }
+      return null;
+    }
+    if (data.credits && data.credits.crew) {
+      var directors = data.credits.crew.filter(function (c) { return c.job === "Director"; });
+      if (directors.length) {
+        return directors.map(function (d) { return d.name; }).join(", ");
+      }
+    }
+    return null;
   }
 
   function fetchMusicBrainz(cover, id, mediaType, done) {

@@ -72,16 +72,18 @@ title: Agora
   {% if a.assistindo and a.assistindo.size > 0 %}
   <section class="agora-section">
     <h2>Assistindo</h2>
-    {% for filme in a.assistindo %}
+    {% for item in a.assistindo %}
+    {%- assign tipo = item.tipo | default: "filme" -%}
+    {%- assign creator = item.criador | default: item.diretor -%}
     <div class="agora-media-row">
       <div class="agora-cover book"
-           data-media-type="filme"
-           {% if filme.tmdb_id %}data-tmdb-id="{{ filme.tmdb_id }}"{% endif %}>
-        <span class="agora-cover-fallback">{{ filme.titulo | truncate: 16 }}</span>
+           data-media-type="{{ tipo }}"
+           {% if item.tmdb_id %}data-tmdb-id="{{ item.tmdb_id }}"{% endif %}>
+        <span class="agora-cover-fallback">{{ item.titulo | truncate: 16 }}</span>
       </div>
       <div>
-        <p class="agora-media-label"><em class="agora-media-titulo">{{ filme.titulo }}</em>{% if filme.diretor %} &middot; <span class="agora-media-creator">{{ filme.diretor }}</span>{% endif %}</p>
-        {% if filme.ano %}<p class="agora-media-meta agora-media-year">{{ filme.ano }}</p>{% endif %}
+        <p class="agora-media-label"><em class="agora-media-titulo">{{ item.titulo }}</em>{% if creator %} &middot; <span class="agora-media-creator">{{ creator }}</span>{% else %} <span class="agora-media-creator"></span>{% endif %}</p>
+        <p class="agora-media-meta agora-media-year">{% if item.ano %}{{ item.ano }}{% endif %}</p>
       </div>
     </div>
     {% endfor %}

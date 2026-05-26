@@ -5,7 +5,7 @@ title: Avaliações
 
 <h1>Avaliações</h1>
 
-<p class="subtitle">Notas recentes para filmes, canções, álbuns e livros.</p>
+<p class="subtitle">Notas recentes para filmes, séries, canções, álbuns e livros.</p>
 
 {% assign all_items = "" | split: "" %}
 
@@ -28,6 +28,7 @@ title: Avaliações
 <div class="avaliacoes-filters">
   <button class="filter-btn active" data-filter="todos">Todos</button>
   <button class="filter-btn" data-filter="filme">Filmes</button>
+  <button class="filter-btn" data-filter="série">Séries</button>
   <button class="filter-btn" data-filter="álbum">Álbuns</button>
   <button class="filter-btn" data-filter="canção">Canções</button>
   <button class="filter-btn" data-filter="livro">Livros</button>
@@ -51,6 +52,8 @@ title: Avaliações
     <div class="avaliacao-info">
       {% if item.media.type == "filme" %}
         <span class="avaliacao-type">Filme</span>
+      {% elsif item.media.type == "série" %}
+        <span class="avaliacao-type">Série</span>
       {% elsif item.media.type == "álbum" %}
         <span class="avaliacao-type">Álbum</span>
       {% elsif item.media.type == "canção" %}
@@ -69,6 +72,12 @@ title: Avaliações
         {% if item.media.type == "filme" %}
           {% if item.media.diretor %}
           <span class="avaliacao-creator">{{ item.media.diretor }}</span>
+          {% else %}
+          <span class="avaliacao-creator"></span>
+          {% endif %}
+        {% elsif item.media.type == "série" %}
+          {% if item.media.criador %}
+          <span class="avaliacao-creator">{{ item.media.criador }}</span>
           {% else %}
           <span class="avaliacao-creator"></span>
           {% endif %}

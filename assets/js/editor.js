@@ -208,6 +208,7 @@
     const labels = {
       livro: { creator: 'Autor' },
       filme: { creator: 'Diretor' },
+      série: { creator: 'Criador' },
       álbum: { creator: 'Artista' },
       canção: { creator: 'Artista' },
     }[m.type] || { creator: 'Autor' };
@@ -327,6 +328,7 @@
         if (md.titulo) lines.push(`  titulo: ${yamlString(md.titulo)}`);
         if (md.type === 'livro' && md.creator) lines.push(`  autor: ${yamlString(md.creator)}`);
         else if (md.type === 'filme' && md.creator) lines.push(`  diretor: ${yamlString(md.creator)}`);
+        else if (md.type === 'série' && md.creator) lines.push(`  criador: ${yamlString(md.creator)}`);
         else if ((md.type === 'álbum' || md.type === 'canção') && md.creator) lines.push(`  artista: ${yamlString(md.creator)}`);
         if (md.type === 'canção' && md.album) lines.push(`  album: ${yamlString(md.album)}`);
         if (md.type === 'livro' && md.publisher) lines.push(`  editora: ${yamlString(md.publisher)}`);
@@ -688,7 +690,7 @@
 
   function updateMediaCreatorLabel() {
     const t = state.meta.media.type;
-    const labelMap = { livro: 'Autor', filme: 'Diretor', álbum: 'Artista', canção: 'Artista' };
+    const labelMap = { livro: 'Autor', filme: 'Diretor', série: 'Criador', álbum: 'Artista', canção: 'Artista' };
     const label = $('[data-creator-label]');
     if (label) label.textContent = labelMap[t] || 'Autor';
     $('.ed-meta-publisher').hidden = (t !== 'livro');
