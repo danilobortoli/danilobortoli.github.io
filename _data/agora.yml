@@ -5,7 +5,7 @@
 # =====================================================================
 
 # Data da última atualização e cidade onde está.
-atualizada_em: "01º de maio de 2026"
+atualizada_em: "26 de maio de 2026"
 local: "Marília, São Paulo"
 
 # Cada seção aceita texto livre em Markdown:
@@ -89,11 +89,11 @@ ouvindo:
 # Para esconder a seção, deixe a lista vazia: assistindo: []
 # ---------------------------------------------------------------------
 assistindo:
- - titulo: "Servant"
+ - titulo: "Widow's Bay"
    tipo: "série"
-   criador: "M. Night Shyamalan"
-   ano: "2019"
-   tmdb_id: "88055"
+   criador: "Katie Dippold"
+   ano: "2026"
+   tmdb_id: "270476"
 
 # ---------------------------------------------------------------------
 # Texto opcional do rodapé. Apague tudo (rodape: "") pra remover.
