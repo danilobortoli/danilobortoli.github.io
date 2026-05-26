@@ -268,10 +268,10 @@ a {
 <body>
 
 <h1>Guia: Fichas de Mídia</h1>
-<p class="subtitle">Como usar o sistema de reviews de filmes, álbuns e canções no blog</p>
+<p class="subtitle">Como usar o sistema de reviews de filmes, séries, álbuns e canções no blog</p>
 <span class="date">Março de 2026</span>
 
-<p>Este guia explica como adicionar fichas de mídia aos seus posts e notas. As fichas buscam automaticamente poster, diretor, artista, gêneros e outros dados de bancos de dados externos (<strong>TMDB</strong> para filmes, <strong>MusicBrainz</strong> para música).</p>
+<p>Este guia explica como adicionar fichas de mídia aos seus posts e notas. As fichas buscam automaticamente poster, diretor, criador, artista, gêneros e outros dados de bancos de dados externos (<strong>TMDB</strong> para filmes e séries, <strong>MusicBrainz</strong> para música).</p>
 
 <div class="card-example">
   <div class="poster">&#127916;</div>
@@ -317,7 +317,36 @@ Aqui vai o texto da sua crítica...</code></pre>
 </div>
 
 
-<h2>2. Álbuns (via MusicBrainz)</h2>
+<h2>2. Séries (via TMDB)</h2>
+
+<h3>Encontrar o ID</h3>
+
+<ol>
+  <li>Acesse <a href="https://www.themoviedb.org">themoviedb.org</a> e busque a série</li>
+  <li>O <strong>ID numérico</strong> está na URL, agora em <code>/tv/</code>: <code>themoviedb.org/tv/<strong>88055</strong>-servant</code></li>
+  <li>Neste caso, o ID é <strong>88055</strong>. Use <code>type: série</code> para que a busca use o catálogo de TV.</li>
+</ol>
+
+<h3>Front matter</h3>
+
+<pre><code>---
+title: Servant me deixou sem dormir
+date: 2026-03-05
+media:
+  type: série
+  tmdb_id: 88055
+  nota: 8
+---
+
+Aqui vai o texto da sua crítica...</code></pre>
+
+<div class="note">
+  <strong>Buscado automaticamente:</strong> título, poster, criador, ano de estreia e gêneros.
+  O criador entra no campo <code>criador</code> (equivalente ao <code>diretor</code> dos filmes).
+</div>
+
+
+<h2>3. Álbuns (via MusicBrainz)</h2>
 
 <h3>Encontrar o ID</h3>
 
@@ -346,7 +375,7 @@ O álbum que definiu uma geração...</code></pre>
 </div>
 
 
-<h2>3. Canções (via MusicBrainz)</h2>
+<h2>4. Canções (via MusicBrainz)</h2>
 
 <h3>Encontrar o ID</h3>
 
@@ -373,7 +402,7 @@ Uma das melhores faixas dos anos 90...</code></pre>
   <strong>Buscado automaticamente:</strong> título, artista, álbum, ano, gêneros e capa do álbum.
 </div>
 
-<h2>4. Livros (via Open Library)</h2>
+<h2>5. Livros (via Open Library)</h2>
 
 <h3>Encontrar o ID</h3>
 
@@ -403,7 +432,7 @@ Uma distopia que nunca envelhece...</code></pre>
 
 <div class="pagebreak"></div>
 
-<h2>5. Modo manual (sem APIs)</h2>
+<h2>6. Modo manual (sem APIs)</h2>
 
 <p>Se preferir, preencha todos os campos diretamente no front matter, sem depender de IDs ou APIs:</p>
 
@@ -415,6 +444,15 @@ Uma distopia que nunca envelhece...</code></pre>
   generos: "Drama, Thriller"
   capa: /assets/images/fight-club.jpg
   nota: 9</code></pre>
+
+<pre><code>media:
+  type: série
+  titulo: "Servant"
+  criador: "Tony Basgallop"
+  ano: 2019
+  generos: "Terror, Drama"
+  capa: /assets/images/servant.jpg
+  nota: 8</code></pre>
 
 <pre><code>media:
   type: álbum
@@ -449,7 +487,7 @@ Uma distopia que nunca envelhece...</code></pre>
 </div>
 
 
-<h2>6. Referência rápida de campos</h2>
+<h2>7. Referência rápida de campos</h2>
 
 <table>
   <thead>
@@ -463,12 +501,12 @@ Uma distopia que nunca envelhece...</code></pre>
     <tr>
       <td><code>type</code></td>
       <td>Obrigatório</td>
-      <td><code>filme</code>, <code>álbum</code>, <code>canção</code> ou <code>livro</code></td>
+      <td><code>filme</code>, <code>série</code>, <code>álbum</code>, <code>canção</code> ou <code>livro</code></td>
     </tr>
     <tr>
       <td><code>tmdb_id</code></td>
-      <td>Filmes</td>
-      <td>ID numérico do TMDB (busca automática)</td>
+      <td>Filmes/Séries</td>
+      <td>ID numérico do TMDB — <code>/movie/</code> para filmes, <code>/tv/</code> para séries (busca automática)</td>
     </tr>
     <tr>
       <td><code>musicbrainz_id</code></td>
@@ -494,6 +532,11 @@ Uma distopia que nunca envelhece...</code></pre>
       <td><code>diretor</code></td>
       <td>Manual</td>
       <td>Diretor do filme</td>
+    </tr>
+    <tr>
+      <td><code>criador</code></td>
+      <td>Manual</td>
+      <td>Criador da série</td>
     </tr>
     <tr>
       <td><code>artista</code></td>
@@ -534,7 +577,7 @@ Uma distopia que nunca envelhece...</code></pre>
 </table>
 
 
-<h2>7. Onde funciona</h2>
+<h2>8. Onde funciona</h2>
 
 <p>A ficha de mídia aparece automaticamente no topo do conteúdo em:</p>
 
@@ -549,7 +592,7 @@ Uma distopia que nunca envelhece...</code></pre>
 <div class="separator">&#10087;</div>
 
 <p style="font-size: 10pt; color: #888; text-align: center; font-style: italic;">
-  APIs utilizadas: TMDB (themoviedb.org) para filmes &middot; MusicBrainz (musicbrainz.org) + Cover Art Archive para música
+  APIs utilizadas: TMDB (themoviedb.org) para filmes e séries &middot; MusicBrainz (musicbrainz.org) + Cover Art Archive para música
 </p>
 
 </body>

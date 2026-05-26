@@ -24,8 +24,8 @@
     var mbId = card.dataset.musicbrainzId;
     var olId = card.dataset.openlibraryId;
 
-    if (type === "filme" && tmdbId) {
-      fetchTMDB(card, tmdbId);
+    if ((type === "filme" || type === "série") && tmdbId) {
+      fetchTMDB(card, tmdbId, type);
     } else if ((type === "álbum" || type === "canção") && mbId) {
       mbQueue.push(function (done) {
         fetchMusicBrainz(card, mbId, type, done);
@@ -36,12 +36,13 @@
     }
   });
 
-  function fetchTMDB(card, id) {
+  function fetchTMDB(card, id, mediaType) {
     var key = window.TMDB_API_KEY;
     if (!key) return;
 
+    var endpoint = mediaType === "série" ? "tv" : "movie";
     var url =
-      "https://api.themoviedb.org/3/movie/" + id +
+      "https://api.themoviedb.org/3/" + endpoint + "/" + id +
       "?api_key=" + key +
       "&language=pt-BR&append_to_response=credits";
 
@@ -51,33 +52,44 @@
         return r.json();
       })
       .then(function (data) {
+        var title = data.title || data.name || data.original_title || data.original_name;
+
         var titleEl = card.querySelector(".avaliacao-title");
         if (titleEl && !titleEl.textContent.trim()) {
-          titleEl.textContent = data.title || data.original_title;
+          titleEl.textContent = title;
         }
 
         var imgEl = card.querySelector(".avaliacao-img");
         if (data.poster_path && imgEl && imgEl.classList.contains("avaliacao-placeholder")) {
           var img = document.createElement("img");
           img.src = "https://image.tmdb.org/t/p/w200" + data.poster_path;
-          img.alt = data.title || "Poster";
+          img.alt = title || "Poster";
           img.className = "avaliacao-img";
           imgEl.parentNode.replaceChild(img, imgEl);
         }
 
         var creatorEl = card.querySelector(".avaliacao-creator");
-        if (creatorEl && !creatorEl.textContent.trim() && data.credits && data.credits.crew) {
-          var directors = data.credits.crew.filter(function (c) {
-            return c.job === "Director";
-          });
-          if (directors.length > 0) {
-            creatorEl.textContent = directors.map(function (d) { return d.name; }).join(", ");
+        if (creatorEl && !creatorEl.textContent.trim()) {
+          var creator = null;
+          if (mediaType === "série") {
+            if (data.created_by && data.created_by.length > 0) {
+              creator = data.created_by.map(function (p) { return p.name; }).join(", ");
+            }
+          } else if (data.credits && data.credits.crew) {
+            var directors = data.credits.crew.filter(function (c) {
+              return c.job === "Director";
+            });
+            if (directors.length > 0) {
+              creator = directors.map(function (d) { return d.name; }).join(", ");
+            }
           }
+          if (creator) creatorEl.textContent = creator;
         }
 
         var yearEl = card.querySelector(".avaliacao-year");
-        if (yearEl && !yearEl.textContent.trim() && data.release_date) {
-          yearEl.textContent = "(" + data.release_date.substring(0, 4) + ")";
+        var date = data.release_date || data.first_air_date;
+        if (yearEl && !yearEl.textContent.trim() && date) {
+          yearEl.textContent = "(" + date.substring(0, 4) + ")";
         }
       })
       .catch(function (err) {

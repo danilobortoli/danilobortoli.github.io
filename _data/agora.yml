@@ -72,21 +72,26 @@ ouvindo:
     musicbrainz_id: "dd02fe28-52e0-4a65-88f4-2417329c22e9"
  
 # ---------------------------------------------------------------------
-# FILMES (opcional — se estiver assistindo algo)
+# FILMES E SÉRIES (opcional — se estiver assistindo algo)
 # ---------------------------------------------------------------------
-# Para cada filme:
+# Para cada item:
 #   titulo:    obrigatório
-#   diretor:   opcional
+#   tipo:      "filme" (default) ou "série"
+#   diretor:   opcional (filmes)
+#   criador:   opcional (séries)
 #   ano:       opcional
 #   tmdb_id:   opcional — se preencher, o pôster real aparece.
 #              Como achar: abra https://www.themoviedb.org e busque;
-#              o ID está na URL (ex: themoviedb.org/movie/603-the-matrix
-#              → tmdb_id: 603).
+#              o ID está na URL — filmes em /movie/ (ex:
+#              themoviedb.org/movie/603-the-matrix → tmdb_id: 603) e
+#              séries em /tv/ (ex: themoviedb.org/tv/88055-servant
+#              → tmdb_id: 88055, tipo: série).
 # Para esconder a seção, deixe a lista vazia: assistindo: []
 # ---------------------------------------------------------------------
-assistindo: 
+assistindo:
  - titulo: "Servant"
-   diretor: "M. Night Shyamalan"
+   tipo: "série"
+   criador: "M. Night Shyamalan"
    ano: "2019"
    tmdb_id: "88055"
 

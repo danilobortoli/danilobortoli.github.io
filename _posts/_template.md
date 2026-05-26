@@ -7,14 +7,15 @@ categories: [categoria1, categoria2]
 image: /assets/images/hero-image.jpg
 # Para reviews de mídia, descomente e preencha:
 # media:
-#   type: filme         # filme | álbum | canção | livro
-#   tmdb_id: 12345      # (filmes) ID do TMDB - busca automática de poster, diretor, ano, gêneros
+#   type: filme         # filme | série | álbum | canção | livro
+#   tmdb_id: 12345      # (filmes/séries) ID do TMDB - busca automática de poster, diretor/criador, ano, gêneros
 #   musicbrainz_id: ""  # (álbuns/canções) ID do MusicBrainz - busca automática de capa, artista, ano
 #   openlibrary_id: ""  # (livros) ID do Open Library - busca automática de capa, autor, ano, editora
 #   nota: 8.5           # sua nota de 0 a 10
 #   # Campos manuais (opcionais - preenchidos automaticamente se usar IDs acima):
-#   # titulo: "Nome do Filme/Álbum/Canção/Livro"
+#   # titulo: "Nome do Filme/Série/Álbum/Canção/Livro"
 #   # diretor: "Nome do Diretor"        # filmes
+#   # criador: "Nome do Criador"        # séries
 #   # artista: "Nome do Artista"         # música
 #   # album: "Nome do Álbum"            # canções
 #   # autor: "Nome do Autor"            # livros

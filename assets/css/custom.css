@@ -2613,6 +2613,10 @@ article .post-meta a:hover {
   margin-top: 0.2rem;
 }
 
+.agora-media-meta.agora-media-year:empty {
+  display: none;
+}
+
 .agora-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;

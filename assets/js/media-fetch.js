@@ -10,20 +10,23 @@
   var olId = card.dataset.openlibraryId;
 
   // Only fetch if we have an ID and fields are empty (not manually filled)
-  if (type === "filme" && tmdbId) {
-    fetchTMDB(tmdbId);
+  if ((type === "filme" || type === "série") && tmdbId) {
+    fetchTMDB(tmdbId, type);
   } else if ((type === "álbum" || type === "canção") && mbId) {
     fetchMusicBrainz(mbId, type);
   } else if (type === "livro" && olId) {
     fetchOpenLibrary(olId);
   }
 
-  function fetchTMDB(id) {
+  function fetchTMDB(id, mediaType) {
     var key = window.TMDB_API_KEY;
     if (!key) return;
 
+    var endpoint = mediaType === "série" ? "tv" : "movie";
     var url =
-      "https://api.themoviedb.org/3/movie/" +
+      "https://api.themoviedb.org/3/" +
+      endpoint +
+      "/" +
       id +
       "?api_key=" +
       key +
@@ -35,10 +38,12 @@
         return r.json();
       })
       .then(function (data) {
+        var title = data.title || data.name || data.original_title || data.original_name;
+
         // Title
         var titleEl = card.querySelector(".media-review-title");
         if (titleEl && !titleEl.textContent.trim()) {
-          titleEl.textContent = data.title || data.original_title;
+          titleEl.textContent = title;
         }
 
         // Poster
@@ -46,30 +51,35 @@
         if (data.poster_path && imgEl.classList.contains("media-review-placeholder")) {
           var img = document.createElement("img");
           img.src = "https://image.tmdb.org/t/p/w300" + data.poster_path;
-          img.alt = data.title || "Poster";
+          img.alt = title || "Poster";
           img.className = "media-review-img";
           imgEl.parentNode.replaceChild(img, imgEl);
         }
 
-        // Director
+        // Director (filme) / Creator (série)
         var dirEl = card.querySelector(".media-review-director");
-        if (dirEl && !dirEl.textContent.trim() && data.credits && data.credits.crew) {
-          var directors = data.credits.crew.filter(function (c) {
-            return c.job === "Director";
-          });
-          if (directors.length > 0) {
-            dirEl.textContent = directors
-              .map(function (d) {
-                return d.name;
-              })
-              .join(", ");
+        if (dirEl && !dirEl.textContent.trim()) {
+          var creator = null;
+          if (mediaType === "série") {
+            if (data.created_by && data.created_by.length > 0) {
+              creator = data.created_by.map(function (p) { return p.name; }).join(", ");
+            }
+          } else if (data.credits && data.credits.crew) {
+            var directors = data.credits.crew.filter(function (c) {
+              return c.job === "Director";
+            });
+            if (directors.length > 0) {
+              creator = directors.map(function (d) { return d.name; }).join(", ");
+            }
           }
+          if (creator) dirEl.textContent = creator;
         }
 
         // Year
         var yearEl = card.querySelector(".media-review-year");
-        if (yearEl && !yearEl.textContent.trim() && data.release_date) {
-          yearEl.textContent = data.release_date.substring(0, 4);
+        var date = data.release_date || data.first_air_date;
+        if (yearEl && !yearEl.textContent.trim() && date) {
+          yearEl.textContent = date.substring(0, 4);
         }
 
         // Genres
