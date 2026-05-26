@@ -24,6 +24,7 @@
       image: '',
       media: {
         type: 'livro',
+        id: '',
         titulo: '',
         creator: '',
         ano: '',
@@ -325,6 +326,11 @@
         const md = m.media;
         lines.push('media:');
         if (md.type) lines.push(`  type: ${md.type}`);
+        if (md.id) {
+          if (md.type === 'filme' || md.type === 'série') lines.push(`  tmdb_id: ${md.id}`);
+          else if (md.type === 'álbum' || md.type === 'canção') lines.push(`  musicbrainz_id: "${md.id}"`);
+          else if (md.type === 'livro') lines.push(`  openlibrary_id: "${md.id}"`);
+        }
         if (md.titulo) lines.push(`  titulo: ${yamlString(md.titulo)}`);
         if (md.type === 'livro' && md.creator) lines.push(`  autor: ${yamlString(md.creator)}`);
         else if (md.type === 'filme' && md.creator) lines.push(`  diretor: ${yamlString(md.creator)}`);
@@ -658,7 +664,7 @@
     state.doc = doc;
     htmlEl.setAttribute('data-doc', doc);
     $$('[data-segmented="doc"] button').forEach(b => b.classList.toggle('active', b.dataset.doc === doc));
-    if (doc === 'media') updateMediaCreatorLabel();
+    if (doc === 'media') updateMediaTypeFields();
     render();
     autosave();
   }
@@ -688,11 +694,26 @@
     }
   }
 
-  function updateMediaCreatorLabel() {
+  function updateMediaTypeFields() {
     const t = state.meta.media.type;
-    const labelMap = { livro: 'Autor', filme: 'Diretor', série: 'Criador', álbum: 'Artista', canção: 'Artista' };
-    const label = $('[data-creator-label]');
-    if (label) label.textContent = labelMap[t] || 'Autor';
+
+    const creatorMap = { livro: 'Autor', filme: 'Diretor', série: 'Criador', álbum: 'Artista', canção: 'Artista' };
+    const creatorLabel = $('[data-creator-label]');
+    if (creatorLabel) creatorLabel.textContent = creatorMap[t] || 'Autor';
+
+    const idMap = {
+      livro:  { label: 'ID Open Library', ph: 'OL…W ou OL…M' },
+      filme:  { label: 'ID TMDB', ph: 'ex: 550' },
+      série:  { label: 'ID TMDB', ph: 'ex: 88055' },
+      álbum:  { label: 'ID MusicBrainz', ph: 'UUID do release group' },
+      canção: { label: 'ID MusicBrainz', ph: 'UUID da recording' },
+    };
+    const idInfo = idMap[t] || idMap.livro;
+    const idLabel = $('[data-id-label]');
+    if (idLabel) idLabel.textContent = idInfo.label;
+    const idInput = $('#meta-media-id');
+    if (idInput) idInput.placeholder = idInfo.ph;
+
     $('.ed-meta-publisher').hidden = (t !== 'livro');
     $('.ed-meta-album').hidden = (t !== 'canção');
   }
@@ -720,7 +741,8 @@
     bindMeta('#meta-date', (v) => state.meta.date = v ? new Date(v) : new Date());
     bindMeta('#meta-category', (v) => state.meta.category = v);
     bindMeta('#meta-image', (v) => state.meta.image = v);
-    bindMeta('#meta-media-type', (v) => { state.meta.media.type = v; updateMediaCreatorLabel(); });
+    bindMeta('#meta-media-type', (v) => { state.meta.media.type = v; updateMediaTypeFields(); });
+    bindMeta('#meta-media-id', (v) => state.meta.media.id = v);
     bindMeta('#meta-media-titulo', (v) => state.meta.media.titulo = v);
     bindMeta('#meta-media-creator', (v) => state.meta.media.creator = v);
     bindMeta('#meta-media-ano', (v) => state.meta.media.ano = v);
@@ -1079,7 +1101,7 @@
       ...(d.meta || {}),
       date: d.meta && d.meta.date ? new Date(d.meta.date) : new Date(),
       media: {
-        type: 'livro', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '',
+        type: 'livro', id: '', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '',
         ...((d.meta && d.meta.media) || {}),
       },
     };
@@ -1139,7 +1161,7 @@
     state.source = '';
     state.meta = {
       title: '', subtitle: '', date: new Date(), category: '', image: '',
-      media: { type: 'livro', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '' },
+      media: { type: 'livro', id: '', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '' },
     };
     applyStateToDom();
     render();
@@ -1248,6 +1270,7 @@
     $('#meta-category').value = state.meta.category || '';
     $('#meta-image').value = state.meta.image || '';
     $('#meta-media-type').value = state.meta.media.type || 'livro';
+    $('#meta-media-id').value = state.meta.media.id || '';
     $('#meta-media-titulo').value = state.meta.media.titulo || '';
     $('#meta-media-creator').value = state.meta.media.creator || '';
     $('#meta-media-ano').value = state.meta.media.ano || '';
@@ -1257,7 +1280,7 @@
     $('#meta-media-capa').value = state.meta.media.capa || '';
     $('#meta-media-nota').value = state.meta.media.nota || '';
     setDoc(state.doc);
-    updateMediaCreatorLabel();
+    updateMediaTypeFields();
   }
 
   function formatDateForInput(d) {
