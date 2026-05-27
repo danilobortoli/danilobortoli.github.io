@@ -24,6 +24,7 @@
       image: '',
       media: {
         type: 'livro',
+        id: '',
         titulo: '',
         creator: '',
         ano: '',
@@ -213,12 +214,23 @@
       canção: { creator: 'Artista' },
     }[m.type] || { creator: 'Autor' };
 
+    // Manual fields take priority; fetched data (by external ID) fills the gaps.
+    const fetched = (m.id && typeof mediaFetchCache[m.type + ':' + m.id] === 'object')
+      ? mediaFetchCache[m.type + ':' + m.id] : {};
+    const titulo = m.titulo || fetched.title || '';
+    const creator = m.creator || fetched.creator || '';
+    const ano = m.ano || fetched.year || '';
+    const generos = m.generos || fetched.genres || '';
+    const publisher = m.publisher || fetched.publisher || '';
+    const album = m.album || fetched.album || '';
+    const capa = m.capa || fetched.coverUrl || '';
+
     const fields = [];
-    if (m.creator) fields.push(`<div class="media-review-field"><dt>${labels.creator}</dt><dd>${escapeHtml(m.creator)}</dd></div>`);
-    if (m.type === 'canção' && m.album) fields.push(`<div class="media-review-field"><dt>Álbum</dt><dd>${escapeHtml(m.album)}</dd></div>`);
-    if (m.type === 'livro' && m.publisher) fields.push(`<div class="media-review-field"><dt>Editora</dt><dd>${escapeHtml(m.publisher)}</dd></div>`);
-    if (m.ano) fields.push(`<div class="media-review-field"><dt>Ano</dt><dd>${escapeHtml(m.ano)}</dd></div>`);
-    if (m.generos) fields.push(`<div class="media-review-field"><dt>Gêneros</dt><dd>${escapeHtml(m.generos)}</dd></div>`);
+    if (creator) fields.push(`<div class="media-review-field"><dt>${labels.creator}</dt><dd>${escapeHtml(creator)}</dd></div>`);
+    if (m.type === 'canção' && album) fields.push(`<div class="media-review-field"><dt>Álbum</dt><dd>${escapeHtml(album)}</dd></div>`);
+    if (m.type === 'livro' && publisher) fields.push(`<div class="media-review-field"><dt>Editora</dt><dd>${escapeHtml(publisher)}</dd></div>`);
+    if (ano) fields.push(`<div class="media-review-field"><dt>Ano</dt><dd>${escapeHtml(ano)}</dd></div>`);
+    if (generos) fields.push(`<div class="media-review-field"><dt>Gêneros</dt><dd>${escapeHtml(generos)}</dd></div>`);
 
     const ratingHtml = m.nota ? `
       <div class="media-review-rating">
@@ -229,8 +241,8 @@
         </div>
       </div>` : '';
 
-    const cover = m.capa
-      ? `<img src="${escapeAttr(m.capa)}" alt="Capa" class="media-review-img"/>`
+    const cover = capa
+      ? `<img src="${escapeAttr(capa)}" alt="Capa" class="media-review-img"/>`
       : `<div class="media-review-img media-review-placeholder"></div>`;
 
     aside.hidden = false;
@@ -239,10 +251,190 @@
       <div class="media-review-cover">${cover}</div>
       <div class="media-review-info">
         <span class="media-review-type">${m.type ? capitalize(m.type) : ''}</span>
-        <h3 class="media-review-title">${escapeHtml(m.titulo || '')}</h3>
+        <h3 class="media-review-title">${escapeHtml(titulo)}</h3>
         <dl class="media-review-meta">${fields.join('')}</dl>
         ${ratingHtml}
       </div>`;
+
+    scheduleMediaFetch(m.type, m.id);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Busca de metadados por ID externo, espelhando o site publicado, para que o
+  // preview mostre capa/criador/ano reais enquanto se edita. Resultados ficam
+  // em cache (por tipo+id) e a busca é adiada para não disparar a cada tecla.
+  // ---------------------------------------------------------------------------
+  const mediaFetchCache = {};
+  let mediaFetchTimer = null;
+
+  function scheduleMediaFetch(type, id) {
+    clearTimeout(mediaFetchTimer);
+    if (!id) return;
+    const key = type + ':' + id;
+    if (mediaFetchCache[key] !== undefined) return;
+    mediaFetchTimer = setTimeout(function () { runMediaFetch(type, id); }, 600);
+  }
+
+  function runMediaFetch(type, id) {
+    const key = type + ':' + id;
+    if (mediaFetchCache[key] !== undefined) return;
+    mediaFetchCache[key] = 'pending';
+
+    let promise;
+    if (type === 'filme' || type === 'série') promise = fetchTmdbData(type, id);
+    else if (type === 'álbum' || type === 'canção') promise = fetchMusicBrainzData(type, id);
+    else if (type === 'livro') promise = fetchOpenLibraryData(id);
+    else { mediaFetchCache[key] = {}; return; }
+
+    promise
+      .then(function (data) {
+        mediaFetchCache[key] = data || {};
+      })
+      .catch(function () {
+        mediaFetchCache[key] = {};
+      })
+      .then(function () {
+        const cur = state.meta.media;
+        if (state.doc === 'media' && cur.type === type && cur.id === id) updateMediaPreview();
+      });
+  }
+
+  function tmdbRequest(kind, id, key) {
+    const url = 'https://api.themoviedb.org/3/' + kind + '/' + id +
+      '?api_key=' + key + '&language=pt-BR&append_to_response=credits';
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error('TMDB ' + r.status);
+      return r.json();
+    });
+  }
+
+  function fetchTmdbData(type, id) {
+    const key = window.TMDB_API_KEY;
+    if (!key) return Promise.reject(new Error('sem chave TMDB'));
+    const primary = type === 'série' ? 'tv' : 'movie';
+    const secondary = primary === 'tv' ? 'movie' : 'tv';
+    return tmdbRequest(primary, id, key)
+      .catch(function () { return tmdbRequest(secondary, id, key); })
+      .then(function (data) {
+        const out = {};
+        out.title = data.title || data.name || data.original_title || data.original_name || '';
+        if (data.poster_path) out.coverUrl = 'https://image.tmdb.org/t/p/w300' + data.poster_path;
+        if (data.created_by && data.created_by.length) {
+          out.creator = data.created_by.map(function (p) { return p.name; }).join(', ');
+        } else if (data.credits && data.credits.crew) {
+          const dirs = data.credits.crew.filter(function (c) { return c.job === 'Director'; });
+          if (dirs.length) out.creator = dirs.map(function (d) { return d.name; }).join(', ');
+        }
+        const date = data.release_date || data.first_air_date;
+        if (date) out.year = date.substring(0, 4);
+        if (data.genres && data.genres.length) out.genres = data.genres.map(function (g) { return g.name; }).join(', ');
+        return out;
+      });
+  }
+
+  function fetchOpenLibraryData(id) {
+    const isWork = /W$/.test(id);
+    const url = 'https://openlibrary.org/' + (isWork ? 'works/' : 'books/') + id + '.json';
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error('OL ' + r.status);
+      return r.json();
+    }).then(function (data) {
+      const out = {};
+      if (data.title) out.title = data.title;
+      const dateStr = data.first_publish_date || data.publish_date || '';
+      const ym = dateStr.match(/\d{4}/);
+      if (ym) out.year = ym[0];
+      if (data.publishers && data.publishers.length) out.publisher = data.publishers[0];
+      if (data.subjects && data.subjects.length) {
+        out.genres = data.subjects.slice(0, 3).map(function (s) {
+          return typeof s === 'string' ? s : s.name;
+        }).join(', ');
+      }
+      if (data.covers && data.covers.length && data.covers[0] > 0) {
+        out.coverUrl = 'https://covers.openlibrary.org/b/id/' + data.covers[0] + '-M.jpg';
+      }
+
+      const tasks = [];
+      if (data.authors) {
+        const keys = data.authors.map(function (a) { return a.author ? a.author.key : a.key; }).filter(Boolean);
+        if (keys.length) {
+          tasks.push(Promise.all(keys.map(function (k) {
+            return fetch('https://openlibrary.org' + k + '.json').then(function (r) { return r.ok ? r.json() : null; });
+          })).then(function (authors) {
+            const names = authors.filter(Boolean).map(function (a) { return a.name; });
+            if (names.length) out.creator = names.join(', ');
+          }).catch(function () {}));
+        }
+      }
+      if (!out.coverUrl && isWork) {
+        tasks.push(fetch('https://openlibrary.org/works/' + id + '/editions.json?limit=50')
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (eds) {
+            if (eds && eds.entries) {
+              const ed = eds.entries.find(function (e) { return e.covers && e.covers[0] > 0; });
+              if (ed) out.coverUrl = 'https://covers.openlibrary.org/b/id/' + ed.covers[0] + '-M.jpg';
+            }
+          }).catch(function () {}));
+      }
+      return Promise.all(tasks).then(function () { return out; });
+    });
+  }
+
+  function fetchMusicBrainzData(type, id) {
+    const entity = type === 'álbum' ? 'release-group' : 'recording';
+    const inc = 'artist-credits+genres' + (type === 'canção' ? '+releases' : '');
+    const url = 'https://musicbrainz.org/ws/2/' + entity + '/' + id + '?inc=' + inc + '&fmt=json';
+    return fetch(url).then(function (r) {
+      if (!r.ok) {
+        if (type === 'álbum' && r.status === 404) {
+          return fetch('https://musicbrainz.org/ws/2/release/' + id + '?inc=artist-credits+genres+release-groups&fmt=json')
+            .then(function (r2) { if (!r2.ok) throw new Error('MB ' + r2.status); return r2.json().then(function (d) { d._isRelease = true; return d; }); });
+        }
+        if (type === 'canção' && r.status === 404) {
+          return fetch('https://musicbrainz.org/ws/2/release/' + id + '?inc=artist-credits+genres+recordings+release-groups&fmt=json')
+            .then(function (r2) { if (!r2.ok) throw new Error('MB ' + r2.status); return r2.json().then(function (d) { d._isRelease = true; if (!d.releases) d.releases = [{ id: id, title: d.title }]; return d; }); });
+        }
+        throw new Error('MB ' + r.status);
+      }
+      return r.json();
+    }).then(function (data) {
+      const out = {};
+      if (data.title) out.title = data.title;
+      if (data['artist-credit']) {
+        out.creator = data['artist-credit'].map(function (a) { return a.name || (a.artist && a.artist.name); }).join(', ');
+      }
+      const date = data['first-release-date'] || data.date || '';
+      if (date) out.year = date.substring(0, 4);
+      let genres = (data.genres && data.genres.length) ? data.genres : null;
+      if (!genres && data._isRelease && data['release-group'] && data['release-group'].genres) genres = data['release-group'].genres;
+      if (genres && genres.length) out.genres = genres.map(function (g) { return g.name; }).join(', ');
+      if (type === 'canção' && data.releases && data.releases.length) out.album = data.releases[0].title;
+
+      const releaseGroupId = (data._isRelease && data['release-group']) ? data['release-group'].id : null;
+      let coverId = releaseGroupId || id;
+      let coverEntity = releaseGroupId ? 'release-group' : (data._isRelease ? 'release' : 'release-group');
+      if (type === 'canção' && data.releases && data.releases.length) { coverId = data.releases[0].id; coverEntity = 'release'; }
+      if (type === 'canção' && data._isRelease && data['release-group']) { coverId = data['release-group'].id; coverEntity = 'release-group'; }
+
+      return fetchCoverArtUrl(coverId, coverEntity).then(function (coverUrl) {
+        if (coverUrl) out.coverUrl = coverUrl;
+        return out;
+      });
+    });
+  }
+
+  function fetchCoverArtUrl(id, entity) {
+    return fetch('https://coverartarchive.org/' + entity + '/' + id)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (data && data.images && data.images.length) {
+          const front = data.images.find(function (img) { return img.front; });
+          return front
+            ? (front.thumbnails.small || front.thumbnails['250'] || front.image)
+            : (data.images[0].thumbnails.small || data.images[0].image);
+        }
+        return null;
+      }).catch(function () { return null; });
   }
 
   function updateStatusBar() {
@@ -325,6 +517,11 @@
         const md = m.media;
         lines.push('media:');
         if (md.type) lines.push(`  type: ${md.type}`);
+        if (md.id) {
+          if (md.type === 'filme' || md.type === 'série') lines.push(`  tmdb_id: ${md.id}`);
+          else if (md.type === 'álbum' || md.type === 'canção') lines.push(`  musicbrainz_id: "${md.id}"`);
+          else if (md.type === 'livro') lines.push(`  openlibrary_id: "${md.id}"`);
+        }
         if (md.titulo) lines.push(`  titulo: ${yamlString(md.titulo)}`);
         if (md.type === 'livro' && md.creator) lines.push(`  autor: ${yamlString(md.creator)}`);
         else if (md.type === 'filme' && md.creator) lines.push(`  diretor: ${yamlString(md.creator)}`);
@@ -658,7 +855,7 @@
     state.doc = doc;
     htmlEl.setAttribute('data-doc', doc);
     $$('[data-segmented="doc"] button').forEach(b => b.classList.toggle('active', b.dataset.doc === doc));
-    if (doc === 'media') updateMediaCreatorLabel();
+    if (doc === 'media') updateMediaTypeFields();
     render();
     autosave();
   }
@@ -688,11 +885,26 @@
     }
   }
 
-  function updateMediaCreatorLabel() {
+  function updateMediaTypeFields() {
     const t = state.meta.media.type;
-    const labelMap = { livro: 'Autor', filme: 'Diretor', série: 'Criador', álbum: 'Artista', canção: 'Artista' };
-    const label = $('[data-creator-label]');
-    if (label) label.textContent = labelMap[t] || 'Autor';
+
+    const creatorMap = { livro: 'Autor', filme: 'Diretor', série: 'Criador', álbum: 'Artista', canção: 'Artista' };
+    const creatorLabel = $('[data-creator-label]');
+    if (creatorLabel) creatorLabel.textContent = creatorMap[t] || 'Autor';
+
+    const idMap = {
+      livro:  { label: 'ID Open Library', ph: 'OL…W ou OL…M' },
+      filme:  { label: 'ID TMDB', ph: 'ex: 550' },
+      série:  { label: 'ID TMDB', ph: 'ex: 88055' },
+      álbum:  { label: 'ID MusicBrainz', ph: 'UUID do release group' },
+      canção: { label: 'ID MusicBrainz', ph: 'UUID da recording' },
+    };
+    const idInfo = idMap[t] || idMap.livro;
+    const idLabel = $('[data-id-label]');
+    if (idLabel) idLabel.textContent = idInfo.label;
+    const idInput = $('#meta-media-id');
+    if (idInput) idInput.placeholder = idInfo.ph;
+
     $('.ed-meta-publisher').hidden = (t !== 'livro');
     $('.ed-meta-album').hidden = (t !== 'canção');
   }
@@ -720,7 +932,8 @@
     bindMeta('#meta-date', (v) => state.meta.date = v ? new Date(v) : new Date());
     bindMeta('#meta-category', (v) => state.meta.category = v);
     bindMeta('#meta-image', (v) => state.meta.image = v);
-    bindMeta('#meta-media-type', (v) => { state.meta.media.type = v; updateMediaCreatorLabel(); });
+    bindMeta('#meta-media-type', (v) => { state.meta.media.type = v; updateMediaTypeFields(); });
+    bindMeta('#meta-media-id', (v) => state.meta.media.id = v);
     bindMeta('#meta-media-titulo', (v) => state.meta.media.titulo = v);
     bindMeta('#meta-media-creator', (v) => state.meta.media.creator = v);
     bindMeta('#meta-media-ano', (v) => state.meta.media.ano = v);
@@ -1079,7 +1292,7 @@
       ...(d.meta || {}),
       date: d.meta && d.meta.date ? new Date(d.meta.date) : new Date(),
       media: {
-        type: 'livro', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '',
+        type: 'livro', id: '', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '',
         ...((d.meta && d.meta.media) || {}),
       },
     };
@@ -1139,7 +1352,7 @@
     state.source = '';
     state.meta = {
       title: '', subtitle: '', date: new Date(), category: '', image: '',
-      media: { type: 'livro', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '' },
+      media: { type: 'livro', id: '', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '' },
     };
     applyStateToDom();
     render();
@@ -1248,6 +1461,7 @@
     $('#meta-category').value = state.meta.category || '';
     $('#meta-image').value = state.meta.image || '';
     $('#meta-media-type').value = state.meta.media.type || 'livro';
+    $('#meta-media-id').value = state.meta.media.id || '';
     $('#meta-media-titulo').value = state.meta.media.titulo || '';
     $('#meta-media-creator').value = state.meta.media.creator || '';
     $('#meta-media-ano').value = state.meta.media.ano || '';
@@ -1257,7 +1471,7 @@
     $('#meta-media-capa').value = state.meta.media.capa || '';
     $('#meta-media-nota').value = state.meta.media.nota || '';
     setDoc(state.doc);
-    updateMediaCreatorLabel();
+    updateMediaTypeFields();
   }
 
   function formatDateForInput(d) {
