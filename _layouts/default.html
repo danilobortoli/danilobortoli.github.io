@@ -3,7 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+
+  {% if site.google_site_verification and site.google_site_verification != "" %}
+  <meta name="google-site-verification" content="{{ site.google_site_verification }}">
+  {% endif %}
+
+  <!-- SEO: title, meta description, canonical, Open Graph, Twitter, JSON-LD -->
+  {% seo %}
+
+  <!-- Dados estruturados: identidade do autor (nome e nome completo) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Danilo Bortoli",
+    "alternateName": "Danilo Ferreira Bortoli",
+    "jobTitle": "Advogado",
+    "url": "{{ site.url }}{{ site.baseurl }}/",
+    "sameAs": [
+      "https://github.com/danilobortoli"
+    ]
+  }
+  </script>
 
   <!-- Tufte CSS -->
   <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
