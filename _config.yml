@@ -1,8 +1,13 @@
 title: Danilo Bortoli
-description: Um blog sobre tecnologia, ciência e outras coisas interessantes
+tagline: advogado, ensaísta
+description: Danilo Bortoli — advogado em direito público, tributário e empresarial. Ensaios sobre crítica cultural e direito, notas e arquivo pessoal.
+author: Danilo Bortoli
 lang: pt-BR
 url: https://danilobortoli.github.io
 baseurl: ""
+
+# Verificação do Google Search Console (cole aqui o código da meta tag)
+google_site_verification: ""
 
 # Jekyll settings
 markdown: kramdown
@@ -21,6 +26,7 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-relative-links
+  - jekyll-seo-tag
 
 # Collections
 collections:
