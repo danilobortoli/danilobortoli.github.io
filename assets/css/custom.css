@@ -1841,6 +1841,26 @@ article .post-meta a:hover {
   letter-spacing: 0.05em;
 }
 
+.home-lede-en {
+  font-size: 0.95rem !important;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin: 0.4rem 0 0 0 !important;
+}
+
+.home-lede-en a {
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border-lighter);
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.home-lede-en a:hover {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
 .home-last {
   margin-top: var(--spacing-lg);
   padding-top: var(--spacing-md);
