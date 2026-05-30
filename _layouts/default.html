@@ -4,11 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  {% if site.google_site_verification and site.google_site_verification != "" %}
-  <meta name="google-site-verification" content="{{ site.google_site_verification }}">
-  {% endif %}
-
-  <!-- SEO: title, meta description, canonical, Open Graph, Twitter, JSON-LD -->
+  <!-- SEO: title, meta description, canonical, Open Graph, Twitter, JSON-LD
+       (inclui a verificação do Google via campo google_site_verification do _config.yml) -->
   {% seo %}
 
   <!-- Dados estruturados: identidade do autor (nome e nome completo) -->
