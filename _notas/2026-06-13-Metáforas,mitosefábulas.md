@@ -1,10 +1,8 @@
 ---
 title: "Metáforas, mitos e fábulas"
-date: 2026-06-13 17:11:00 -0300
+date: 2026-06-13 17:21:00 -0300
 ---
-> last one [pic.twitter.com/utFCuOxULT](https://t.co/utFCuOxULT)
-> 
-> — Rhys (@RhysSullivan) [June 13, 2026](https://x.com/RhysSullivan/status/2065665447043997878?ref_src=twsrc%5Etfw)
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">last one <a href="https://t.co/utFCuOxULT">pic.twitter.com/utFCuOxULT</a></p>&mdash; Rhys (@RhysSullivan) <a href="https://x.com/RhysSullivan/status/2065665447043997878?ref_src=twsrc%5Etfw">June 13, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script> 
 
 Depois de escrever [mais um de seus textos](https://darioamodei.com/post/policy-on-the-ai-exponential) em seu *blog* e pedir mais regulamentação à indústria de inteligência artificial, Dario Amodei teve, enfim, o que queria: mais regulação. Não em cima dos competidores ou, ainda, contra competidores *especificamente estrangeiros* - penso aqui no mercado cihinês, mas contra a própria Anthropic.
 
