@@ -4,9 +4,9 @@ date: 2026-06-13 17:21:00 -0300
 ---
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">last one <a href="https://t.co/utFCuOxULT">pic.twitter.com/utFCuOxULT</a></p>&mdash; Rhys (@RhysSullivan) <a href="https://x.com/RhysSullivan/status/2065665447043997878?ref_src=twsrc%5Etfw">June 13, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script> 
 
-Depois de escrever [mais um de seus textos](https://darioamodei.com/post/policy-on-the-ai-exponential) em seu *blog* e pedir mais regulamentação à indústria de inteligência artificial, Dario Amodei teve, enfim, o que queria: mais regulação. Não em cima dos competidores ou, ainda, contra competidores *especificamente estrangeiros* - penso aqui no mercado cihinês, mas contra a própria Anthropic.
+Depois de escrever [mais um de seus textos](https://darioamodei.com/post/policy-on-the-ai-exponential) em seu *blog* e pedir mais regulamentação à indústria de inteligência artificial, Dario Amodei teve, enfim, o que queria: mais regulação. Não em cima dos competidores ou, ainda, contra competidores *especificamente estrangeiros* - penso aqui no mercado chinês, mas contra a própria Anthropic.
 
-Ontem a empresa divulgou que recebeu da Casa Branca ofício de lavra do Secretário de Comércio, Howard Lutnick, dirigido ao CEO, Dario Amodei, escrita em conjunto com funcionários do *Bureau of Industry and Security*, o BIS. Em suma, a missiva comunicava diretiva que proíbe a comercialização e uso do Fable 5 e Mythos, os LLMs mais "potentes" da Anthopic, por estrangeiros, incluindo aí os próprios funcionários da Anthropic que são não nativos norte-americanos. Na prática, para garantir compliance, a empresa desativou o acesso aos modelos a qualquer pessoa no mundo inteiro.
+Ontem a empresa divulgou que recebeu da Casa Branca ofício de lavra do Secretário de Comércio, Howard Lutnick, dirigido ao CEO, Dario Amodei, escrita em conjunto com funcionários do *Bureau of Industry and Security*, o BIS. Em suma, a missiva comunicava diretiva que proíbe a comercialização e uso do Fable 5 e Mythos, os LLMs mais "potentes" da Anthopic, por estrangeiros, incluindo aí os próprios funcionários da Anthropic que não são nativos norte-americanos. Na prática, para garantir compliance, a empresa desativou o acesso aos modelos a qualquer pessoa no mundo inteiro.
 
 Citando apenas preocupações do governo estadunidense acerca de "segurança nacional", isso foi o quanto informado pela empresa:
 
@@ -26,19 +26,17 @@ Mas justificam a discordância ao final: "This action does not adhere to those p
 
 Não é a primeira investida do governo de Trump contra a Anthropic, que a classificou mais cedo nesse ano como uma *supply-chain risk* (vide para tanto [aqui](https://danilobortoli.github.io/notas/2026-02-28-18-32/)).
 
-Pelo que o próprio laboratório de IA comenta, o ofício nem a diretiva dão um embasamenot jurídico específico para a magnitude da decisão, ato que seria facilmente contestável, dizem.
-
-A decisão do governo federal utiliza a *Export Control Reform Act* de 2018 e as *Export Administration Regulations* (*EAR*), que confereria amplos poderes ao Estado para controlar a exportação e transferência de itens militares, de duplo uso e os comerciais. O ECRA
+Pelo que o próprio laboratório de IA comenta, o ofício nem a diretiva dão um embasamento jurídico específico para a magnitude da decisão, ato que seria facilmente contestável, dizem. Contudo, a decisão do governo federal utiliza a *Export Control Reform Act* de 2018 e as *Export Administration Regulations* (*EAR*), que confereria amplos poderes ao Estado para controlar a exportação e transferência de itens militares, de duplo uso e os comerciais. O ECRA, enfim:
 
 > “closes gaps in our export controls that could permit transfers of cutting-edge technology like artificial intelligence and advanced semiconductors to potential adversaries such as Beijing.”[^1]
 
-O BIS já tinha, em janeiro de 2025, delimitado a possibilidade de controle de exportação de modelos de inteligência artificial de ponta, tal como o Claude e, agora, o Mythos e o Fable 5. São, na prática, classificados como ECCN 4E091, o que exigiria licenças específicas para modelos closed source - fechados, portanto - e que são treinados com mais de 10²⁶ operações computacionais.[^2]
+O BIS já tinha, em janeiro de 2025, delimitado a possibilidade de controle de exportação de modelos de inteligência artificial de ponta, tal como o Claude e, agora, o Mythos e o Fable 5. São, na prática, classificados como ECCN 4E091, o que exigiria licenças específicas para modelos _closed source_ - fechados, portanto - e que são treinados com mais de 10²⁶ operações computacionais.[^2]
 
 Pelas más línguas que correm por aí, teria sido a Amazon a alertar o Departamento de Comércio sobre a possibilidade de *jailbreak* dos modelos.
 
 Enquanto isso, a Anthropic - com alguma razão - reclama da desproporcionalidade da medida e há [quem diga](https://www.lawfaremedia.org/article/trump-s-illegal-ai-chip-export-controls--and-who-can-challenge-them) que tal controle governamental sobre a iniciativa privada - especialmente os poderes conferidos pelo ECRA - são ilegais e inconstitucionais.
 
-Também enquanto isso, acredito que a lição a ser aprendida - no momento em que a legalidade dos atos do Departamento de Comércio nessa corrida da IA *a la* Guerra Fria são alvo de escrutínio - é que a estratégia de marketing de Amodei saiu pela culatra. Espalhar aos quatro ventos como o seu modelo *closed source* é extramamente perigoso e seu uso ao consumidor comum não pode ser autorizado, em qualquer outro marco histórico, seria risível, mas tinha, por razões inexplicáveis, ganhado ares apocalípticos. Finalmente, os rumos são corrigidos.
+Também enquanto isso, acredito que a lição a ser aprendida - no momento em que a legalidade dos atos do Departamento de Comércio nessa corrida da IA *a la* Guerra Fria são alvo de escrutínio - é que a estratégia de _marketing_ de Amodei saiu pela culatra. Espalhar aos quatro ventos como o seu modelo *closed source* é extramamente perigoso e seu uso ao consumidor comum não pode ser autorizado, em qualquer outro marco histórico, seria risível, mas tinha, por razões inexplicáveis, ganhado ares apocalípticos. Finalmente, os rumos são corrigidos.
 
 [^1]: Vide: Center for Strategic & International Studies, [*Understanding U.S. Allies’ Current Legal Authority to Implement AI and Semiconductor Export Controls*](https://www.csis.org/analysis/understanding-us-allies-current-legal-authority-implement-ai-and-semiconductor-export). [↩︎](#fnref1)
     
