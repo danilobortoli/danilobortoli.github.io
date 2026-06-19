@@ -5,7 +5,7 @@
 # =====================================================================
 
 # Data da última atualização e cidade onde está.
-atualizada_em: "26 de maio de 2026"
+atualizada_em: "19 de junho de 2026"
 local: "Marília, São Paulo"
 
 # Cada seção aceita texto livre em Markdown:
@@ -14,7 +14,7 @@ local: "Marília, São Paulo"
 
 advocacia: |
  O trabalho contínuo na
-  [MATRA](https://matra.org.br). Analisei, recentemente, a legalidade da contratação, por inexigibilidade, da pintura do Mural da Biblioteca da UNESP de Marília. Foi um trabalho interessante e que vai gerar, acredito, questionamentos interessantes.
+  [MATRA](https://matra.org.br). 
 
 escrevendo: |
   Um ensaio em gestação sobre *pré-compromissos constitucionais* —
@@ -59,17 +59,17 @@ lendo:
 #                       3. Para canção: pegue o ID do "Recording"
 # ---------------------------------------------------------------------
 ouvindo:
-  - titulo: "Sd-3"
-    artista: "Loukeman"
+  - titulo: "you seem pretty sad for a girl so in love"
+    artista: "Olivia Rodrigo"
     ano: "2026"
     tipo: "álbum"
-    musicbrainz_id: "f357c89e-131c-43b3-af51-0236289dc00e"
+    musicbrainz_id: "e142765a-1fb3-4980-90b5-2b39044eb01f"
 
-  - titulo: "Middle of Nowhere"
-    artista: "Kacey Musgraves"
+  - titulo: "If This Is It"
+    artista: "DJ Seinfeld"
     ano: "2026"
     tipo: "álbum"
-    musicbrainz_id: "dd02fe28-52e0-4a65-88f4-2417329c22e9"
+    musicbrainz_id: "55c3ccae-a016-48ac-b236-58aeb7927537"
  
 # ---------------------------------------------------------------------
 # FILMES E SÉRIES (opcional — se estiver assistindo algo)
