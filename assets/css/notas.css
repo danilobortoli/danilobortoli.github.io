@@ -291,9 +291,24 @@
   max-width: none;
 }
 .nota-card-body p:last-child { margin-bottom: 0; }
+.nota-card-body a:link,
+.nota-card-body a:visited {
+  color: var(--color-link);
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 115, 232, 0.3);
+  text-underline-offset: 3px;
+  background: none;
+}
+.nota-card-body a:hover {
+  color: var(--color-link-hover);
+  text-decoration-color: var(--color-link-hover);
+}
+/* Esconde os supra-índices de nota de rodapé no preview (o link levaria
+   a uma âncora inexistente na listagem; a nota completa mantém tudo). */
+.nota-card-body sup[id^="fnref"] { display: none; }
 .nota-card-more-wrap { margin-top: 0.5rem !important; }
-.nota-card-more:link,
-.nota-card-more:visited {
+.nota-card-body a.nota-card-more:link,
+.nota-card-body a.nota-card-more:visited {
   font-family: var(--font-body);
   font-variant: small-caps;
   letter-spacing: 0.05em;
@@ -303,7 +318,7 @@
   background: none;
   transition: color .2s;
 }
-.nota-card-more:hover { color: var(--color-accent-hover); }
+.nota-card-body a.nota-card-more:hover { color: var(--color-accent-hover); }
 
 /* ============================================================
    Paginator
