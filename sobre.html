@@ -1,58 +1,64 @@
 ---
 layout: default
 title: Sobre
+main_class: site-main--sobre
 ---
-<section class="sobre-page">
-  <p class="sobre-eyebrow">Sobre</p>
-  <h1>Danilo Bortoli</h1>
-  <p class="sobre-subtitle">primeira pessoa</p>
-  <p class="sobre-lede">
-    <span class="newthought">Sou Danilo Ferreira Bortoli</span>, advogado em Marília (OAB/SP 409.024). Atuo em direito tributário, empresarial, recuperação judicial e direito público, sobretudo em matérias de complexidade institucional e regulatória. Advogo para a OSCIP MATRA — Marília Transparente.
-  </p>
-  <section class="sobre-section">
-    <p class="sobre-eyebrow">Prática</p>
-    <p>
-      Dogmática rigorosa, análise econômica e estratégica do conflito. Interessam-me mais as assimetrias informacionais, as falhas institucionais e o desenho de incentivos.
-    </p>
-    <p>
-      Leio filosofia do direito, teoria do Estado e teoria da democracia. Resenhei <em>Constitutional Personae</em>, de Cass Sunstein, no PopMatters.
-    </p>
-  </section>
-  <section class="sobre-section">
-    <p class="sobre-eyebrow">Crítica</p>
-    <p>
-      Escrevo sobre música desde os dezesseis anos. Colaboro com <em><a href="https://thesinglesjukebox.com">The Singles Jukebox</a></em> e mantive um <em><a href="https://oneweekoneband.tumblr.com/tagged/burial/chrono">One Week One Band</a></em> sobre Burial.
-    </p>
-  </section>
-  <section class="sobre-section">
-    <p class="sobre-eyebrow">Tecnologia</p>
-    <p>
-      Desenvolvi sistemas de automação documental, monitoramento institucional e integração de bases públicas — em parte para a prática, em parte para o trabalho da OSCIP MATRA.
-    </p>
-  </section>
-  <section class="sobre-section">
-    <p class="sobre-eyebrow">Sobre este site</p>
-    <p>
-      Notas sobre o que leio, escrevo e investigo. Não pretende ser currículo nem portfólio.
-    </p>
-    <p>
-      Construído em <a href="https://github.com/edwardtufte/tufte-css" target="_blank">Tufte CSS</a> — papel creme, et-book, sidenotes na margem. Homenagem a <a href="https://www.edwardtufte.com/tufte/" target="_blank">Edward Tufte</a>. A <a href="{{ '/exemplo' | relative_url }}">página de exemplo</a> mostra os recursos em uso.
-    </p>
-    <p>
-      Licenciado sob a <a href="{{ '/licenca.html' | relative_url }}">Licença MIT</a>.
-    </p>
-  </section>
-  <section class="sobre-section">
-    <p class="sobre-eyebrow">Contato</p>
-    <dl class="sobre-contato">
-      <div>
-        <dt>E-mail</dt>
-        <dd><a href="mailto:danilobortoli@icloud.com">danilobortoli@icloud.com</a></dd>
-      </div>
-      <div>
-        <dt>GitHub</dt>
-        <dd><a href="https://github.com/danilobortoli" target="_blank">@danilobortoli</a></dd>
-      </div>
-    </dl>
-  </section>
+
+<section class="sobre-head">
+  <p class="eyebrow">Sobre · primeira pessoa</p>
+  <h1 class="page-title">Em primeira pessoa</h1>
+</section>
+
+<section class="sobre-block">
+  <div class="sobre-block-main">
+    <p><span class="incipit">Sou advogado</span> em Marília<sup class="footref">1</sup>. Atuo em direito tributário, empresarial, recuperação judicial e direito público, sobretudo em matérias de complexidade institucional e regulatória. Advogo para a <span class="name">OSCIP MATRA — Marília Transparente</span>.</p>
+  </div>
+  <div class="sobre-block-margin">
+    <p class="footaside"><sup>1&nbsp;</sup>OAB/SP 409.024. Ver <a href="{{ '/advocacia.html' | relative_url }}">Advocacia</a> para os eixos de atuação e contato.</p>
+  </div>
+</section>
+
+<section class="sobre-block">
+  <div class="sobre-block-main">
+    <h2>Prática</h2>
+    <p>Dogmática rigorosa, análise econômica e estratégica do conflito. Interessam-me mais as assimetrias informacionais, as falhas institucionais e o desenho de incentivos. Leio filosofia do direito, teoria do Estado e teoria da democracia<sup class="footref">2</sup>.</p>
+  </div>
+  <div class="sobre-block-margin">
+    <p class="footaside"><sup>2&nbsp;</sup>Resenhei <em>Constitutional Personae</em>, de Cass Sunstein, no <a href="https://www.popmatters.com" target="_blank" rel="noopener">PopMatters</a>.</p>
+  </div>
+</section>
+
+<section class="sobre-block">
+  <div class="sobre-block-main">
+    <h2>Crítica</h2>
+    <p>Escrevo sobre música desde os dezesseis anos. Colaboro com <em><a href="https://thesinglesjukebox.com" target="_blank" rel="noopener">The Singles Jukebox</a></em> e mantive um <em><a href="https://oneweekoneband.tumblr.com/tagged/burial/chrono" target="_blank" rel="noopener">One Week One Band</a></em> sobre Burial.</p>
+  </div>
+  <div class="sobre-block-margin"></div>
+</section>
+
+<section class="sobre-block sobre-block--ruled">
+  <div class="sobre-block-main">
+    <h2>Tecnologia</h2>
+    <p>Desenvolvi sistemas de automação documental, monitoramento institucional e integração de bases públicas — em parte para a prática, em parte para o trabalho da OSCIP MATRA.</p>
+  </div>
+  <div class="sobre-block-margin"></div>
+</section>
+
+<section class="sobre-colophon">
+  <aside class="callout-aside">
+    <p class="eyebrow">Sobre este site</p>
+    <p>Notas sobre o que leio, escrevo e investigo. Não pretende ser currículo nem portfólio.</p>
+    <p>Repaginado no sistema <em>Tufte-Bortoli</em>, modo Spiekermann — fundo branco, ET Book, Fira Sans nos metadados, magenta tipográfica como único acento, sidenotes na margem. Herança de <a href="https://www.edwardtufte.com/tufte/" target="_blank" rel="noopener">Edward Tufte</a> e de Erik Spiekermann. Licenciado sob a <a href="{{ '/licenca.html' | relative_url }}">Licença MIT</a>.</p>
+  </aside>
+</section>
+
+<section class="sobre-contact contact-cols">
+  <div class="contact-col">
+    <p class="contact-label">E-mail</p>
+    <p class="contact-value"><a href="mailto:danilobortoli@icloud.com">danilobortoli@icloud.com</a></p>
+  </div>
+  <div class="contact-col">
+    <p class="contact-label">GitHub</p>
+    <p class="contact-value"><a href="https://github.com/danilobortoli" target="_blank" rel="noopener">@danilobortoli</a></p>
+  </div>
 </section>

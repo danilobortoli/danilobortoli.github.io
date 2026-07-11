@@ -2,55 +2,72 @@
 layout: default
 ---
 
-<section class="home-lede">
-  <p class="home-lede-eyebrow">Início</p>
-  <h1>Danilo Bortoli</h1>
-  <p class="home-lede-subtitle">advogado &middot; ensaísta &middot; 
+{%- assign a = site.data.agora -%}
 
-  <div class="home-lede-body">
-    <p>
-      <span class="newthought">Sou advogado</span> com atuação em Direito Empresarial e Tributário<label for="sn-advocacia" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-advocacia" class="margin-toggle"/><span class="sidenote">OAB/SP 409.024. Coordenador jurídico da <a href="https://matra.org.br" target="_blank">MATRA – Marília Transparente</a>. Ver <a href="{{ '/advocacia.html' | relative_url }}">Advocacia</a> para atuação e contato.</span>.
-      Em paralelo, escrevo <em>ensaios</em> sobre crítica cultural e direito, e alimento um arquivo de <em>notas</em> curtas — pequenas observações, poemas que encontro, canções que escuto.
-    </p>
+<section class="home-hero">
+  <p class="eyebrow">Advogo · escrevo · escuto</p>
+  <h1 class="home-hero-title">Danilo Bortoli</h1>
+  <p class="home-hero-sub">Advogado em direito público, tributário e empresarial. Ensaios sobre crítica cultural e direito, notas curtas e um arquivo pessoal.</p>
+</section>
 
-    <p>
-      Comece pelo <em><a href="{{ '/escrita.html' | relative_url }}">último ensaio</a></em>, folheie as <em><a href="{{ '/notas/' | relative_url }}">notas</a></em>, ou veja o que estou fazendo <em><a href="{{ '/agora.html' | relative_url }}">agora</a></em>.
-    </p>
-
-    <p class="home-lede-en">
-      &rarr; <a href="{{ '/en/' | relative_url }}">In English</a>
-    </p>
+<section class="home-intro split">
+  <div class="split-content">
+    <p><span class="incipit">Advogo em</span> Marília, sobretudo em matérias de complexidade institucional e regulatória, e coordeno juridicamente a <span class="name">MATRA</span><sup class="footref">1</sup>. O resto do tempo leio, escrevo e escuto — e é disso que trata este arquivo.</p>
   </div>
-
-  {% assign latest_post = site.posts | first %}
-  {% if latest_post %}
-  <div class="home-last">
-    <p class="home-last-eyebrow">Último ensaio &middot;
-      {{ latest_post.date | date: "%-d %b %Y" | replace: "Jan", "jan" | replace: "Feb", "fev" | replace: "Mar", "mar" | replace: "Apr", "abr" | replace: "May", "mai" | replace: "Jun", "jun" | replace: "Jul", "jul" | replace: "Aug", "ago" | replace: "Sep", "set" | replace: "Oct", "out" | replace: "Nov", "nov" | replace: "Dec", "dez" }}
-    </p>
-    <div class="home-last-grid">
-      <div class="home-last-cover">
-        {% if latest_post.image %}
-          <img src="{{ latest_post.image | relative_url }}" alt="">
-        {% else %}
-          <span>{{ latest_post.title | downcase | truncate: 14 }}</span>
-        {% endif %}
-      </div>
-      <div>
-        <h3 class="home-last-title"><a href="{{ latest_post.url | relative_url }}">{{ latest_post.title }}</a></h3>
-        <p class="home-last-excerpt">
-          {% assign excerpt_text = latest_post.excerpt | strip_html | strip %}
-          {% if excerpt_text and excerpt_text != '' %}
-            {{ excerpt_text | truncatewords: 28 }}
-          {% else %}
-            {{ latest_post.content | strip_html | truncatewords: 28 }}
-          {% endif %}
-        </p>
-        {% if latest_post.category %}
-          <p class="home-last-meta">{{ latest_post.category | downcase }} &middot; {% include reading-time.html content=latest_post.content %}</p>
-        {% endif %}
-      </div>
-    </div>
+  <div class="split-margin">
+    <p class="footaside"><sup>1&nbsp;</sup>OAB/SP 409.024. <a href="https://matra.org.br" target="_blank" rel="noopener">MATRA — Marília Transparente</a>, OSCIP apartidária dedicada à transparência na gestão pública.</p>
   </div>
-  {% endif %}
+</section>
+
+<section class="home-index">
+  <p class="eyebrow">Índice</p>
+
+  <a href="{{ '/escrita.html' | relative_url }}" class="index-entry">
+    <span class="index-entry-num">I</span>
+    <span class="index-entry-body">
+      <span class="index-entry-title">Escrita</span>
+      <span class="index-entry-desc">Ensaios longos sobre direito, cultura e leituras.</span>
+    </span>
+    <span class="index-entry-tag">{{ site.posts.size }} textos</span>
+  </a>
+
+  <a href="{{ '/notas/' | relative_url }}" class="index-entry">
+    <span class="index-entry-num">II</span>
+    <span class="index-entry-body">
+      <span class="index-entry-title">Notas</span>
+      <span class="index-entry-desc">O caderno — fragmentos, links, canções e leituras.</span>
+    </span>
+    <span class="index-entry-tag">{{ site.notas.size }} notas</span>
+  </a>
+
+  <a href="{{ '/advocacia.html' | relative_url }}" class="index-entry">
+    <span class="index-entry-num">III</span>
+    <span class="index-entry-body">
+      <span class="index-entry-title">Advocacia</span>
+      <span class="index-entry-desc">Empresarial, tributário e público — atuação e contato.</span>
+    </span>
+    <span class="index-entry-tag">OAB/SP</span>
+  </a>
+
+  <a href="{{ '/agora.html' | relative_url }}" class="index-entry">
+    <span class="index-entry-num">IV</span>
+    <span class="index-entry-body">
+      <span class="index-entry-title">Agora</span>
+      <span class="index-entry-desc">O que estou fazendo, lendo e ouvindo neste momento.</span>
+    </span>
+    <span class="index-entry-tag">{% if a.atualizada_em %}{{ a.atualizada_em }}{% else %}Página viva{% endif %}</span>
+  </a>
+
+  <a href="{{ '/sobre.html' | relative_url }}" class="index-entry">
+    <span class="index-entry-num">V</span>
+    <span class="index-entry-body">
+      <span class="index-entry-title">Sobre</span>
+      <span class="index-entry-desc">Prática, crítica, tecnologia — e este site.</span>
+    </span>
+    <span class="index-entry-tag">Primeira pessoa</span>
+  </a>
+</section>
+
+<section class="home-en">
+  <p>→ <a href="{{ '/en/' | relative_url }}">In English</a></p>
 </section>

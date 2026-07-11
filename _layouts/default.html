@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- SEO: title, meta description, canonical, Open Graph, Twitter, JSON-LD
-       (inclui a verificação do Google via campo google_site_verification do _config.yml) -->
+  <!-- SEO: title, meta description, canonical, Open Graph, Twitter, JSON-LD -->
   {% seo %}
 
-  <!-- Dados estruturados: identidade do autor (nome e nome completo) -->
+  <!-- Dados estruturados: identidade do autor -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -23,11 +22,14 @@
   }
   </script>
 
-  <!-- Tufte CSS -->
-  <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
+  <!-- Fira Sans (Erik Spiekermann) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Custom Enhancements -->
-  <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}"/>
+  <!-- Sistema de design Tufte-Bortoli (modo Spiekermann) -->
+  <link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}"/>
   {% if page.extra_css %}
   <link rel="stylesheet" href="{{ '/assets/css/' | append: page.extra_css | relative_url }}"/>
   {% endif %}
@@ -42,19 +44,23 @@
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']]
       },
-      svg: {
-        fontCache: 'global'
-      }
+      svg: { fontCache: 'global' }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </head>
 <body>
-  <article>
-    {% include navigation.html %}
+  {% include navigation.html %}
 
+  {%- assign main_class = 'site-main' -%}
+  {%- if page.layout == 'post' -%}{%- assign main_class = 'site-main site-main--mid' -%}{%- endif -%}
+  {%- if page.main_class -%}{%- assign main_class = 'site-main ' | append: page.main_class -%}{%- endif -%}
+
+  <main class="{{ main_class }}">
     {{ content }}
-  </article>
+
+    {% include site-footer.html %}
+  </main>
 
   <script>
     // Converte notas de rodapé do Kramdown para sidenotes do Tufte CSS
@@ -62,45 +68,35 @@
       'use strict';
 
       function convertFootnotesToSidenotes() {
-        // Encontra todas as seções de notas de rodapé na página
-        // (pode haver múltiplas quando várias notas são renderizadas na mesma página)
         const footnoteSections = document.querySelectorAll('.footnotes');
-
         if (footnoteSections.length === 0) return;
 
         let globalCounter = 0;
 
         footnoteSections.forEach(function(footnotesDiv) {
-          // Encontra o container pai desta seção de notas de rodapé
           var container = footnotesDiv.parentElement;
           if (!container) return;
 
-          // Encontra as referências de notas apenas dentro deste container
           var footnoteRefs = container.querySelectorAll('sup[id^="fnref:"]');
 
           footnoteRefs.forEach(function(ref) {
             globalCounter++;
             var footnoteId = ref.id.replace('fnref:', '');
             var footnoteLink = ref.querySelector('a');
-
             if (!footnoteLink) return;
 
-            // Encontra o conteúdo da nota dentro DESTA seção específica
             var footnoteItem = footnotesDiv.querySelector('li[id="fn:' + footnoteId + '"]');
             if (!footnoteItem) return;
 
-            // Extrai o conteúdo da nota (remove o link de retorno)
             var footnoteContent = footnoteItem.cloneNode(true);
             var backref = footnoteContent.querySelector('.reversefootnote');
             if (backref) backref.remove();
 
-            // Remove o primeiro <p> se houver apenas um parágrafo
             var content = footnoteContent.innerHTML.trim();
             if (content.startsWith('<p>') && content.endsWith('</p>')) {
               content = content.slice(3, -4);
             }
 
-            // Cria a estrutura de sidenote do Tufte CSS
             var label = document.createElement('label');
             label.setAttribute('for', 'sn-' + globalCounter);
             label.className = 'margin-toggle sidenote-number';
@@ -114,19 +110,16 @@
             sidenote.className = 'sidenote';
             sidenote.innerHTML = content;
 
-            // Substitui a referência original pela estrutura de sidenote
             ref.parentNode.insertBefore(label, ref);
             ref.parentNode.insertBefore(input, ref);
             ref.parentNode.insertBefore(sidenote, ref);
             ref.remove();
           });
 
-          // Remove esta seção de notas de rodapé
           footnotesDiv.remove();
         });
       }
 
-      // Executa quando o DOM estiver pronto
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', convertFootnotesToSidenotes);
       } else {

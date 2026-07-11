@@ -1,0 +1,139 @@
+/* ============================================================
+   Tufte-Bortoli Design System — tokens + editorial base.
+   Modo Spiekermann: white ground, magenta accent, italic serif
+   display, sans small-caps metadata. Ported from the Claude
+   Design project (tufte-bortoli-design-system) for this site.
+   ============================================================ */
+
+/* ---- Serif (ET Book), self-hosted ---- */
+@font-face {
+  font-family: "et-book";
+  src: url("/assets/fonts/et-book-roman.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("/assets/fonts/et-book-italic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("/assets/fonts/et-book-bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   COLORS
+   Rule of the magenta: the accent appears ONLY in running heads,
+   eyebrows, section numbering, small-caps highlights and links.
+   Never in body copy, never in titles.
+   ============================================================ */
+:root {
+  /* ---- Surface ---- */
+  --color-surface:       #ffffff;
+  --color-surface-alt:   #f4f4f4;
+  --color-surface-dark:  #111111;
+
+  /* ---- Text ---- */
+  --color-text-primary:  #111111;
+  --color-text-body:     #222222;
+  --color-text-muted:    #666666;
+  --color-text-subtle:   #888888;
+  --color-text-inverse:  #ffffff;
+
+  /* ---- Accent — Spiekermann magenta (~Pantone 213C) ---- */
+  --color-accent:        #d91f5d;
+  --color-accent-soft:   #f4c8d7;
+  --color-accent-tufte:  #a00000;
+
+  /* ---- Support ---- */
+  --color-border:        #cccccc;
+  --color-border-strong: #111111;
+
+  /* ---- Editorial category signals (kickers) ---- */
+  --color-signal-rest:   #2a8a5f;
+  --color-signal-office: #1f5fd9;
+
+  /* ---- Semantic aliases ---- */
+  --surface-page:  var(--color-surface);
+  --text-title:    var(--color-text-primary);
+  --text-body:     var(--color-text-body);
+  --text-note:     var(--color-text-muted);
+  --text-pagenum:  var(--color-text-subtle);
+  --signal:        var(--color-accent);
+  --divider:       var(--color-border);
+  --link:          var(--color-accent);
+
+  /* ---- Font stacks ---- */
+  --font-serif: "et-book", Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-sans:  "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:  Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* ---- Weights ---- */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+
+  /* ---- Type scale ---- */
+  --size-display:  2.7rem;
+  --size-h1:       2.2rem;
+  --size-h2:       1.85rem;
+  --size-h3:       1.3rem;
+  --size-lede:     1.15rem;
+  --size-body:     1.08rem;
+  --size-body-sm:  1rem;
+  --size-note:     0.9rem;
+  --size-meta:     0.72rem;
+  --size-caption:  0.62rem;
+
+  /* ---- Line heights ---- */
+  --leading-tight:  1.15;
+  --leading-body:   1.55;
+  --leading-note:   1.45;
+
+  /* ---- Letter-spacing ---- */
+  --tracking-eyebrow: 0.12em;
+  --tracking-incipit: 0.08em;
+  --tracking-name:    0.06em;
+  --tracking-kicker:  0.10em;
+
+  --indent-para: 1.5em;
+
+  /* ---- Spacing scale ---- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs:  0.75rem;
+  --space-sm:  1rem;
+  --space-md:  1.5rem;
+  --space-lg:  2.5rem;
+  --space-xl:  4rem;
+  --space-2xl: 6rem;
+
+  /* ---- Measure ---- */
+  --measure-prose:  40em;
+  --measure-narrow: 32em;
+  --measure-wide:   48em;
+
+  /* ---- Rules & borders ---- */
+  --rule-hairline: 1px;
+  --rule-emphatic: 2px;
+  --radius-checkbox: 2px;
+
+  --sidenote-pad: 1.25rem;
+}
+
+/* ---- Classic Tufte mode (cream ground, dark-red accent) ---- */
+[data-theme="tufte"] {
+  --color-surface: #fffff8;
+  --color-accent:  #a00000;
+  --surface-page:  var(--color-surface);
+  --signal:        var(--color-accent);
+  --link:          var(--color-accent);
+}
