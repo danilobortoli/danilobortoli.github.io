@@ -1184,6 +1184,20 @@ figcaption {
   border: 0;
 }
 
+/* Bare iframes embedded directly in note/post markdown (e.g. YouTube):
+   force them to fit the reading column at a 16:9 ratio instead of using
+   their hard-coded width/height attributes. */
+.nota-body iframe,
+.post-content iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  margin: 24px 0;
+}
+
 /* ============================================================
    Media review card (notas/posts)
    ============================================================ */
