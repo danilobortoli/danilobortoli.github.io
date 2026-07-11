@@ -5,99 +5,74 @@ title: Agora
 
 {%- assign a = site.data.agora -%}
 
-<section class="agora-page">
-  <p class="agora-eyebrow">Página nova</p>
-  <h1>Agora</h1>
-  <p class="agora-subtitle">O que estou fazendo, lendo e ouvindo neste momento. Atualizada quando algo muda.</p>
-  <p class="agora-stamp">Atualizada em {{ a.atualizada_em }} &middot; {{ a.local }}</p>
+<section class="agora-head">
+  <p class="eyebrow">Agora · página viva</p>
+  <h1 class="page-title">Agora</h1>
+  <p class="page-lede">O que estou fazendo, lendo e ouvindo neste momento. Atualizada quando algo muda.</p>
+  <p class="agora-stamp">Atualizada em {{ a.atualizada_em }} · {{ a.local }}</p>
+</section>
 
+{% if a.advocacia and a.advocacia != "" or a.escrevendo and a.escrevendo != "" %}
+<section class="agora-cols">
   {% if a.advocacia and a.advocacia != "" %}
-  <section class="agora-section">
-    <h2>Advocacia</h2>
+  <div class="agora-col">
+    <p class="eyebrow">Advocacia</p>
     {{ a.advocacia | markdownify }}
-  </section>
+  </div>
   {% endif %}
-
   {% if a.escrevendo and a.escrevendo != "" %}
-  <section class="agora-section">
-    <h2>Escrevendo</h2>
+  <div class="agora-col">
+    <p class="eyebrow">Escrevendo</p>
     {{ a.escrevendo | markdownify }}
-  </section>
-  {% endif %}
-
-  {% if a.lendo and a.lendo.size > 0 %}
-  <section class="agora-section">
-    <h2>Lendo</h2>
-    {% for livro in a.lendo %}
-    <div class="agora-media-row">
-      <div class="agora-cover book"
-           data-media-type="livro"
-           {% if livro.openlibrary_id %}data-openlibrary-id="{{ livro.openlibrary_id }}"{% endif %}>
-        <span class="agora-cover-fallback">{{ livro.titulo | truncate: 16 }}</span>
-      </div>
-      <div>
-        <p class="agora-media-label"><em class="agora-media-titulo">{{ livro.titulo }}</em>{% if livro.autor %} &middot; <span class="agora-media-creator">{{ livro.autor }}</span>{% else %} <span class="agora-media-creator"></span>{% endif %}</p>
-        {% if livro.status %}<p class="agora-media-meta">{{ livro.status }}</p>{% endif %}
-      </div>
-    </div>
-    {% endfor %}
-  </section>
-  {% endif %}
-
-  {% if a.ouvindo and a.ouvindo.size > 0 %}
-  <section class="agora-section">
-    <h2>Ouvindo</h2>
-    <div class="agora-grid-2">
-      {% for item in a.ouvindo %}
-      {%- assign tipo = item.tipo | default: "álbum" -%}
-      <div class="agora-media-row">
-        <div class="agora-cover {% cycle 'album', 'album-2' %}"
-             data-media-type="{{ tipo }}"
-             {% if item.musicbrainz_id %}data-musicbrainz-id="{{ item.musicbrainz_id }}"{% endif %}>
-        </div>
-        <div>
-          <p class="agora-media-label"><em class="agora-media-titulo">{{ item.titulo }}</em></p>
-          <p class="agora-media-meta">
-            <span class="agora-media-creator">{% if item.artista %}{{ item.artista }}{% endif %}</span>
-            {% if item.artista and item.ano %} &middot; {% endif %}
-            <span class="agora-media-year">{% if item.ano %}{{ item.ano }}{% endif %}</span>
-          </p>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
-  {% if a.assistindo and a.assistindo.size > 0 %}
-  <section class="agora-section">
-    <h2>Assistindo</h2>
-    {% for item in a.assistindo %}
-    {%- assign tipo = item.tipo | default: "filme" -%}
-    {%- assign creator = item.criador | default: item.diretor -%}
-    <div class="agora-media-row">
-      <div class="agora-cover book"
-           data-media-type="{{ tipo }}"
-           {% if item.tmdb_id %}data-tmdb-id="{{ item.tmdb_id }}"{% endif %}>
-        <span class="agora-cover-fallback">{{ item.titulo | truncate: 16 }}</span>
-      </div>
-      <div>
-        <p class="agora-media-label"><em class="agora-media-titulo">{{ item.titulo }}</em>{% if creator %} &middot; <span class="agora-media-creator">{{ creator }}</span>{% else %} <span class="agora-media-creator"></span>{% endif %}</p>
-        <p class="agora-media-meta agora-media-year">{% if item.ano %}{{ item.ano }}{% endif %}</p>
-      </div>
-    </div>
-    {% endfor %}
-  </section>
-  {% endif %}
-
-  {% if a.rodape and a.rodape != "" %}
-  <div class="agora-footer">
-    {{ a.rodape | markdownify }}
   </div>
   {% endif %}
 </section>
+{% endif %}
 
-<script>
-  window.TMDB_API_KEY = "{{ site.tmdb_api_key }}";
-</script>
-<script src="{{ '/assets/js/agora-fetch.js' | relative_url }}"></script>
+{% if a.lendo and a.lendo.size > 0 %}
+<section class="agora-block">
+  <p class="eyebrow">Lendo</p>
+  {% for livro in a.lendo %}
+  <div class="agora-row">
+    <span class="agora-row-title"><em>{{ livro.titulo }}</em>{% if livro.autor %} <span class="agora-row-creator">· {{ livro.autor }}</span>{% endif %}</span>
+    {% if livro.status %}<span class="agora-row-status">{{ livro.status }}</span>{% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if a.ouvindo and a.ouvindo.size > 0 or a.assistindo and a.assistindo.size > 0 %}
+<section class="agora-media-cols">
+  {% if a.ouvindo and a.ouvindo.size > 0 %}
+  <div class="agora-media-col">
+    <p class="eyebrow">Ouvindo</p>
+    {% for item in a.ouvindo %}
+    <div class="agora-stack-item">
+      <span class="agora-stack-title"><em>{{ item.titulo }}</em></span>
+      <span class="agora-stack-meta">{% if item.artista %}{{ item.artista }}{% endif %}{% if item.artista and item.ano %} · {% endif %}{% if item.ano %}{{ item.ano }}{% endif %}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if a.assistindo and a.assistindo.size > 0 %}
+  <div class="agora-media-col">
+    <p class="eyebrow">Assistindo</p>
+    {% for item in a.assistindo %}
+    {%- assign creator = item.criador | default: item.diretor -%}
+    <div class="agora-stack-item">
+      <span class="agora-stack-title"><em>{{ item.titulo }}</em></span>
+      <span class="agora-stack-meta">{% if creator %}{{ creator }}{% endif %}{% if creator and item.ano %} · {% endif %}{% if item.ano %}{{ item.ano }}{% endif %}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+<section class="agora-note">
+  {% if a.rodape and a.rodape != "" %}
+    {{ a.rodape | markdownify }}
+  {% else %}
+    <p>Inspirado em <a href="https://nownownow.com" target="_blank" rel="noopener">nownownow.com</a> (Derek Sivers).</p>
+  {% endif %}
+</section>

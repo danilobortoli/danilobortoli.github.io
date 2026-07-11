@@ -12,87 +12,27 @@
 {%- capture last_abbr -%}{% include mes-abbr.html date=last_nota.date %}{%- endcapture -%}{%- assign last_abbr = last_abbr | strip -%}
 {%- capture first_abbr -%}{% include mes-abbr.html date=first_nota.date %}{%- endcapture -%}{%- assign first_abbr = first_abbr | strip -%}
 
+{%- assign c_frag   = all_notas | where_exp: "n", "n.media == nil"          | size -%}
+{%- assign c_filme  = all_notas | where_exp: "n", "n.media.type == 'filme'"  | size -%}
+{%- assign c_cancao = all_notas | where_exp: "n", "n.media.type == 'canção'" | size -%}
+{%- assign c_album  = all_notas | where_exp: "n", "n.media.type == 'álbum'"  | size -%}
+{%- assign c_livro  = all_notas | where_exp: "n", "n.media.type == 'livro'"  | size -%}
+{%- assign c_serie  = all_notas | where_exp: "n", "n.media.type == 'série'"  | size -%}
+
 <section class="notas-index">
 
-  {%- if current_page == 1 -%}
-  {%- comment -%} ---- "O caderno": painel de estatísticas ---- {%- endcomment -%}
-  {%- assign c_frag   = all_notas | where_exp: "n", "n.media == nil"          | size -%}
-  {%- assign c_filme  = all_notas | where_exp: "n", "n.media.type == 'filme'"  | size -%}
-  {%- assign c_cancao = all_notas | where_exp: "n", "n.media.type == 'canção'" | size -%}
-  {%- assign c_album  = all_notas | where_exp: "n", "n.media.type == 'álbum'"  | size -%}
-  {%- assign c_livro  = all_notas | where_exp: "n", "n.media.type == 'livro'"  | size -%}
-  {%- assign c_serie  = all_notas | where_exp: "n", "n.media.type == 'série'"  | size -%}
-  {%- assign type_max = c_frag -%}
-  {%- if c_filme  > type_max %}{% assign type_max = c_filme %}{% endif -%}
-  {%- if c_cancao > type_max %}{% assign type_max = c_cancao %}{% endif -%}
-  {%- if c_album  > type_max %}{% assign type_max = c_album %}{% endif -%}
-  {%- if c_livro  > type_max %}{% assign type_max = c_livro %}{% endif -%}
-  {%- if c_serie  > type_max %}{% assign type_max = c_serie %}{% endif -%}
-  {%- if type_max < 1 %}{% assign type_max = 1 %}{% endif -%}
-
-  {%- assign mgroups = all_notas | group_by_exp: "n", "n.date | date: '%Y-%m'" | sort: "name" -%}
-  {%- assign mstart = mgroups.size | minus: 6 -%}
-  {%- if mstart < 0 %}{% assign mstart = 0 %}{% endif -%}
-  {%- assign mgroups = mgroups | slice: mstart, 6 -%}
-  {%- assign month_max = 1 -%}
-  {%- for g in mgroups -%}{%- if g.size > month_max %}{% assign month_max = g.size %}{% endif -%}{%- endfor -%}
-
-  <aside class="caderno" aria-label="O caderno — estatísticas das notas">
-    <div class="caderno-dingbat">&#10087;</div>
-    <p class="caderno-kicker">O caderno</p>
-
-    <div class="caderno-total">
-      <span class="caderno-total-num">{{ total_notas }}</span>
-      <span class="caderno-total-label">notas</span>
-    </div>
-    <p class="caderno-range">{{ first_abbr }} &mdash; {{ last_abbr }} {{ last_nota.date | date: '%Y' }}</p>
-
-    <div class="caderno-block">
-      <p class="caderno-block-title">Por tipo</p>
-      {%- comment -%} render each non-zero bucket {%- endcomment -%}
-      {%- assign buckets = "Fragmento|" | append: c_frag | append: ";Filme|" | append: c_filme | append: ";Canção|" | append: c_cancao | append: ";Álbum|" | append: c_album | append: ";Livro|" | append: c_livro | append: ";Série|" | append: c_serie | split: ";" -%}
-      {%- for b in buckets -%}
-        {%- assign parts = b | split: "|" -%}
-        {%- assign n = parts[1] | plus: 0 -%}
-        {%- if n > 0 -%}
-        {%- assign w = n | times: 100 | divided_by: type_max -%}
-        {%- if w < 4 %}{% assign w = 4 %}{% endif -%}
-        <div class="caderno-bar">
-          <span class="caderno-bar-label">{{ parts[0] }}</span>
-          <span class="caderno-bar-track"><span class="caderno-bar-fill" style="width:{{ w }}%"></span></span>
-          <span class="caderno-bar-num">{{ n }}</span>
-        </div>
-        {%- endif -%}
-      {%- endfor -%}
-    </div>
-
-    <div class="caderno-block">
-      <p class="caderno-block-title">Por mês</p>
-      <div class="caderno-months">
-        {%- for g in mgroups -%}
-          {%- assign h = g.size | times: 40 | divided_by: month_max -%}
-          {%- capture mab -%}{% include mes-abbr.html date=g.items.first.date %}{%- endcapture -%}
-          <div class="caderno-month">
-            <span class="caderno-month-num">{{ g.size }}</span>
-            <span class="caderno-month-track"><span class="caderno-month-fill" style="height:{{ h }}px"></span></span>
-            <span class="caderno-month-label">{{ mab | strip | capitalize }}</span>
-          </div>
-        {%- endfor -%}
-      </div>
-    </div>
-
-    <div class="caderno-last">
-      <span>última</span>
-      <span>{{ last_nota.date | date: '%d' }} {{ last_abbr }} {{ last_nota.date | date: '%Y' }}</span>
-    </div>
-  </aside>
-  {%- endif -%}
-
-  <header class="notas-masthead">
-    <h1>Notas</h1>
-    <p class="notas-lede">Pequenos pensamentos, links interessantes e observações rápidas.</p>
-    <p class="notas-meta">{{ total_notas }} notas &middot; atualizado em {{ last_nota.date | date: '%-d' }} {{ last_abbr }} {{ last_nota.date | date: '%Y' }} &middot; <a href="{{ '/feed.xml' | relative_url }}">assinar (RSS) &rarr;</a></p>
+  <header class="notas-head">
+    <p class="eyebrow">Notas · o caderno</p>
+    <p class="notas-dingbat">&#10087;</p>
+    <h1 class="page-title">Notas</h1>
+    <p class="page-lede">Pequenos pensamentos, links interessantes e observações rápidas. Seguem o mesmo estilo tipográfico dos <a href="{{ '/escrita.html' | relative_url }}">ensaios</a>.</p>
   </header>
+
+  <div class="notas-stats">
+    <span><strong>{{ total_notas }} notas</strong> · {{ first_abbr }} — {{ last_abbr }} {{ last_nota.date | date: '%Y' }}</span>
+    <span>Fragmento {{ c_frag }}{% if c_filme > 0 %} · Filme {{ c_filme }}{% endif %}{% if c_album > 0 %} · Álbum {{ c_album }}{% endif %}{% if c_cancao > 0 %} · Canção {{ c_cancao }}{% endif %}{% if c_livro > 0 %} · Livro {{ c_livro }}{% endif %}{% if c_serie > 0 %} · Série {{ c_serie }}{% endif %}</span>
+    <a href="{{ '/feed.xml' | relative_url }}">Assinar (RSS) →</a>
+  </div>
 
   <div class="notas-list">
     {%- for nota in all_notas offset: skip limit: per_page -%}
@@ -160,7 +100,7 @@
       {%- else -%}
         <span class="prev disabled">&nbsp;</span>
       {%- endif -%}
-      <span class="indicator">página {{ current_page }} de {{ total_pages }}</span>
+      <span class="indicator">Página {{ current_page }} de {{ total_pages }}</span>
       {%- if current_page < total_pages -%}
         {%- assign next_page = current_page | plus: 1 -%}
         <a class="next" href="{{ '/notas/page/' | append: next_page | append: '/' | relative_url }}">Notas mais antigas &rarr;</a>
@@ -170,11 +110,6 @@
     </div>
   </nav>
   {%- endif -%}
-
-  <footer class="notas-colophon">
-    <div class="notas-colophon-dingbat">&#10087;</div>
-    <p>As notas seguem o mesmo estilo tipográfico dos <a href="{{ '/escrita.html' | relative_url }}">textos</a>, herdado dos livros de Edward Tufte via Tufte CSS.</p>
-  </footer>
 
 </section>
 

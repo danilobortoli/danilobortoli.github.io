@@ -1,17 +1,17 @@
 <header class="site-header">
-  <a href="{{ '/' | relative_url }}" class="site-wordmark">
-    <span class="site-wordmark-name">Danilo Bortoli</span>
-    <span class="site-wordmark-subtitle">Advogo, escrevo, escuto</span>
-  </a>
+  <div class="site-header-inner">
+    <a href="{{ '/' | relative_url }}" class="site-wordmark">
+      <span class="site-wordmark-name">Danilo Bortoli</span>
+      <span class="site-wordmark-tag">Advogo · escrevo · escuto</span>
+    </a>
 
-  <nav class="navigation" aria-label="Navegação principal">
-    <ul>
-      <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Início</a></li>
-      <li><a href="{{ '/escrita.html' | relative_url }}" {% if page.url == '/escrita.html' or page.layout == 'post' %}class="active"{% endif %}>Escrita</a></li>
-      <li><a href="{{ '/notas/' | relative_url }}" {% if page.url == '/notas/' or page.layout == 'nota' %}class="active"{% endif %}>Notas</a></li>
-      <li><a href="{{ '/advocacia.html' | relative_url }}" {% if page.url == '/advocacia.html' %}class="active"{% endif %}>Advocacia</a></li>
-      <li><a href="{{ '/agora.html' | relative_url }}" {% if page.url == '/agora.html' %}class="active"{% endif %}>Agora</a></li>
-      <li><a href="{{ '/sobre.html' | relative_url }}" {% if page.url == '/sobre.html' %}class="active"{% endif %}>Sobre</a></li>
-    </ul>
-  </nav>
+    <nav class="site-nav" aria-label="Navegação principal">
+      <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active" aria-current="page"{% endif %}>Início</a>
+      <a href="{{ '/escrita.html' | relative_url }}" {% if page.url == '/escrita.html' or page.layout == 'post' %}class="active" aria-current="page"{% endif %}>Escrita</a>
+      <a href="{{ '/notas/' | relative_url }}" {% if page.url contains '/notas/' or page.layout == 'nota' %}class="active" aria-current="page"{% endif %}>Notas</a>
+      <a href="{{ '/advocacia.html' | relative_url }}" {% if page.url == '/advocacia.html' %}class="active" aria-current="page"{% endif %}>Advocacia</a>
+      <a href="{{ '/agora.html' | relative_url }}" {% if page.url == '/agora.html' %}class="active" aria-current="page"{% endif %}>Agora</a>
+      <a href="{{ '/sobre.html' | relative_url }}" {% if page.url == '/sobre.html' %}class="active" aria-current="page"{% endif %}>Sobre</a>
+    </nav>
+  </div>
 </header>
