@@ -104,9 +104,41 @@
         {%- if nota.subtitle and nota.subtitle != "" -%}
         <p class="nota-card-subtitle">{{ nota.subtitle }}</p>
         {%- endif -%}
-        {%- assign excerpt = nota.excerpt | replace: '</p>', ' ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip | normalize_whitespace -%}
-        {%- if excerpt != "" -%}
-        <p class="nota-card-excerpt">{{ excerpt | truncatewords: 45 }}</p>
+        {%- comment -%} Preview: preserva parágrafos, corta por palavras e mostra "Ler mais". {%- endcomment -%}
+        {%- assign word_limit = 65 -%}
+        {%- assign plain = nota.content | strip_html | normalize_whitespace | strip -%}
+        {%- assign total_words = plain | split: ' ' | size -%}
+        {%- if plain != "" -%}
+        <div class="nota-card-body">
+          {%- assign paras = nota.content | split: '</p>' -%}
+          {%- if total_words <= word_limit -%}
+            {%- for p in paras -%}
+              {%- assign ptext = p | strip_html | normalize_whitespace | strip -%}
+              {%- if ptext != "" -%}<p>{{ ptext }}</p>{%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- assign count = 0 -%}
+            {%- assign done = false -%}
+            {%- for p in paras -%}
+              {%- unless done -%}
+                {%- assign ptext = p | strip_html | normalize_whitespace | strip -%}
+                {%- if ptext != "" -%}
+                  {%- assign pwords = ptext | split: ' ' | size -%}
+                  {%- assign newcount = count | plus: pwords -%}
+                  {%- if newcount <= word_limit -%}
+                    <p>{{ ptext }}</p>
+                    {%- assign count = newcount -%}
+                  {%- else -%}
+                    {%- assign remaining = word_limit | minus: count -%}
+                    {%- if remaining >= 10 -%}<p>{{ ptext | truncatewords: remaining, '…' }}</p>{%- endif -%}
+                    {%- assign done = true -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endunless -%}
+            {%- endfor -%}
+            <p class="nota-card-more-wrap"><a class="nota-card-more" href="{{ nota.url | relative_url }}">Ler mais &rarr;</a></p>
+          {%- endif -%}
+        </div>
         {%- endif -%}
         {% include media-review.html variant='list' media=nota.media %}
       </article>

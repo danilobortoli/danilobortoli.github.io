@@ -283,13 +283,27 @@
   margin: 0 0 0.6rem;
   max-width: none;
 }
-.nota-card-excerpt {
+.nota-card-body p {
   font-size: 1.2rem;
   line-height: 1.65;
   color: var(--color-text-muted);
-  margin: 0;
+  margin: 0 0 0.9rem;
   max-width: none;
 }
+.nota-card-body p:last-child { margin-bottom: 0; }
+.nota-card-more-wrap { margin-top: 0.5rem !important; }
+.nota-card-more:link,
+.nota-card-more:visited {
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  font-size: 0.95rem;
+  color: var(--color-accent);
+  text-decoration: none;
+  background: none;
+  transition: color .2s;
+}
+.nota-card-more:hover { color: var(--color-accent-hover); }
 
 /* ============================================================
    Paginator
@@ -569,7 +583,7 @@
   .notas-masthead .notas-lede { font-size: 1.25rem; }
   .nota-card-title { font-size: 1.45rem; }
   .nota-card-subtitle,
-  .nota-card-excerpt { font-size: 1.1rem; }
+  .nota-card-body p { font-size: 1.1rem; }
 
   .notas-list .media-review { max-width: none; }
 
