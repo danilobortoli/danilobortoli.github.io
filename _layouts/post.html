@@ -40,3 +40,10 @@ layout: default
 <script src="{{ '/assets/js/hero-contrast.js' | relative_url }}"></script>
 {% endif %}
 
+{% if page.media %}
+<script>
+  window.TMDB_API_KEY = "{{ site.tmdb_api_key }}";
+</script>
+<script src="{{ '/assets/js/media-fetch.js' | relative_url }}"></script>
+{% endif %}
+

@@ -1,31 +1,46 @@
 ---
 layout: default
 ---
-{%- capture cat -%}{% include notas-category.html title=page.title subtitle=page.subtitle content=content media_type=page.media.type %}{%- endcapture -%}
+<section class="nota-single{% if page.media %} has-media{% endif %}">
 
-<section class="notas-page var-ny var-ny1 single">
-  <p class="p-back">
-    <a href="{{ '/notas/' | relative_url }}">&larr; Voltar para Notas</a>
+  <p class="nota-back">
+    <a href="{{ '/notas/' | relative_url }}">&larr; Voltar para as notas</a>
   </p>
 
-  <article class="post">
-    <p class="p-section">{{ cat }}</p>
+  <article class="nota-article">
+    <time class="nota-date" datetime="{{ page.date | date_to_xmlschema }}">{% include data-pt.html date=page.date %}</time>
     {%- if page.title and page.title != "" -%}
-    <h1 class="p-title">{{ page.title }}</h1>
+    <h1 class="nota-title">{{ page.title }}</h1>
     {%- endif -%}
     {%- if page.subtitle and page.subtitle != "" -%}
-    <p class="p-subtitle">{{ page.subtitle }}</p>
+    <p class="nota-subtitle">{{ page.subtitle }}</p>
     {%- endif -%}
-    <p class="p-byline">
-      <span class="by">por</span>
-      <span class="author">Danilo Bortoli</span>
-      &nbsp;·&nbsp;
-      <time datetime="{{ page.date | date_to_xmlschema }}">{% include data-pt.html date=page.date %}</time>
-    </p>
 
-    <div class="p-body nota-single-content">
-      {% include media-review.html variant='compact' %}
+    {% include media-review.html variant='nota' %}
+
+    <div class="nota-body">
       {{ content }}
     </div>
   </article>
+
+  <nav class="nota-nav" aria-label="Navegação entre notas">
+    <div class="nota-nav-prev">
+      {%- if page.previous -%}
+      <a href="{{ page.previous.url | relative_url }}" rel="prev">&laquo; {{ page.previous.title | default: "Nota anterior" }}</a>
+      {%- endif -%}
+    </div>
+    <div class="nota-nav-next">
+      {%- if page.next -%}
+      <a href="{{ page.next.url | relative_url }}" rel="next">{{ page.next.title | default: "Próxima nota" }} &raquo;</a>
+      {%- endif -%}
+    </div>
+  </nav>
+
 </section>
+
+{% if page.media %}
+<script>
+  window.TMDB_API_KEY = "{{ site.tmdb_api_key }}";
+</script>
+<script src="{{ '/assets/js/media-fetch.js' | relative_url }}"></script>
+{% endif %}
