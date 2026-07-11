@@ -1,43 +1,43 @@
-{% if page.media %}
+{% assign m = include.media | default: page.media %}{% if m %}
 {% assign mr_variant = include.variant | default: 'compact' %}
-<aside class="media-review media-review--{{ mr_variant }}" data-media-type="{{ page.media.type }}"
-  {% if page.media.tmdb_id %}data-tmdb-id="{{ page.media.tmdb_id }}"{% endif %}
-  {% if page.media.musicbrainz_id %}data-musicbrainz-id="{{ page.media.musicbrainz_id }}"{% endif %}
-  {% if page.media.openlibrary_id %}data-openlibrary-id="{{ page.media.openlibrary_id }}"{% endif %}>
+<aside class="media-review media-review--{{ mr_variant }}" data-media-type="{{ m.type }}"
+  {% if m.tmdb_id %}data-tmdb-id="{{ m.tmdb_id }}"{% endif %}
+  {% if m.musicbrainz_id %}data-musicbrainz-id="{{ m.musicbrainz_id }}"{% endif %}
+  {% if m.openlibrary_id %}data-openlibrary-id="{{ m.openlibrary_id }}"{% endif %}>
 
   <div class="media-review-cover">
-    {% if page.media.capa %}
-    <img src="{{ page.media.capa }}" alt="Capa" class="media-review-img">
+    {% if m.capa %}
+    <img src="{{ m.capa }}" alt="Capa" class="media-review-img">
     {% else %}
     <div class="media-review-img media-review-placeholder"></div>
     {% endif %}
   </div>
 
   <div class="media-review-info">
-    {% if page.media.type == "filme" %}
+    {% if m.type == "filme" %}
       <span class="media-review-type">Filme</span>
-    {% elsif page.media.type == "série" %}
+    {% elsif m.type == "série" %}
       <span class="media-review-type">Série</span>
-    {% elsif page.media.type == "álbum" %}
+    {% elsif m.type == "álbum" %}
       <span class="media-review-type">Álbum</span>
-    {% elsif page.media.type == "canção" %}
+    {% elsif m.type == "canção" %}
       <span class="media-review-type">Canção</span>
-    {% elsif page.media.type == "livro" %}
+    {% elsif m.type == "livro" %}
       <span class="media-review-type">Livro</span>
     {% endif %}
 
-    {% if page.media.titulo %}
-    <h3 class="media-review-title">{{ page.media.titulo }}</h3>
+    {% if m.titulo %}
+    <h3 class="media-review-title">{{ m.titulo }}</h3>
     {% else %}
     <h3 class="media-review-title"></h3>
     {% endif %}
 
     <dl class="media-review-meta">
-      {% if page.media.type == "filme" %}
-        {% if page.media.diretor %}
+      {% if m.type == "filme" %}
+        {% if m.diretor %}
         <div class="media-review-field">
           <dt>Diretor</dt>
-          <dd class="media-review-director">{{ page.media.diretor }}</dd>
+          <dd class="media-review-director">{{ m.diretor }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -45,10 +45,10 @@
           <dd class="media-review-director"></dd>
         </div>
         {% endif %}
-        {% if page.media.ano %}
+        {% if m.ano %}
         <div class="media-review-field">
           <dt>Ano</dt>
-          <dd class="media-review-year">{{ page.media.ano }}</dd>
+          <dd class="media-review-year">{{ m.ano }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -56,10 +56,10 @@
           <dd class="media-review-year"></dd>
         </div>
         {% endif %}
-        {% if page.media.generos %}
+        {% if m.generos %}
         <div class="media-review-field">
           <dt>Gêneros</dt>
-          <dd class="media-review-genres">{{ page.media.generos }}</dd>
+          <dd class="media-review-genres">{{ m.generos }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -67,11 +67,11 @@
           <dd class="media-review-genres"></dd>
         </div>
         {% endif %}
-      {% elsif page.media.type == "série" %}
-        {% if page.media.criador %}
+      {% elsif m.type == "série" %}
+        {% if m.criador %}
         <div class="media-review-field">
           <dt>Criador</dt>
-          <dd class="media-review-director">{{ page.media.criador }}</dd>
+          <dd class="media-review-director">{{ m.criador }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -79,10 +79,10 @@
           <dd class="media-review-director"></dd>
         </div>
         {% endif %}
-        {% if page.media.ano %}
+        {% if m.ano %}
         <div class="media-review-field">
           <dt>Ano</dt>
-          <dd class="media-review-year">{{ page.media.ano }}</dd>
+          <dd class="media-review-year">{{ m.ano }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -90,10 +90,10 @@
           <dd class="media-review-year"></dd>
         </div>
         {% endif %}
-        {% if page.media.generos %}
+        {% if m.generos %}
         <div class="media-review-field">
           <dt>Gêneros</dt>
-          <dd class="media-review-genres">{{ page.media.generos }}</dd>
+          <dd class="media-review-genres">{{ m.generos }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -101,11 +101,11 @@
           <dd class="media-review-genres"></dd>
         </div>
         {% endif %}
-      {% elsif page.media.type == "livro" %}
-        {% if page.media.autor %}
+      {% elsif m.type == "livro" %}
+        {% if m.autor %}
         <div class="media-review-field">
           <dt>Autor</dt>
-          <dd class="media-review-author">{{ page.media.autor }}</dd>
+          <dd class="media-review-author">{{ m.autor }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -113,10 +113,10 @@
           <dd class="media-review-author"></dd>
         </div>
         {% endif %}
-        {% if page.media.editora %}
+        {% if m.editora %}
         <div class="media-review-field">
           <dt>Editora</dt>
-          <dd class="media-review-publisher">{{ page.media.editora }}</dd>
+          <dd class="media-review-publisher">{{ m.editora }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -124,10 +124,10 @@
           <dd class="media-review-publisher"></dd>
         </div>
         {% endif %}
-        {% if page.media.ano %}
+        {% if m.ano %}
         <div class="media-review-field">
           <dt>Ano</dt>
-          <dd class="media-review-year">{{ page.media.ano }}</dd>
+          <dd class="media-review-year">{{ m.ano }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -135,10 +135,10 @@
           <dd class="media-review-year"></dd>
         </div>
         {% endif %}
-        {% if page.media.generos %}
+        {% if m.generos %}
         <div class="media-review-field">
           <dt>Gêneros</dt>
-          <dd class="media-review-genres">{{ page.media.generos }}</dd>
+          <dd class="media-review-genres">{{ m.generos }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -147,10 +147,10 @@
         </div>
         {% endif %}
       {% else %}
-        {% if page.media.artista %}
+        {% if m.artista %}
         <div class="media-review-field">
           <dt>Artista</dt>
-          <dd class="media-review-artist">{{ page.media.artista }}</dd>
+          <dd class="media-review-artist">{{ m.artista }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -158,21 +158,21 @@
           <dd class="media-review-artist"></dd>
         </div>
         {% endif %}
-        {% if page.media.type == "canção" and page.media.album %}
+        {% if m.type == "canção" and m.album %}
         <div class="media-review-field">
           <dt>Álbum</dt>
-          <dd class="media-review-album">{{ page.media.album }}</dd>
+          <dd class="media-review-album">{{ m.album }}</dd>
         </div>
-        {% elsif page.media.type == "canção" %}
+        {% elsif m.type == "canção" %}
         <div class="media-review-field">
           <dt>Álbum</dt>
           <dd class="media-review-album"></dd>
         </div>
         {% endif %}
-        {% if page.media.ano %}
+        {% if m.ano %}
         <div class="media-review-field">
           <dt>Ano</dt>
-          <dd class="media-review-year">{{ page.media.ano }}</dd>
+          <dd class="media-review-year">{{ m.ano }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -180,10 +180,10 @@
           <dd class="media-review-year"></dd>
         </div>
         {% endif %}
-        {% if page.media.generos %}
+        {% if m.generos %}
         <div class="media-review-field">
           <dt>Gêneros</dt>
-          <dd class="media-review-genres">{{ page.media.generos }}</dd>
+          <dd class="media-review-genres">{{ m.generos }}</dd>
         </div>
         {% else %}
         <div class="media-review-field">
@@ -194,20 +194,15 @@
       {% endif %}
     </dl>
 
-    {% if page.media.nota %}
+    {% if m.nota %}
     <div class="media-review-rating">
-      <span class="media-review-rating-value">{{ page.media.nota }}</span>
+      <span class="media-review-rating-value">{{ m.nota }}</span>
       <span class="media-review-rating-max">/10</span>
       <div class="media-review-rating-bar">
-        <div class="media-review-rating-fill" style="width: {{ page.media.nota | times: 10 }}%"></div>
+        <div class="media-review-rating-fill" style="width: {{ m.nota | times: 10 }}%"></div>
       </div>
     </div>
     {% endif %}
   </div>
 </aside>
-
-<script>
-  window.TMDB_API_KEY = "{{ site.tmdb_api_key }}";
-</script>
-<script src="{{ '/assets/js/media-fetch.js' | relative_url }}"></script>
 {% endif %}

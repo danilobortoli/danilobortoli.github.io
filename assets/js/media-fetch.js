@@ -1,24 +1,26 @@
 (function () {
   "use strict";
 
-  var card = document.querySelector(".media-review");
-  if (!card) return;
+  var cards = document.querySelectorAll(".media-review");
+  if (!cards.length) return;
 
-  var type = card.dataset.mediaType;
-  var tmdbId = card.dataset.tmdbId;
-  var mbId = card.dataset.musicbrainzId;
-  var olId = card.dataset.openlibraryId;
+  Array.prototype.forEach.call(cards, function (card) {
+    var type = card.dataset.mediaType;
+    var tmdbId = card.dataset.tmdbId;
+    var mbId = card.dataset.musicbrainzId;
+    var olId = card.dataset.openlibraryId;
 
-  // Only fetch if we have an ID and fields are empty (not manually filled)
-  if ((type === "filme" || type === "série") && tmdbId) {
-    fetchTMDB(tmdbId, type);
-  } else if ((type === "álbum" || type === "canção") && mbId) {
-    fetchMusicBrainz(mbId, type);
-  } else if (type === "livro" && olId) {
-    fetchOpenLibrary(olId);
-  }
+    // Only fetch if we have an ID and fields are empty (not manually filled)
+    if ((type === "filme" || type === "série") && tmdbId) {
+      fetchTMDB(card, tmdbId, type);
+    } else if ((type === "álbum" || type === "canção") && mbId) {
+      fetchMusicBrainz(card, mbId, type);
+    } else if (type === "livro" && olId) {
+      fetchOpenLibrary(card, olId);
+    }
+  });
 
-  function fetchTMDB(id, mediaType) {
+  function fetchTMDB(card, id, mediaType) {
     var key = window.TMDB_API_KEY;
     if (!key) return;
 
@@ -97,7 +99,7 @@
       });
   }
 
-  function fetchMusicBrainz(id, mediaType) {
+  function fetchMusicBrainz(card, id, mediaType) {
     var entity = mediaType === "álbum" ? "release-group" : "recording";
     var inc = "artist-credits+genres" + (mediaType === "canção" ? "+releases" : "");
     var url =
@@ -219,7 +221,7 @@
       });
   }
 
-  function fetchOpenLibrary(id) {
+  function fetchOpenLibrary(card, id) {
     // id can be a works ID (OL...W) or editions ID (OL...M)
     var isWork = /W$/.test(id);
     var url = "https://openlibrary.org/" + (isWork ? "works/" : "books/") + id + ".json";
