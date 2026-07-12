@@ -857,7 +857,7 @@ a:hover {
 .post-content { font-family: var(--font-serif); }
 .post-content p {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--color-text-body);
   line-height: 1.64;
   text-align: justify;
@@ -1060,12 +1060,11 @@ a:hover {
 }
 .nota-body p {
   font-family: var(--font-serif);
-  font-size: 1.12rem;
+  font-size: 1.2rem;
   color: var(--color-text-body);
   line-height: 1.62;
   margin: 0 0 16px 0;
 }
-.nota-body p:first-of-type { font-size: 1.2rem; }
 .nota-body a { color: var(--color-accent); }
 .nota-body img { display: block; margin: 20px 0; }
 .nota-single.has-media .nota-body { max-width: 520px; }
