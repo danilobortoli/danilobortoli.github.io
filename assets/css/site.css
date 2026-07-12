@@ -857,7 +857,7 @@ a:hover {
 .post-content { font-family: var(--font-serif); }
 .post-content p {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--color-text-body);
   line-height: 1.64;
   text-align: justify;
