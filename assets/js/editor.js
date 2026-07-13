@@ -175,26 +175,28 @@
     const hasHero = state.doc === 'post' && !!m.image;
     htmlEl.setAttribute('data-has-hero', hasHero ? 'true' : 'false');
 
+    // Herói: imagem simples abaixo do cabeçalho (como o site novo), sem overlay.
     const hero = $('#ed-preview-hero');
     if (hasHero) {
       hero.hidden = false;
-      $('#ed-preview-hero-image').style.backgroundImage = `url("${m.image}")`;
-      $('#ed-preview-categories').textContent = m.category ? m.category.toUpperCase() : '';
-      $('#ed-preview-hero-title').textContent = m.title || 'Sem título';
-      $('#ed-preview-hero-subtitle').textContent = m.subtitle || '';
-      $('#ed-preview-hero-meta').textContent = formatDate(m.date) + ' · ' + readingTime(state.source) + ' min de leitura';
+      $('#ed-preview-hero-image').src = m.image;
     } else {
       hero.hidden = true;
     }
 
+    // Cabeçalho editorial: kicker · título italic · subtítulo · meta (data · leitura).
     const header = $('#ed-preview-header');
-    if (state.doc === 'post' && hasHero) {
-      header.hidden = true;
+    header.hidden = false;
+    if (state.doc === 'post') {
+      $('#ed-preview-eyebrow').textContent = m.category ? (m.category + ' · ensaio') : 'ensaio';
+      $('#ed-preview-title').textContent = m.title || 'Sem título';
+      $('#ed-preview-subtitle').textContent = m.subtitle || '';
+      $('#ed-preview-date').textContent =
+        formatDate(m.date) + ' · ' + readingTime(state.source) + ' min de leitura';
     } else {
-      header.hidden = false;
-      $('#ed-preview-eyebrow').textContent = state.doc === 'post' ? (m.category || '') : '';
+      $('#ed-preview-eyebrow').textContent = '';
       $('#ed-preview-title').textContent = m.title || (state.doc === 'nota' ? '' : 'Sem título');
-      $('#ed-preview-subtitle').textContent = state.doc === 'post' ? (m.subtitle || '') : '';
+      $('#ed-preview-subtitle').textContent = m.subtitle || '';
       $('#ed-preview-date').textContent = formatDate(m.date);
     }
   }
