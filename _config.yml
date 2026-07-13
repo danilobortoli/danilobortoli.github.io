@@ -13,6 +13,10 @@ google_site_verification: "GbZmHAS36aapp_SePfSkRWhU_DplLGp7T5wWhE8MdDI"
 markdown: kramdown
 highlighter: rouge
 timezone: America/Sao_Paulo
+# Publica notas com data "no futuro" em relação ao horário do build.
+# Sem isto, uma nota escrita com o horário atual pode ser omitida por
+# diferença de fuso/relógio entre a escrita e o build do GitHub Pages.
+future: true
 
 # Kramdown settings for footnotes
 kramdown:
