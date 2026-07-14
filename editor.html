@@ -11,8 +11,14 @@ sitemap: false
   <meta name="robots" content="noindex, nofollow">
   <title>Editor — Danilo Bortoli</title>
 
-  <link rel="stylesheet" href="https://edwardtufte.github.io/tufte-css/tufte.css"/>
-  <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}"/>
+  <!-- Fira Sans (Erik Spiekermann) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Sistema de design Tufte-Bortoli (modo Spiekermann) -->
+  <link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}"/>
   <link rel="stylesheet" href="{{ '/assets/css/editor.css' | relative_url }}"/>
 </head>
 <body class="editor-body">
@@ -176,29 +182,21 @@ sitemap: false
     <section class="ed-pane ed-pane-preview" aria-label="Preview Tufte">
       <article class="ed-preview-article">
 
-        <div class="ed-preview-hero" id="ed-preview-hero" hidden>
-          <div class="ed-preview-hero-image" id="ed-preview-hero-image"></div>
-          <div class="ed-preview-hero-overlay"></div>
-          <div class="ed-preview-hero-content">
-            <p class="post-hero-categories" id="ed-preview-categories"></p>
-            <h1 class="post-hero-title" id="ed-preview-hero-title"></h1>
-            <p class="post-hero-subtitle" id="ed-preview-hero-subtitle"></p>
-            <p class="post-hero-meta" id="ed-preview-hero-meta"></p>
-          </div>
-        </div>
+        <header class="ed-preview-header" id="ed-preview-header">
+          <p class="ed-preview-eyebrow" id="ed-preview-eyebrow"></p>
+          <h1 class="ed-preview-title" id="ed-preview-title"></h1>
+          <p class="ed-preview-subtitle" id="ed-preview-subtitle"></p>
+          <p class="ed-preview-date" id="ed-preview-date"></p>
+        </header>
 
-        <div class="ed-preview-body">
-          <header class="ed-preview-header" id="ed-preview-header">
-            <p class="ed-preview-eyebrow" id="ed-preview-eyebrow"></p>
-            <h1 class="ed-preview-title" id="ed-preview-title"></h1>
-            <p class="ed-preview-subtitle" id="ed-preview-subtitle"></p>
-            <p class="ed-preview-date" id="ed-preview-date"></p>
-          </header>
+        <figure class="ed-preview-hero" id="ed-preview-hero" hidden>
+          <img class="ed-preview-hero-img" id="ed-preview-hero-image" alt="Imagem de abertura"/>
+        </figure>
 
-          <aside id="ed-preview-media" class="media-review media-review--marginalia" hidden></aside>
+        <aside id="ed-preview-media" class="media-review media-review--marginalia" hidden></aside>
 
-          <div class="ed-preview-content post-content nota-single-content" id="ed-preview-content"></div>
-        </div>
+        <div class="ed-preview-content post-content nota-single-content" id="ed-preview-content"></div>
+
       </article>
     </section>
   </main>
