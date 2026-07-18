@@ -264,6 +264,24 @@
   width: 34%;
 }
 
+/* Itens de honorários: valores alinhados à direita, total demarcado */
+.esc-quadro-valor {
+  text-align: right;
+  white-space: nowrap;
+  width: 30%;
+}
+.esc-quadro-total td {
+  border-top: 2px solid #111;
+}
+.esc-quadro-total td:first-child {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #111;
+}
+
 .esc-fecho { margin: 2.6rem 0 0; }
 .esc-local-data { margin: 1.4rem 0 0; }
 
@@ -366,9 +384,7 @@
   .esc-quadro,
   .esc-parecer-meta,
   .esc-ementa { break-inside: avoid; }
-  .esc-assinaturas,
-  .esc-local-data,
-  .esc-fecho { break-inside: avoid; }
+  .esc-closing { break-inside: avoid; }
 
   .esc-body a { text-decoration: none; color: #111; }
 }

@@ -128,7 +128,10 @@
         [
           { id: 'objeto', label: 'Objeto da atuação', placeholder: 'Defesa em ação de…', grow: 2 },
           { id: 'modalidade', label: 'Modalidade', type: 'select', options: MODALIDADES },
-          { id: 'valor', label: 'Valor', placeholder: 'R$ 0,00' },
+          { id: 'valor', label: 'Valor global (se não houver itens)', placeholder: 'R$ 0,00' },
+        ],
+        [
+          { id: 'itens', label: 'Itens de honorários (um por linha: descrição — valor)', type: 'textarea', placeholder: 'Fase consultiva — R$ 4.000,00\nContencioso administrativo — R$ 6.000,00\nÊxito — 20% sobre o proveito econômico', grow: 1 },
         ],
         [
           { id: 'condicoes', label: 'Condições de pagamento', type: 'textarea', placeholder: 'Entrada de…, parcelas de…', grow: 1 },
@@ -372,19 +375,72 @@
       }).join('');
       out.push(`<div class="esc-assinaturas">${html}</div>`);
     }
-    return out.join('');
+    if (!out.length) return '';
+    // Bloco único: fecho, local/data e assinaturas não se separam na paginação.
+    return `<div class="esc-closing">${out.join('')}</div>`;
+  }
+
+  // "Fase consultiva — R$ 4.000,00" → { desc, valor }. Aceita —, –, " - ", | e tab
+  // como separador (o último da linha, pra descrição poder conter hífens).
+  function parseItensHonorarios() {
+    return (state.fields.itens || '').split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const m = line.match(/^(.*)(?:\s+[—–-]\s+|\s*\|\s*|\t+)(.*)$/);
+        if (m && m[1].trim()) return { desc: m[1].trim(), valor: m[2].trim() };
+        return { desc: line, valor: '' };
+      });
+  }
+
+  // "R$ 4.000,00" → 4000 (formato brasileiro); null se não for valor monetário.
+  function moneyValue(v) {
+    const m = (v || '').match(/R\$\s*([\d.]+(?:,\d{1,2})?)/);
+    if (!m) return null;
+    return parseFloat(m[1].replace(/\./g, '').replace(',', '.'));
+  }
+
+  function formatBRL(n) {
+    try { return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+    catch (e) { return 'R$ ' + n.toFixed(2); }
   }
 
   function quadroHonorariosHtml() {
+    const itens = parseItensHonorarios();
     const rows = [];
     if (f('modalidade')) rows.push(['Modalidade', f('modalidade')]);
-    if (f('valor')) rows.push(['Valor', f('valor')]);
+    if (!itens.length && f('valor')) rows.push(['Valor', f('valor')]);
     if (f('condicoes')) rows.push(['Condições de pagamento', f('condicoes')]);
     if (f('validade')) rows.push(['Validade da proposta', f('validade')]);
-    if (!rows.length) return '';
-    return `<table class="esc-quadro"><caption>Quadro-resumo dos honorários</caption><tbody>` +
-      rows.map(([k, v]) => `<tr><th>${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('') +
-      '</tbody></table>';
+    if (!itens.length && !rows.length) return '';
+
+    let html = '<table class="esc-quadro"><caption>Quadro-resumo dos honorários</caption>';
+
+    if (itens.length) {
+      let total = 0;
+      let hasMoney = false;
+      let hasOther = false;
+      const itemRows = itens.map((it) => {
+        const mv = moneyValue(it.valor);
+        if (mv !== null) { total += mv; hasMoney = true; }
+        else if (it.valor) hasOther = true;
+        return `<tr><td>${escapeHtml(it.desc)}</td><td class="esc-quadro-valor">${escapeHtml(it.valor)}</td></tr>`;
+      });
+      html += '<tbody class="esc-quadro-itens">' + itemRows.join('');
+      if (hasMoney && itens.length > 1) {
+        const label = hasOther ? 'Total — parcela fixa' : 'Total';
+        html += `<tr class="esc-quadro-total"><td>${label}</td><td class="esc-quadro-valor">${escapeHtml(formatBRL(total))}</td></tr>`;
+      }
+      html += '</tbody>';
+    }
+
+    if (rows.length) {
+      html += '<tbody>' +
+        rows.map(([k, v]) => `<tr><th>${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('') +
+        '</tbody>';
+    }
+
+    return html + '</table>';
   }
 
   // ===========================================================================
