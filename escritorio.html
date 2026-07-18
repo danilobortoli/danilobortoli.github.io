@@ -1,0 +1,171 @@
+---
+layout: null
+permalink: /escritorio/
+sitemap: false
+---
+<!DOCTYPE html>
+<html lang="pt-BR" data-doc="peticao" data-mode="split">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Escritório — Danilo Bortoli</title>
+
+  <!-- Fira Sans (Erik Spiekermann) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Sistema de design Tufte-Bortoli (modo Spiekermann) -->
+  <link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/editor.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/escritorio.css' | relative_url }}"/>
+</head>
+<body class="editor-body escritorio-body">
+
+  <header class="ed-topbar">
+    <div class="ed-topbar-left">
+      <a href="{{ '/' | relative_url }}" class="ed-wordmark" title="Voltar ao site">
+        <span class="ed-wordmark-name">Danilo Bortoli</span>
+        <span class="ed-wordmark-subtitle">Escritório</span>
+      </a>
+    </div>
+
+    <div class="ed-topbar-center">
+      <div class="ed-segmented" data-segmented="doc" role="tablist" aria-label="Tipo de documento">
+        <button type="button" data-doc="peticao" class="active">Petição</button>
+        <button type="button" data-doc="recurso">Recurso</button>
+        <button type="button" data-doc="parecer">Parecer</button>
+        <button type="button" data-doc="proposta">Proposta</button>
+        <button type="button" data-doc="generico">Doc</button>
+      </div>
+    </div>
+
+    <div class="ed-topbar-right">
+      <div class="ed-segmented" data-segmented="mode" role="tablist" aria-label="Modo de visualização">
+        <button type="button" data-mode="markdown" title="Só markdown (⌘⇧M)">MD</button>
+        <button type="button" data-mode="split" class="active" title="Lado a lado (⌘⇧P)">Split</button>
+        <button type="button" data-mode="pagina" title="Só a página A4 (⌘⇧A)">Página</button>
+      </div>
+      <div class="ed-actions">
+        <button type="button" id="ed-action-help" title="Atalhos (?)">?</button>
+        <button type="button" id="ed-action-drafts" title="Rascunhos (⌘⇧D)">Rascunhos</button>
+        <button type="button" id="ed-action-new" title="Novo documento">Novo</button>
+        <button type="button" id="ed-action-copy" title="Copiar markdown (⌘⇧C)">Copiar</button>
+        <button type="button" id="ed-action-download" title="Baixar .md (⌘S)">Baixar .md</button>
+        <button type="button" id="ed-action-pdf" class="primary" title="Exportar PDF (⌘P)">Exportar PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="ed-meta" aria-label="Campos do documento">
+    <div id="esc-meta"></div>
+  </section>
+
+  <nav class="ed-toolbar" aria-label="Barra de ferramentas">
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="bold" title="Negrito (⌘B)"><b>B</b></button>
+      <button type="button" data-cmd="italic" title="Itálico (⌘I)"><i>I</i></button>
+    </div>
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="h2" title="Seção (DOS FATOS…)">H₂</button>
+      <button type="button" data-cmd="h3" title="Subseção">H₃</button>
+    </div>
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="link" title="Link (⌘K)">↗</button>
+      <button type="button" data-cmd="ul" title="Lista">•</button>
+      <button type="button" data-cmd="ol" title="Lista numerada">1.</button>
+      <button type="button" data-cmd="quote" title="Citação longa (recuada)">”</button>
+      <button type="button" data-cmd="hr" title="Régua">―</button>
+    </div>
+    <div class="ed-toolbar-group ed-toolbar-tufte">
+      <span class="ed-toolbar-label">Jurídico</span>
+      <button type="button" data-cmd="abertura" title="Parágrafo de abertura gerado a partir dos campos">Abertura</button>
+      <button type="button" data-cmd="jurisprudencia" title="Citação de jurisprudência com referência">§ juris</button>
+      <button type="button" data-cmd="dispositivo" title="Transcrição de dispositivo legal">Art.</button>
+      <button type="button" data-cmd="pedidos" title="Bloco de pedidos">Pedidos</button>
+    </div>
+  </nav>
+
+  <main class="ed-main">
+    <section class="ed-pane ed-pane-md" aria-label="Editor markdown">
+      <textarea
+        id="ed-source"
+        spellcheck="true"
+        autocapitalize="off"
+        autocomplete="off"
+        autocorrect="off"
+        placeholder="Corpo do documento em markdown…&#10;&#10;Endereçamento, cabeçalho e assinatura são gerados pelos campos acima.&#10;Dica: digite / no início da linha pra abrir o menu de blocos."
+      ></textarea>
+    </section>
+
+    <section class="ed-pane ed-pane-preview esc-pane-sheet" aria-label="Página A4">
+      <div class="esc-sheet-wrap">
+        <article class="esc-sheet" id="esc-sheet"></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ed-statusbar">
+    <span id="ed-status-words">0 palavras</span>
+    <span id="ed-status-saved">não salvo</span>
+    <span id="ed-status-filename" class="ed-mono"></span>
+  </footer>
+
+  <div id="ed-help" class="ed-modal" hidden>
+    <div class="ed-modal-card">
+      <header class="ed-modal-header">
+        <h2>Atalhos</h2>
+        <button type="button" id="ed-help-close" class="ed-modal-close" title="Fechar">×</button>
+      </header>
+      <dl class="ed-shortcuts">
+        <dt><kbd>⌘</kbd>+<kbd>B</kbd></dt><dd>Negrito</dd>
+        <dt><kbd>⌘</kbd>+<kbd>I</kbd></dt><dd>Itálico</dd>
+        <dt><kbd>⌘</kbd>+<kbd>K</kbd></dt><dd>Inserir link</dd>
+        <dt><kbd>⌘</kbd>+<kbd>S</kbd></dt><dd>Baixar arquivo .md</dd>
+        <dt><kbd>⌘</kbd>+<kbd>P</kbd></dt><dd>Exportar PDF (imprimir a página A4)</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>C</kbd></dt><dd>Copiar markdown</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>P</kbd></dt><dd>Modo split (markdown + página)</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>M</kbd></dt><dd>Só markdown</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>A</kbd></dt><dd>Só a página A4</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>D</kbd></dt><dd>Abrir rascunhos</dd>
+        <dt><kbd>/</kbd></dt><dd>No início da linha, abre menu de blocos</dd>
+        <dt><kbd>?</kbd></dt><dd>Mostrar/esconder este painel</dd>
+      </dl>
+      <h3>Como funciona</h3>
+      <ul class="ed-help-list">
+        <li><strong>Campos → protocolo.</strong> Endereçamento, referência do processo, ementa, quadro de honorários, fecho e assinatura são gerados pelos campos. Campo vazio = bloco omitido.</li>
+        <li><strong>Corpo em markdown.</strong> Só a redação vive no editor; <code>##</code> vira seção (DOS FATOS…).</li>
+        <li><strong>Abertura</strong> insere no texto o parágrafo inicial montado a partir dos campos — depois é seu, edite à vontade.</li>
+        <li><strong>PDF</strong> usa a impressão do navegador: escolha “Salvar como PDF” no diálogo.</li>
+        <li><strong>Privacidade.</strong> Nada sai deste navegador — rascunhos ficam só no <code>localStorage</code> desta máquina.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="ed-drafts" class="ed-modal" hidden>
+    <div class="ed-modal-card ed-drafts-card">
+      <header class="ed-modal-header">
+        <h2>Rascunhos</h2>
+        <button type="button" id="ed-drafts-close" class="ed-modal-close" title="Fechar">×</button>
+      </header>
+      <p class="ed-drafts-help">
+        Rascunhos ficam salvos automaticamente <strong>somente neste navegador</strong> — nada é enviado a servidor algum.
+        Em máquina compartilhada, apague o que for sigiloso ao terminar.
+      </p>
+      <div class="ed-drafts-actions">
+        <button type="button" id="ed-drafts-new" class="ed-drafts-new-btn">+ Novo documento</button>
+        <button type="button" id="ed-drafts-wipe" class="esc-drafts-wipe-btn">Apagar tudo</button>
+      </div>
+      <ul id="ed-drafts-list" class="ed-drafts-list"></ul>
+    </div>
+  </div>
+
+  <div id="ed-slash" class="ed-popover" hidden></div>
+  <datalist id="esc-clientes-list"></datalist>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="{{ '/assets/js/escritorio.js' | relative_url }}"></script>
+</body>
+</html>
