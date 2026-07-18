@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explorador Sidewinder — Danilo Bortoli</title>
+
+<!-- Fontes carregadas de forma NÃO-bloqueante: o <script> nunca espera por elas -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap">
+</noscript>
+
+<style>
+@font-face {
+  font-family: "et-book";
+  src: url("https://edwardtufte.github.io/et-book/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff") format("woff"),
+       url("https://edwardtufte.github.io/et-book/et-book/et-book-roman-line-figures/et-book-roman-line-figures.ttf") format("truetype");
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("https://edwardtufte.github.io/et-book/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff") format("woff"),
+       url("https://edwardtufte.github.io/et-book/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.ttf") format("truetype");
+  font-weight: normal; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("https://edwardtufte.github.io/et-book/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff") format("woff"),
+       url("https://edwardtufte.github.io/et-book/et-book/et-book-bold-line-figures/et-book-bold-line-figures.ttf") format("truetype");
+  font-weight: bold; font-style: normal; font-display: swap;
+}
+
+:root {
+  --color-surface: #ffffff;
+  --color-text-primary: #111111;
+  --color-text-body: #222222;
+  --color-text-muted: #666666;
+  --color-text-subtle: #888888;
+  --color-accent: #d91f5d;
+  --color-accent-soft: #f4c8d7;
+  --color-border: #cccccc;
+  --font-serif: "et-book", Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-sans: "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--color-surface); }
+body {
+  font-family: var(--font-serif);
+  color: var(--color-text-body);
+  padding: 32px 20px 48px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 940px; margin: 0 auto; }
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11pt;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+h1 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32pt;
+  color: var(--color-text-primary);
+  line-height: 1.15;
+  margin-top: 8px;
+}
+
+.incipit {
+  font-family: var(--font-sans);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--color-text-muted);
+  font-size: 13pt;
+  margin-top: 4px;
+}
+
+.divider { width: 48px; height: 2px; background: var(--color-accent); margin: 16px 0 32px; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+@media (max-width: 720px) {
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+  h1 { font-size: 26pt; }
+}
+
+.panel { background: var(--color-surface); border: 1px solid var(--color-border); padding: 20px; }
+
+.panel-title {
+  font-family: var(--font-sans);
+  font-size: 10.5pt;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.caption {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 10.5pt;
+  color: var(--color-text-muted);
+  margin-top: 8px;
+}
+
+.eq {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13pt;
+  color: var(--color-text-body);
+  line-height: 1.9;
+  padding: 6px 0 6px 14px;
+  border-left: 2px solid var(--color-accent);
+  margin: 8px 0;
+}
+
+.slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.slider-row label {
+  font-family: var(--font-sans);
+  font-size: 10.5pt;
+  color: var(--color-text-muted);
+  width: 160px;
+  flex-shrink: 0;
+}
+.slider-row input[type=range] { flex: 1; accent-color: var(--color-accent); }
+.slider-val {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12pt;
+  color: var(--color-accent);
+  width: 48px;
+  text-align: right;
+}
+
+.insight {
+  border-left: 2px solid var(--color-accent);
+  padding: 10px 14px;
+  font-family: var(--font-serif);
+  font-size: 11.5pt;
+  color: var(--color-text-body);
+  line-height: 1.6;
+  margin-top: 10px;
+  background: #fdfafb;
+}
+
+.canvas-box { position: relative; width: 100%; }
+.canvas-box canvas { display: block; width: 100%; height: 100%; }
+
+.metric { text-align: center; padding: 14px 8px; border-top: 2px solid var(--color-accent); }
+.metric-val {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 22pt;
+  color: var(--color-text-primary);
+  display: block;
+  line-height: 1.2;
+}
+.metric-label { font-family: var(--font-sans); font-size: 9pt; color: var(--color-text-muted); }
+
+button {
+  font-family: var(--font-sans);
+  font-size: 10pt;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  cursor: pointer;
+  background: var(--color-surface);
+  border: 1px solid var(--color-text-primary);
+  color: var(--color-text-primary);
+  transition: all 0.15s;
+}
+button:hover { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
+.footer {
+  font-family: var(--font-sans);
+  font-size: 9pt;
+  color: var(--color-text-subtle);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+.footer .accent { color: var(--color-accent); }
+
+#boot-error {
+  display: none;
+  border-left: 2px solid var(--color-accent);
+  background: #fdfafb;
+  padding: 12px 16px;
+  font-family: var(--font-sans);
+  font-size: 11pt;
+  color: var(--color-text-body);
+  margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Danilo Bortoli &middot; Notas de Física Aplicada</p>
+  <h1><span class="incipit">Explorador</span> Sidewinder</h1>
+  <p class="subtitle">a geometria das ondas acopladas na locomoção da cascavel</p>
+  <div class="divider"></div>
+
+  <div id="boot-error">Não foi possível inicializar a simulação neste navegador. Tente abrir em outro navegador (Chrome, Firefox) ou verifique se o JavaScript está habilitado.</div>
+
+  <div class="grid2" style="margin-bottom:20px">
+    <div class="panel">
+      <div class="panel-title">corpo da cobra &middot; tempo real</div>
+      <div class="canvas-box" style="aspect-ratio:420/230"><canvas id="cvBody"></canvas></div>
+      <p class="caption"><span style="color:#111">—</span> no chão &nbsp;&nbsp; <span style="color:#d91f5d">—</span> no ar</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">rastros acumulados</div>
+      <div class="canvas-box" style="aspect-ratio:420/230"><canvas id="cvTrails"></canvas></div>
+      <p class="caption">cada segmento é uma pegada estacionária</p>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-bottom:20px">
+    <div class="metric"><span class="metric-val" id="mv-vnet">—</span><span class="metric-label">v<sub>net</sub> &middot; velocidade de progressão</span></div>
+    <div class="metric"><span class="metric-val" id="mv-trail">—</span><span class="metric-label">espaçamento entre rastros</span></div>
+    <div class="metric"><span class="metric-val" id="mv-contact">—</span><span class="metric-label">corpo em contato com o solo</span></div>
+  </div>
+
+  <div class="grid2" style="margin-bottom:20px">
+    <div class="panel">
+      <div class="panel-title">z(s,t) &middot; levantamento</div>
+      <div class="canvas-box" style="aspect-ratio:420/140"><canvas id="cvZ"></canvas></div>
+      <p class="caption">z ≥ 0 no ar &middot; z = 0 no solo (rastro)</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">fase relativa &middot; lissajous</div>
+      <div class="canvas-box" style="aspect-ratio:420/140"><canvas id="cvPhase"></canvas></div>
+      <p class="caption">a defasagem φ define onde o corpo toca o solo</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-title">parâmetros</div>
+      <div class="slider-row"><label>θ &middot; ângulo (°)</label><input type="range" id="sl-theta" min="10" max="80" value="50" step="1"><span class="slider-val" id="v-theta">50°</span></div>
+      <div class="slider-row"><label>λ &middot; comp. de onda</label><input type="range" id="sl-lambda" min="0.1" max="0.8" value="0.4" step="0.01"><span class="slider-val" id="v-lambda">0.40</span></div>
+      <div class="slider-row"><label>ω &middot; freq. angular</label><input type="range" id="sl-omega" min="1" max="6" value="3" step="0.1"><span class="slider-val" id="v-omega">3.0</span></div>
+      <div class="slider-row"><label>φ &middot; defasagem (rad)</label><input type="range" id="sl-phi" min="0" max="6.28" value="1.05" step="0.05"><span class="slider-val" id="v-phi">π/3</span></div>
+      <div class="slider-row"><label>A<sub>lat</sub> &middot; amp. lateral</label><input type="range" id="sl-alat" min="0.01" max="0.2" value="0.08" step="0.005"><span class="slider-val" id="v-alat">0.08</span></div>
+      <div class="slider-row"><label>A<sub>z</sub> &middot; amp. levant.</label><input type="range" id="sl-az" min="0.01" max="0.15" value="0.05" step="0.005"><span class="slider-val" id="v-az">0.05</span></div>
+      <div style="margin-top:14px">
+        <button onclick="resetTrails()">limpar rastros</button>
+        <button onclick="togglePause()" id="btn-pause" style="margin-left:8px">pausar</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">equações &middot; valores atuais</div>
+      <div class="eq">x(s,t) = s&middot;cos&nbsp;θ + A<sub>lat</sub>&middot;sin(ks &minus; ωt)</div>
+      <div class="eq">y(s,t) = s&middot;sin&nbsp;θ + A<sub>lat</sub>&middot;cos(ks &minus; ωt)&middot;0.3</div>
+      <div class="eq">z(s,t) = max(0, A<sub>z</sub>&middot;sin(ks &minus; ωt + φ))</div>
+      <div class="eq">rastro &hArr; z(s,t) = 0</div>
+      <div class="insight" id="insight-box">Com θ = 50°, o corpo avança diagonalmente. O ângulo observado em cascaveleiras do Mojave fica entre 45° e 60° — equilíbrio entre velocidade e estabilidade.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>fonte: Marvi &amp; Hu (2012), <span style="font-style:italic">J. R. Soc. Interface</span></span>
+    <span class="accent">danilobortoli.github.io</span>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  function boot(){
+    try {
+      runApp();
+    } catch (err) {
+      const box = document.getElementById('boot-error');
+      if (box) {
+        box.style.display = 'block';
+        box.textContent = 'Erro ao inicializar: ' + (err && err.message ? err.message : err);
+      }
+      if (window.console) console.error(err);
+    }
+  }
+
+  function runApp(){
+    const cvBody = document.getElementById('cvBody');
+    const cvTrails = document.getElementById('cvTrails');
+    const cvZ = document.getElementById('cvZ');
+    const cvPhase = document.getElementById('cvPhase');
+    const ctxB = cvBody.getContext('2d');
+    const ctxT = cvTrails.getContext('2d');
+    const ctxZ = cvZ.getContext('2d');
+    const ctxP = cvPhase.getContext('2d');
+
+    const MAGENTA = '#d91f5d';
+    const INK = '#111111';
+    const MUTED = '#888888';
+    const SAND = '#faf7f2';
+
+    let theta = 50 * Math.PI / 180;
+    let lambda = 0.4;
+    let omega = 3.0;
+    let phi = Math.PI/3;
+    let Alat = 0.08;
+    let Az = 0.05;
+    let t = 0;
+    let paused = false;
+    let trailData = [];
+    let frame = 0;
+    const N = 120;
+    const L = 1.0;
+    const vforward = 0.12;
+
+    // Dimensões lógicas (CSS px) de cada canvas — a resolução real
+    // é ajustada por devicePixelRatio em setupCanvas().
+    const dims = {};
+
+    function setupCanvas(c){
+      const dpr = window.devicePixelRatio || 1;
+      const rect = c.getBoundingClientRect();
+      const w = Math.max(1, Math.round(rect.width));
+      const h = Math.max(1, Math.round(rect.height));
+      c.width = w * dpr;
+      c.height = h * dpr;
+      const ctx = c.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dims[c.id] = {w, h};
+    }
+
+    function setupAllCanvases(){
+      [cvBody, cvTrails, cvZ, cvPhase].forEach(setupCanvas);
+    }
+
+    function getParams(){
+      theta = parseFloat(document.getElementById('sl-theta').value) * Math.PI / 180;
+      lambda = parseFloat(document.getElementById('sl-lambda').value);
+      omega = parseFloat(document.getElementById('sl-omega').value);
+      phi = parseFloat(document.getElementById('sl-phi').value);
+      Alat = parseFloat(document.getElementById('sl-alat').value);
+      Az = parseFloat(document.getElementById('sl-az').value);
+    }
+
+    function snakePos(s, t){
+      const k = 2*Math.PI/lambda;
+      const phase = k*s - omega*t;
+      const ox = vforward * t * Math.cos(theta - Math.PI/2);
+      const oy = vforward * t * Math.sin(theta - Math.PI/2);
+      const x = s*Math.cos(theta) + Alat*Math.sin(phase) + ox;
+      const y = s*Math.sin(theta) + Alat*Math.cos(phase)*0.3 + oy;
+      const zr = Az * Math.sin(phase + phi);
+      const z = Math.max(0, zr);
+      return {x:x, y:y, z:z, zr:zr};
+    }
+
+    function worldToCanvas(x, y, w, h){
+      const margin = Math.min(34, w*0.08, h*0.08);
+      const cx = margin + (x+0.2)/1.6*(w-2*margin);
+      const cy = h - margin - (y+0.1)/1.2*(h-2*margin);
+      return {cx:cx, cy:cy};
+    }
+
+    function drawBody(){
+      const w = dims.cvBody.w, h = dims.cvBody.h;
+      ctxB.clearRect(0,0,w,h);
+      ctxB.fillStyle = SAND; ctxB.fillRect(0,0,w,h);
+
+      const pts = [];
+      for(let i=0;i<=N;i++) pts.push(snakePos(i/N*L, t));
+
+      // Um único path por cor, em vez de beginPath/stroke por segmento —
+      // mais rápido e evita falhas de composição em alguns navegadores.
+      ctxB.lineJoin = 'round';
+      ctxB.lineCap = 'round';
+
+      ctxB.beginPath();
+      let groundContact = 0;
+      for(let i=0;i<pts.length-1;i++){
+        const p = pts[i], q = pts[i+1];
+        if(p.z < 0.003){
+          groundContact++;
+          const a = worldToCanvas(p.x,p.y,w,h);
+          const b = worldToCanvas(q.x,q.y,w,h);
+          ctxB.moveTo(a.cx,a.cy);
+          ctxB.lineTo(b.cx,b.cy);
+        }
+      }
+      ctxB.strokeStyle = INK;
+      ctxB.lineWidth = 3;
+      ctxB.stroke();
+
+      ctxB.beginPath();
+      for(let i=0;i<pts.length-1;i++){
+        const p = pts[i], q = pts[i+1];
+        if(p.z >= 0.003){
+          const a = worldToCanvas(p.x,p.y,w,h);
+          const b = worldToCanvas(q.x,q.y,w,h);
+          ctxB.moveTo(a.cx,a.cy);
+          ctxB.lineTo(b.cx,b.cy);
+        }
+      }
+      ctxB.strokeStyle = MAGENTA;
+      ctxB.lineWidth = 2.5;
+      ctxB.globalAlpha = 0.8;
+      ctxB.stroke();
+      ctxB.globalAlpha = 1;
+
+      const pct = Math.round(groundContact/(pts.length-1)*100);
+      document.getElementById('mv-contact').textContent = pct + '%';
+
+      const head = pts[pts.length-1];
+      const hc = worldToCanvas(head.x,head.y,w,h);
+      ctxB.beginPath();
+      ctxB.arc(hc.cx,hc.cy,5,0,2*Math.PI);
+      ctxB.fillStyle = INK;
+      ctxB.fill();
+
+      ctxB.font = 'italic 12px Georgia, serif';
+      ctxB.fillStyle = MUTED;
+      ctxB.fillText('θ = '+Math.round(theta*180/Math.PI)+'°', 10, h-10);
+    }
+
+    function drawTrails(){
+      const w = dims.cvTrails.w, h = dims.cvTrails.h;
+
+      const pts = [];
+      for(let i=0;i<=N;i++) pts.push(snakePos(i/N*L, t));
+      const groundPts = pts.filter(function(p){ return p.z < 0.005; });
+
+      if(groundPts.length > 2 && frame % 2 === 0){
+        trailData.push({pts: groundPts.map(function(p){ return {x:p.x,y:p.y}; })});
+        if(trailData.length > 200) trailData.shift();
+      }
+
+      ctxT.clearRect(0,0,w,h);
+      ctxT.fillStyle = SAND; ctxT.fillRect(0,0,w,h);
+      ctxT.lineJoin = 'round';
+      ctxT.lineCap = 'round';
+
+      for(let di=0; di<trailData.length; di++){
+        const d = trailData[di];
+        if(d.pts.length < 2) continue;
+        const alpha = 0.2 + 0.5*(di/trailData.length);
+        ctxT.beginPath();
+        const p0 = worldToCanvas(d.pts[0].x, d.pts[0].y, w, h);
+        ctxT.moveTo(p0.cx, p0.cy);
+        for(let j=1;j<d.pts.length;j++){
+          const pj = worldToCanvas(d.pts[j].x, d.pts[j].y, w, h);
+          ctxT.lineTo(pj.cx, pj.cy);
+        }
+        ctxT.strokeStyle = '#555555';
+        ctxT.lineWidth = 3;
+        ctxT.globalAlpha = alpha;
+        ctxT.stroke();
+        ctxT.globalAlpha = 1;
+      }
+
+      const spacing = (lambda * Math.abs(Math.cos(theta))).toFixed(2);
+      document.getElementById('mv-trail').textContent = spacing;
+    }
+
+    function drawZ(){
+      const w = dims.cvZ.w, h = dims.cvZ.h;
+      ctxZ.clearRect(0,0,w,h);
+      ctxZ.fillStyle = '#ffffff'; ctxZ.fillRect(0,0,w,h);
+
+      const margin = 22;
+      const gw = w-2*margin, gh = h-2*margin;
+
+      ctxZ.strokeStyle = '#cccccc'; ctxZ.lineWidth = 1;
+      ctxZ.beginPath();
+      ctxZ.moveTo(margin,margin); ctxZ.lineTo(margin,h-margin); ctxZ.lineTo(w-margin,h-margin);
+      ctxZ.stroke();
+
+      ctxZ.strokeStyle = '#dddddd'; ctxZ.lineWidth = 1; ctxZ.setLineDash([2,4]);
+      const midY = margin + gh/2;
+      ctxZ.beginPath(); ctxZ.moveTo(margin,midY); ctxZ.lineTo(w-margin,midY); ctxZ.stroke();
+      ctxZ.setLineDash([]);
+
+      ctxZ.font = 'italic 11px Georgia, serif'; ctxZ.fillStyle = MUTED;
+      ctxZ.fillText('z=0 (solo)', margin+3, midY+3+gh/4);
+
+      const pts = [];
+      for(let i=0;i<=N;i++) pts.push(snakePos(i/N*L, t));
+
+      ctxZ.beginPath();
+      for(let i=0;i<=N;i++){
+        const sx = margin + (i/N)*gw;
+        const sy = h-margin - (pts[i].z/Az + 0.5)*gh*0.8;
+        if(i===0) ctxZ.moveTo(sx,sy); else ctxZ.lineTo(sx,sy);
+      }
+      ctxZ.strokeStyle = MAGENTA; ctxZ.lineWidth = 2; ctxZ.stroke();
+
+      ctxZ.beginPath();
+      for(let i=0;i<=N;i++){
+        const sx = margin + (i/N)*gw;
+        const sy = h-margin - (pts[i].zr/Az + 0.5)*gh*0.8;
+        if(i===0) ctxZ.moveTo(sx,sy); else ctxZ.lineTo(sx,sy);
+      }
+      ctxZ.strokeStyle = '#cccccc'; ctxZ.lineWidth = 1; ctxZ.setLineDash([3,4]); ctxZ.stroke();
+      ctxZ.setLineDash([]);
+
+      ctxZ.fillStyle = '#333333'; ctxZ.font = 'italic 12px Georgia, serif';
+      ctxZ.fillText('z(s,t)', margin+5, margin+14);
+
+      ctxZ.fillStyle = INK;
+      for(let i=0;i<pts.length;i++){
+        if(pts[i].z < 0.002){
+          const sx = margin + (i/N)*gw;
+          ctxZ.beginPath(); ctxZ.arc(sx,h-margin,2,0,2*Math.PI); ctxZ.fill();
+        }
+      }
+    }
+
+    function drawPhase(){
+      const w = dims.cvPhase.w, h = dims.cvPhase.h;
+      ctxP.clearRect(0,0,w,h);
+      ctxP.fillStyle = '#ffffff'; ctxP.fillRect(0,0,w,h);
+
+      const margin = 22, gw = w-2*margin, gh = h-2*margin;
+      ctxP.strokeStyle = '#cccccc'; ctxP.lineWidth = 1;
+      ctxP.beginPath();
+      ctxP.moveTo(margin,margin); ctxP.lineTo(margin,h-margin); ctxP.lineTo(w-margin,h-margin);
+      ctxP.stroke();
+
+      const ns = 200;
+      ctxP.beginPath();
+      for(let i=0;i<=ns;i++){
+        const sval = i/ns * 4*Math.PI;
+        const lat = Math.sin(sval - omega*t);
+        const lift = Math.sin(sval - omega*t + phi);
+        const nx = margin + (lat+1)/2*gw;
+        const ny = margin + (1-(lift+1)/2)*gh;
+        if(i===0) ctxP.moveTo(nx,ny); else ctxP.lineTo(nx,ny);
+      }
+      ctxP.strokeStyle = MAGENTA; ctxP.lineWidth = 1.8; ctxP.stroke();
+
+      ctxP.font = 'italic 11px Georgia, serif'; ctxP.fillStyle = MUTED;
+      ctxP.fillText('lateral →', w-margin-56, h-margin+2);
+      ctxP.fillText('↑ lift', margin+3, margin+12);
+
+      ctxP.fillStyle = '#333333';
+      ctxP.fillText('φ = '+(phi/Math.PI).toFixed(2)+'π', margin+5, h-margin-10);
+    }
+
+    function updateMetrics(){
+      const vnet = (omega * lambda * Math.sin(theta) / (2*Math.PI)).toFixed(3);
+      document.getElementById('mv-vnet').textContent = vnet;
+    }
+
+    function updateInsight(){
+      const deg = Math.round(theta*180/Math.PI);
+      let text;
+      if(deg < 30) text = 'θ muito pequeno: o corpo avança quase perpendicular a si mesmo. Ineficiente — grande ondulação, pequeno deslocamento líquido.';
+      else if(deg < 45) text = 'Ângulo moderado. A cobra ondula amplamente mas progride com velocidade razoável.';
+      else if(deg <= 65) text = 'Faixa ótima observada em cascaveleiras do Mojave (45°–60°). Equilíbrio entre velocidade e estabilidade.';
+      else if(deg <= 75) text = 'Ângulo elevado: o corpo tende a alinhar-se com a direção do movimento. Reduz a amplitude efetiva das ondulações.';
+      else text = 'θ próximo de 90°: corpo quase paralelo ao movimento. O sidewinding degenera — a serpente precisaria deslizar, o que não é a estratégia.';
+      document.getElementById('insight-box').textContent = text;
+    }
+
+    function resetTrails(){
+      trailData = [];
+      const w = dims.cvTrails.w, h = dims.cvTrails.h;
+      ctxT.fillStyle = SAND; ctxT.fillRect(0,0,w,h);
+    }
+    window.resetTrails = resetTrails;
+
+    function togglePause(){
+      paused = !paused;
+      document.getElementById('btn-pause').textContent = paused ? 'retomar' : 'pausar';
+    }
+    window.togglePause = togglePause;
+
+    function bindSliders(){
+      const pairs = [
+        ['sl-theta','v-theta', function(v){ return Math.round(v)+'°'; }],
+        ['sl-lambda','v-lambda', function(v){ return parseFloat(v).toFixed(2); }],
+        ['sl-omega','v-omega', function(v){ return parseFloat(v).toFixed(1); }],
+        ['sl-phi','v-phi', function(v){ return (parseFloat(v)/Math.PI).toFixed(2)+'π'; }],
+        ['sl-alat','v-alat', function(v){ return parseFloat(v).toFixed(3); }],
+        ['sl-az','v-az', function(v){ return parseFloat(v).toFixed(3); }]
+      ];
+      pairs.forEach(function(pair){
+        const sid = pair[0], vid = pair[1], fmt = pair[2];
+        const sl = document.getElementById(sid);
+        const vd = document.getElementById(vid);
+        sl.addEventListener('input', function(){
+          vd.textContent = fmt(sl.value);
+          getParams();
+          if(sid === 'sl-theta') updateInsight();
+          resetTrails();
+        });
+      });
+    }
+
+    function loop(){
+      if(!paused){
+        t += 0.025;
+        frame++;
+        getParams();
+        drawBody();
+        drawTrails();
+        drawZ();
+        drawPhase();
+        updateMetrics();
+      }
+      requestAnimationFrame(loop);
+    }
+
+    let resizeTimer = null;
+    window.addEventListener('resize', function(){
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function(){
+        setupAllCanvases();
+        resetTrails();
+      }, 120);
+    });
+
+    bindSliders();
+    updateInsight();
+    getParams();
+    setupAllCanvases();
+    loop();
+  }
+
+  if(document.readyState === 'complete' || document.readyState === 'interactive'){
+    setTimeout(boot, 0);
+  } else {
+    document.addEventListener('DOMContentLoaded', boot);
+  }
+  window.addEventListener('load', function(){
+    // segunda tentativa de segurança, caso a primeira tenha ocorrido
+    // antes do layout final (ex: fontes ainda carregando)
+    if(!window.__sidewinderBooted){
+      window.__sidewinderBooted = true;
+    }
+  });
+})();
+</script>
+</body>
+</html>
