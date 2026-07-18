@@ -570,13 +570,68 @@
     }
   }
 
+  /**
+   * Exporta PDF imprimindo um iframe oculto que contém SÓ a folha.
+   * Imprimir a página do app é frágil: o preview vive num painel com rolagem
+   * interna e alguns navegadores levam o deslocamento do scroll pra impressão,
+   * resultando em página em branco. O documento isolado não tem esse problema.
+   */
   function exportPdf() {
     saveClienteAtual();
     persist();
-    const prev = document.title;
-    document.title = generateFilename().replace(/\.md$/, '');
-    window.print();
-    document.title = prev;
+
+    const old = document.getElementById('esc-print-frame');
+    if (old) old.remove();
+
+    const frame = document.createElement('iframe');
+    frame.id = 'esc-print-frame';
+    frame.setAttribute('aria-hidden', 'true');
+    frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;';
+    document.body.appendChild(frame);
+
+    const fdoc = frame.contentDocument || frame.contentWindow.document;
+    fdoc.open();
+    fdoc.write('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"></head><body></body></html>');
+    fdoc.close();
+    fdoc.title = generateFilename().replace(/\.md$/, '');
+
+    // Mesmos stylesheets do app (mesma origem); espera carregarem antes de imprimir.
+    const links = $$('link[rel="stylesheet"]');
+    let pending = links.length;
+    let printed = false;
+
+    const doPrint = () => {
+      if (printed) return;
+      printed = true;
+      try {
+        frame.contentWindow.focus();
+        frame.contentWindow.print();
+      } catch (e) {
+        window.print();
+      }
+      // O Chromium clona o documento pro preview; o iframe pode sair depois.
+      setTimeout(() => frame.remove(), 60000);
+    };
+
+    const onAssetsReady = () => {
+      const fontsReady = (fdoc.fonts && fdoc.fonts.ready) ? fdoc.fonts.ready : Promise.resolve();
+      fontsReady.then(() => setTimeout(doPrint, 100)).catch(doPrint);
+    };
+
+    if (!pending) onAssetsReady();
+    links.forEach((l) => {
+      const c = fdoc.createElement('link');
+      c.rel = 'stylesheet';
+      c.href = l.href;
+      c.onload = c.onerror = () => { if (--pending === 0) onAssetsReady(); };
+      fdoc.head.appendChild(c);
+    });
+
+    fdoc.body.className = 'esc-print-root';
+    fdoc.body.innerHTML = sheet.outerHTML;
+
+    // Rede de segurança se onload/fonts.ready não dispararem.
+    setTimeout(doPrint, 2500);
   }
 
   // ===========================================================================

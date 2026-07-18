@@ -335,6 +335,23 @@
   margin: 20mm 20mm 22mm 24mm;
 }
 
+/* Documento isolado do iframe de impressão: só a folha, sem app shell.
+   As margens vêm do @page; a folha não simula papel aqui. */
+body.esc-print-root {
+  margin: 0;
+  background: #fff;
+}
+body.esc-print-root .esc-sheet {
+  width: auto;
+  max-width: none;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  font-size: 12pt;
+  line-height: 1.5;
+}
+
 @media print {
   html, body.editor-body {
     height: auto;
@@ -358,6 +375,7 @@
   }
   .ed-pane-preview {
     overflow: visible;
+    height: auto;
     background: #fff;
   }
   .esc-sheet-wrap {
