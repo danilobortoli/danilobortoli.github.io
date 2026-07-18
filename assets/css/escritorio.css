@@ -1,0 +1,390 @@
+/* ============================================================
+   Escritório — editor de documentos jurídicos.
+   Camada sobre editor.css: formulário dinâmico de campos,
+   preview em folha A4 e estilos de impressão (exportar PDF).
+   Tipografia da peça calibrada pelo modelo real: endereçamento
+   sóbrio, referência em versalete, seções romanas, fecho e
+   assinaturas centradas.
+   ============================================================ */
+
+/* ==========================================================================
+   1. Formulário de campos (gerado por JS dentro de .ed-meta)
+   ========================================================================== */
+
+#esc-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.ed-meta textarea {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  padding: 0.36rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--ed-radius);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 2.1rem;
+}
+.ed-meta textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-soft);
+}
+
+/* ==========================================================================
+   2. Modo "Página" (só a folha A4)
+   ========================================================================== */
+
+[data-mode="pagina"] .ed-main { grid-template-columns: 1fr; }
+[data-mode="pagina"] .ed-pane-md { display: none; }
+
+/* ==========================================================================
+   3. Folha A4
+   ========================================================================== */
+
+.esc-pane-sheet {
+  background: var(--color-surface-alt);
+}
+
+.esc-sheet-wrap {
+  padding: 2rem 1.5rem 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.esc-sheet {
+  background: #fff;
+  color: #111;
+  width: 100%;
+  max-width: 210mm;
+  min-height: 260mm;
+  box-sizing: border-box;
+  padding: 22mm 20mm 24mm 24mm;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14), 0 8px 28px rgba(0, 0, 0, 0.10);
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+/* ---- Timbre ---- */
+.esc-timbre {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  border-bottom: 1px solid #111;
+  padding-bottom: 0.45rem;
+  margin-bottom: 3rem;
+}
+.esc-timbre-nome {
+  font-style: italic;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+.esc-timbre-sub {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #666;
+  white-space: nowrap;
+}
+
+/* ---- Blocos protocolares ---- */
+.esc-enderecamento {
+  margin: 0 0 4.5rem;
+}
+
+.esc-ref {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 0.6rem;
+}
+
+.esc-titulo-peca {
+  font-style: italic;
+  font-size: 1.12rem;
+  margin: 0 0 2.6rem;
+}
+
+.esc-doc-title {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 0 1.8rem;
+}
+
+.esc-destinatario { margin: 0 0 0.4rem; }
+
+.esc-parecer-meta {
+  margin: 0 0 1.6rem;
+  padding: 0;
+}
+.esc-parecer-meta div {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.2rem;
+}
+.esc-parecer-meta dt {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #666;
+  flex: 0 0 7rem;
+  padding-top: 0.22rem;
+}
+.esc-parecer-meta dd { margin: 0; }
+
+.esc-ementa {
+  margin: 0 0 2.4rem 30%;
+  font-style: italic;
+  font-size: 0.94rem;
+}
+.esc-ementa-label {
+  display: block;
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-style: normal;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 0.3rem;
+}
+.esc-ementa p { margin: 0; }
+
+/* ---- Corpo ---- */
+.esc-body {
+  text-align: justify;
+  hyphens: auto;
+}
+.esc-body > *:first-child { margin-top: 0; }
+.esc-body p { margin: 0 0 0.9rem; }
+
+.esc-body h1,
+.esc-body h2 {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-align: left;
+  margin: 2.4rem 0 1rem;
+}
+.esc-body h3 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: normal;
+  font-size: 1.02rem;
+  text-transform: none;
+  letter-spacing: normal;
+  margin: -0.6rem 0 1rem;
+}
+
+.esc-body blockquote {
+  margin: 1.2rem 0 0.5rem 2.8rem;
+  padding: 0;
+  font-size: 0.95rem;
+  color: #222;
+}
+.esc-body blockquote p { margin-bottom: 0.5rem; }
+
+/* Linha de fonte sob citações (jurisprudência, dispositivos) */
+.esc-body .esc-fonte {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #555;
+  margin: 0 0 1.4rem 2.8rem;
+  text-align: left;
+}
+
+.esc-body ul,
+.esc-body ol { margin: 0 0 0.9rem; padding-left: 1.6rem; }
+.esc-body li { margin-bottom: 0.35rem; }
+.esc-body hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  width: 30%;
+  margin: 1.8rem auto;
+}
+.esc-body a { color: inherit; }
+
+/* ---- Pós-corpo ---- */
+.esc-valor-causa { margin: 1.6rem 0 0; }
+
+.esc-quadro {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0 0;
+  font-size: 0.95rem;
+}
+.esc-quadro caption {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #666;
+  text-align: left;
+  padding-bottom: 0.4rem;
+}
+.esc-quadro th,
+.esc-quadro td {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+.esc-quadro th {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #444;
+  width: 34%;
+}
+
+/* Itens de honorários: valores alinhados à direita, total demarcado */
+.esc-quadro-valor {
+  text-align: right;
+  white-space: nowrap;
+  width: 30%;
+}
+.esc-quadro-total td {
+  border-top: 2px solid #111;
+}
+.esc-quadro-total td:first-child {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #111;
+}
+
+.esc-fecho { margin: 2.6rem 0 0; }
+.esc-local-data { margin: 1.4rem 0 0; }
+
+.esc-assinaturas {
+  margin: 3.2rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.esc-assin-nome {
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  font-size: 1.02rem;
+}
+.esc-assin-oab {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: #444;
+  margin-bottom: 0.2rem;
+}
+.esc-assin-gap { height: 1.4rem; }
+
+/* ---- Botão "apagar tudo" no modal de rascunhos ---- */
+.esc-drafts-wipe-btn {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+  background: none;
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--ed-radius);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+.esc-drafts-wipe-btn:hover { background: var(--color-accent-soft); }
+
+.ed-drafts-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+/* ==========================================================================
+   4. Impressão — Exportar PDF pelo diálogo do navegador
+   ========================================================================== */
+
+@page {
+  size: A4;
+  margin: 20mm 20mm 22mm 24mm;
+}
+
+@media print {
+  html, body.editor-body {
+    height: auto;
+    overflow: visible;
+    display: block;
+    background: #fff;
+  }
+
+  .ed-topbar,
+  .ed-meta,
+  .ed-toolbar,
+  .ed-statusbar,
+  .ed-pane-md,
+  .ed-modal,
+  .ed-popover,
+  .ed-toast { display: none !important; }
+
+  .ed-main {
+    display: block;
+    overflow: visible;
+  }
+  .ed-pane-preview {
+    overflow: visible;
+    background: #fff;
+  }
+  .esc-sheet-wrap {
+    padding: 0;
+    display: block;
+  }
+  .esc-sheet {
+    width: auto;
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  .esc-timbre { margin-bottom: 2.2rem; }
+
+  .esc-body h1,
+  .esc-body h2,
+  .esc-body h3 { break-after: avoid; }
+  .esc-body blockquote,
+  .esc-quadro,
+  .esc-parecer-meta,
+  .esc-ementa { break-inside: avoid; }
+  .esc-closing { break-inside: avoid; }
+
+  .esc-body a { text-decoration: none; color: #111; }
+}
