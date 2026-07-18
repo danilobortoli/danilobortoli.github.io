@@ -34,54 +34,25 @@
     <a href="{{ '/feed.xml' | relative_url }}">Assinar (RSS) →</a>
   </div>
 
-  <div class="notas-list">
+  <div class="notas-list notas-list--full">
     {%- for nota in all_notas offset: skip limit: per_page -%}
-      <article class="nota-card">
-        <time class="nota-card-date" datetime="{{ nota.date | date_to_xmlschema }}">{% include data-pt.html date=nota.date %}</time>
+      <article class="nota-card nota-card--full{% if nota.media %} has-media{% endif %}">
+        <time class="nota-card-date" datetime="{{ nota.date | date_to_xmlschema }}"><a href="{{ nota.url | relative_url }}">{% include data-pt.html date=nota.date %}</a></time>
         {%- if nota.title and nota.title != "" -%}
         <h2 class="nota-card-title"><a href="{{ nota.url | relative_url }}">{{ nota.title }}</a></h2>
         {%- endif -%}
         {%- if nota.subtitle and nota.subtitle != "" -%}
         <p class="nota-card-subtitle">{{ nota.subtitle }}</p>
         {%- endif -%}
-        {%- comment -%} Preview: preserva parágrafos (com links/itálico), corta por palavras. {%- endcomment -%}
-        {%- assign word_limit = 65 -%}
-        {%- assign content = nota.content | split: '<div class="footnotes"' | first -%}
-        {%- assign plain = content | strip_html | normalize_whitespace | strip -%}
-        {%- assign total_words = plain | split: ' ' | size -%}
-        {%- if plain != "" -%}
-        <div class="nota-card-body">
-          {%- assign paras = content | split: '</p>' -%}
-          {%- if total_words <= word_limit -%}
-            {%- for p in paras -%}
-              {%- assign ptext = p | strip_html | normalize_whitespace | strip -%}
-              {%- if ptext != "" -%}<p>{{ p | split: '<p>' | last | strip }}</p>{%- endif -%}
-            {%- endfor -%}
-          {%- else -%}
-            {%- assign count = 0 -%}
-            {%- assign done = false -%}
-            {%- for p in paras -%}
-              {%- unless done -%}
-                {%- assign ptext = p | strip_html | normalize_whitespace | strip -%}
-                {%- if ptext != "" -%}
-                  {%- assign pwords = ptext | split: ' ' | size -%}
-                  {%- assign newcount = count | plus: pwords -%}
-                  {%- if newcount <= word_limit -%}
-                    <p>{{ p | split: '<p>' | last | strip }}</p>
-                    {%- assign count = newcount -%}
-                  {%- else -%}
-                    {%- assign remaining = word_limit | minus: count -%}
-                    {%- if remaining >= 10 -%}<p>{{ ptext | truncatewords: remaining, '…' }}</p>{%- endif -%}
-                    {%- assign done = true -%}
-                  {%- endif -%}
-                {%- endif -%}
-              {%- endunless -%}
-            {%- endfor -%}
-            <p class="nota-card-more-wrap"><a class="nota-card-more" href="{{ nota.url | relative_url }}">Ler mais &rarr;</a></p>
-          {%- endif -%}
+        {%- comment -%} Blog: mostra a nota inteira — texto, imagens, mídias e sidenotes. {%- endcomment -%}
+        {%- if nota.media -%}
+        <div class="nota-media-layout">
+          <div class="nota-body">{{ nota.content }}</div>
+          {% include media-review.html variant='nota' media=nota.media %}
         </div>
+        {%- else -%}
+        <div class="nota-body">{{ nota.content }}</div>
         {%- endif -%}
-        {% include media-review.html variant='list' media=nota.media %}
       </article>
     {%- endfor -%}
   </div>

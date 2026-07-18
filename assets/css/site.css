@@ -498,6 +498,13 @@ a:hover {
 .nota-card-more { color: var(--color-accent); }
 .nota-card-more-wrap { margin: 4px 0 0; }
 
+/* Blog-style full posts on the notes index */
+.notas-list--full .nota-card--full { padding: 40px 0 46px; }
+.nota-card--full .nota-card-date a { color: var(--color-text-subtle); background: none; }
+.nota-card--full .nota-card-date a:hover { color: var(--color-accent); }
+.nota-card--full .nota-card-title { font-size: 1.9rem; line-height: 1.1; margin-bottom: 14px; }
+.nota-card--full .nota-body { margin-top: 6px; }
+
 .notas-paginator {
   padding: 26px 0 8px;
   display: flex;
@@ -1111,7 +1118,8 @@ a:hover {
 }
 .sidenote a, .marginnote a { color: var(--color-accent); }
 
-.post-content { counter-reset: sidenote-counter; }
+.post-content,
+.nota-body { counter-reset: sidenote-counter; }
 
 input.margin-toggle { display: none; }
 label.sidenote-number { display: inline-block; max-height: 2rem; }
