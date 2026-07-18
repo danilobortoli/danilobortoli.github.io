@@ -2,7 +2,7 @@
 title: Matemática e cobras
 date: 2026-07-18 08:42:58 -0300
 ---
-![claudecascavelsidewinder](https://claude.ai/api/cd2f5713-f921-4a27-97b4-c37a4be6c120/files/3409c13d-bdd3-4191-a31a-412f1b791faf/preview)
+![claudecascavelsidewinder]({{site.baseurl}}/assets/images/tweetsidewinder.jpeg)
 
 Meses atrás, vi um *tweet* que continha um vídeo com movimentos da cascavel-chifruda (ou *sidewinder*) na areia. Lembro que tinha me interessado sobre como seria a matemática que expressaria esses movimentos todos.
 
