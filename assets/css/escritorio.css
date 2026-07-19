@@ -330,13 +330,16 @@
    4. Impressão — Exportar PDF pelo diálogo do navegador
    ========================================================================== */
 
+/* Margem ZERO na página física para suprimir os cabeçalhos/rodapés
+   automáticos do navegador (nome do arquivo, URL, data, nº de página).
+   A margem visual do documento vem do padding da folha, abaixo. */
 @page {
   size: A4;
-  margin: 20mm 20mm 22mm 24mm;
+  margin: 0;
 }
 
 /* Documento isolado do iframe de impressão: só a folha, sem app shell.
-   As margens vêm do @page; a folha não simula papel aqui. */
+   O padding da folha faz as vezes da margem da página impressa. */
 body.esc-print-root {
   margin: 0;
   background: #fff;
@@ -346,10 +349,11 @@ body.esc-print-root .esc-sheet {
   max-width: none;
   min-height: 0;
   margin: 0;
-  padding: 0;
+  padding: 22mm 22mm 24mm 26mm;
   box-shadow: none;
-  font-size: 12pt;
-  line-height: 1.5;
+  font-size: 13pt;
+  line-height: 1.62;
+  color: #000;
 }
 
 @media print {
@@ -387,10 +391,11 @@ body.esc-print-root .esc-sheet {
     max-width: none;
     min-height: 0;
     margin: 0;
-    padding: 0;
+    padding: 22mm 22mm 24mm 26mm;
     box-shadow: none;
-    font-size: 12pt;
-    line-height: 1.5;
+    font-size: 13pt;
+    line-height: 1.62;
+    color: #000;
   }
 
   .esc-timbre { margin-bottom: 2.2rem; }
