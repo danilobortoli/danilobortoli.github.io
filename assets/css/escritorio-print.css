@@ -1,0 +1,52 @@
+/* ============================================================
+   Escritório — folha de estilo do Paged.js (exportação de PDF).
+   Carregada SOMENTE dentro do iframe de impressão, por último, para
+   que o Paged.js gere páginas A4 com margem consistente em todas
+   elas, numeração de folha e sem os carimbos automáticos do navegador.
+   ============================================================ */
+
+@page {
+  size: A4;
+  margin: 25mm 22mm 24mm 28mm;
+
+  /* Numeração discreta no rodapé. Em documento de página única o
+     script oculta o número (classe esc-hide-folio na raiz). */
+  @bottom-right {
+    content: counter(page);
+    font-family: "Fira Sans", -apple-system, sans-serif;
+    font-size: 8.5pt;
+    color: #9a9a9a;
+    margin-top: 6mm;
+  }
+}
+
+/* Base tipográfica do corpo impresso: et-book maior e em preto pleno. */
+.pagedjs_page_content {
+  font-family: var(--font-serif, "et-book", Georgia, serif);
+  font-size: 13pt;
+  line-height: 1.62;
+  color: #000;
+}
+
+/* O Paged.js fragmenta o texto para paginar; sem isto a última linha
+   de parágrafos justificados sai esticada. */
+.esc-body { text-align: justify; }
+.esc-body p,
+.esc-enderecamento,
+.esc-destinatario,
+.esc-ref { text-align-last: left; }
+
+/* Blocos que não devem se partir entre páginas. */
+.esc-timbre,
+.esc-closing,
+.esc-quadro,
+.esc-ementa,
+.esc-parecer-meta { break-inside: avoid; }
+
+/* Título de seção nunca fica órfão no fim da página. */
+.esc-body h1,
+.esc-body h2,
+.esc-body h3 { break-after: avoid; }
+
+/* Documento de página única: sem numeração de folha. */
+.esc-hide-folio .pagedjs_margin-bottom-right { display: none !important; }

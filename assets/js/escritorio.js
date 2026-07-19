@@ -570,15 +570,34 @@
     }
   }
 
+  // URLs de recursos (mesma origem do app), derivadas dos <link>/<script>
+  // já presentes, para funcionar tanto em / quanto em subcaminho.
+  function printAssetUrls() {
+    const links = $$('link[rel="stylesheet"]').map((l) => l.href);
+    const escritorioHref = links.find((h) => /escritorio\.css(\?|$)/.test(h)) || '';
+    const printCss = escritorioHref.replace(/escritorio\.css.*$/, 'escritorio-print.css');
+    const css = links.filter((h) => /(tokens|editor|escritorio)\.css/.test(h) && !/escritorio-print/.test(h));
+    if (printCss) css.push(printCss);
+    const selfSrc = $$('script').map((s) => s.src).find((src) => /escritorio\.js(\?|$)/.test(src)) || '';
+    const paged = selfSrc.replace(/js\/escritorio\.js.*$/, 'js/vendor/paged.polyfill.min.js');
+    return { css: css, paged: paged };
+  }
+
   /**
-   * Exporta PDF imprimindo um iframe oculto que contém SÓ a folha.
-   * Imprimir a página do app é frágil: o preview vive num painel com rolagem
-   * interna e alguns navegadores levam o deslocamento do scroll pra impressão,
-   * resultando em página em branco. O documento isolado não tem esse problema.
+   * Exporta PDF paginando a folha com o Paged.js dentro de um iframe oculto.
+   *
+   * Paged.js quebra o documento em páginas A4 reais com margem consistente em
+   * TODAS as páginas e numeração de folha — o que o CSS de impressão puro não
+   * faz. Ele também dispensa os cabeçalhos/rodapés automáticos do navegador.
+   * Se o Paged.js não carregar ou falhar, cai no caminho simples (folha única
+   * com @page do escritorio.css), que ao menos entrega documentos curtos.
    */
   function exportPdf() {
     saveClienteAtual();
     persist();
+
+    const content = sheet.innerHTML; // só o interior da folha, sem o wrapper
+    const assets = printAssetUrls();
 
     const old = document.getElementById('esc-print-frame');
     if (old) old.remove();
@@ -591,15 +610,15 @@
 
     const fdoc = frame.contentDocument || frame.contentWindow.document;
     fdoc.open();
-    fdoc.write('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"></head><body></body></html>');
+    // PagedConfig.auto=false: o Paged.js NÃO deve paginar o body sozinho —
+    // chamamos Previewer.preview() manualmente. Sem isto, ele gera uma
+    // primeira página fantasma a partir do próprio body do iframe.
+    fdoc.write('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">' +
+      '<scr' + 'ipt>window.PagedConfig={auto:false};</scr' + 'ipt></head><body></body></html>');
     fdoc.close();
     fdoc.title = generateFilename().replace(/\.md$/, '');
 
-    // Mesmos stylesheets do app (mesma origem); espera carregarem antes de imprimir.
-    const links = $$('link[rel="stylesheet"]');
-    let pending = links.length;
     let printed = false;
-
     const doPrint = () => {
       if (printed) return;
       printed = true;
@@ -609,29 +628,60 @@
       } catch (e) {
         window.print();
       }
-      // O Chromium clona o documento pro preview; o iframe pode sair depois.
       setTimeout(() => frame.remove(), 60000);
     };
 
-    const onAssetsReady = () => {
-      const fontsReady = (fdoc.fonts && fdoc.fonts.ready) ? fdoc.fonts.ready : Promise.resolve();
-      fontsReady.then(() => setTimeout(doPrint, 100)).catch(doPrint);
+    const waitFontsThenPrint = () => {
+      const fr = (fdoc.fonts && fdoc.fonts.ready) ? fdoc.fonts.ready : Promise.resolve();
+      fr.then(() => setTimeout(doPrint, 120)).catch(doPrint);
     };
 
-    if (!pending) onAssetsReady();
-    links.forEach((l) => {
-      const c = fdoc.createElement('link');
-      c.rel = 'stylesheet';
-      c.href = l.href;
-      c.onload = c.onerror = () => { if (--pending === 0) onAssetsReady(); };
-      fdoc.head.appendChild(c);
-    });
+    // Caminho de reserva: imprime a folha inteira com o @page do escritorio.css.
+    let fellBack = false;
+    const fallbackSimplePrint = () => {
+      if (printed || fellBack) return;
+      fellBack = true;
+      fdoc.documentElement.classList.remove('esc-hide-folio');
+      fdoc.body.className = 'esc-print-root';
+      fdoc.body.innerHTML = '';
+      fdoc.head.innerHTML = '<meta charset="utf-8">';
+      let pending = assets.css.length;
+      const ready = () => { if (--pending <= 0) waitFontsThenPrint(); };
+      if (!pending) waitFontsThenPrint();
+      assets.css.forEach((href) => {
+        const c = fdoc.createElement('link');
+        c.rel = 'stylesheet';
+        c.href = href;
+        c.onload = c.onerror = ready;
+        fdoc.head.appendChild(c);
+      });
+      fdoc.body.innerHTML = '<article class="esc-sheet">' + content + '</article>';
+      setTimeout(doPrint, 2500);
+    };
 
-    fdoc.body.className = 'esc-print-root';
-    fdoc.body.innerHTML = sheet.outerHTML;
+    const script = fdoc.createElement('script');
+    script.src = assets.paged;
+    script.onload = () => {
+      try {
+        const P = frame.contentWindow.Paged;
+        if (!P || !P.Previewer) return fallbackSimplePrint();
+        new P.Previewer().preview(content, assets.css, fdoc.body).then(() => {
+          const total = fdoc.querySelectorAll('.pagedjs_page').length;
+          if (total === 0) return fallbackSimplePrint();
+          if (total <= 1) fdoc.documentElement.classList.add('esc-hide-folio');
+          waitFontsThenPrint();
+        }).catch(fallbackSimplePrint);
+      } catch (e) {
+        fallbackSimplePrint();
+      }
+    };
+    script.onerror = fallbackSimplePrint;
+    fdoc.head.appendChild(script);
 
-    // Rede de segurança se onload/fonts.ready não dispararem.
-    setTimeout(doPrint, 2500);
+    // Rede de segurança: se em 9s nada paginou nem imprimiu, usa o reserva.
+    setTimeout(() => {
+      if (!printed && !fellBack && !fdoc.querySelector('.pagedjs_page')) fallbackSimplePrint();
+    }, 9000);
   }
 
   // ===========================================================================
