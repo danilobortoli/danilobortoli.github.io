@@ -617,9 +617,25 @@
     const printCss = escritorioHref.replace(/escritorio\.css.*$/, 'escritorio-print.css');
     const css = links.filter((h) => /(tokens|editor|escritorio)\.css/.test(h) && !/escritorio-print/.test(h));
     if (printCss) css.push(printCss);
+    // Conteúdo do rodapé de contato repetido em cada página, gerado da
+    // constante RODAPE (fonte única) e injetado na caixa @bottom-center do
+    // Paged.js. Vai por último, depois do escritorio-print.css (que dá o
+    // estilo da caixa), sem duplicar os dados de contato no CSS.
+    const footerUrl = footerPageCssUrl();
+    if (footerUrl) css.push(footerUrl);
     const selfSrc = $$('script').map((s) => s.src).find((src) => /escritorio\.js(\?|$)/.test(src)) || '';
     const paged = selfSrc.replace(/js\/escritorio\.js.*$/, 'js/vendor/paged.polyfill.min.js');
     return { css: css, paged: paged };
+  }
+
+  // Regra @page/@bottom-center com os dados de RODAPE, como data: URL de CSS
+  // (independe de origem, o Paged.js busca por fetch). "" se RODAPE vazio.
+  function footerPageCssUrl() {
+    const parts = [RODAPE.site, RODAPE.email, RODAPE.telefone].filter(Boolean);
+    if (!parts.length) return '';
+    const text = parts.join('  ·  ').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const css = '@page { @bottom-center { content: "' + text + '"; } }';
+    return 'data:text/css;charset=utf-8,' + encodeURIComponent(css);
   }
 
   /**

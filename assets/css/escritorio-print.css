@@ -22,18 +22,36 @@ body,
 
 @page {
   size: A4;
-  margin: 25mm 22mm 24mm 28mm;
+  margin: 25mm 22mm 30mm 28mm;
 
-  /* Numeração discreta no rodapé. Em documento de página única o
+  /* Rodapé de contato repetido em TODAS as páginas. O CONTEÚDO é injetado
+     pelo escritorio.js (regra @bottom-center gerada da constante RODAPE),
+     porque esta versão do Paged.js não suporta position:running. Aqui fica
+     só o estilo, para não duplicar os dados de contato. */
+  @bottom-center {
+    font-family: "Fira Sans", -apple-system, sans-serif;
+    font-size: 7pt;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    color: #7a7a7a;
+    vertical-align: bottom;
+  }
+
+  /* Numeração discreta no canto. Em documento de página única o
      script oculta o número (classe esc-hide-folio na raiz). */
   @bottom-right {
     content: counter(page);
     font-family: "Fira Sans", -apple-system, sans-serif;
     font-size: 8.5pt;
     color: #9a9a9a;
-    margin-top: 6mm;
+    vertical-align: bottom;
   }
 }
+
+/* O rodapé de contato vira caixa de margem repetida (acima); o bloco no
+   fluxo é ocultado só nas páginas do Paged.js. Na prévia e no fallback
+   nativo — que não têm .pagedjs_page_content — ele segue no fim da folha. */
+.pagedjs_page_content .esc-rodape { display: none; }
 
 /* Base tipográfica idêntica à folha da prévia (.esc-sheet):
    mesmo corpo, entrelinha e cor — antes 13pt/1.62/#000, que deixavam o PDF
