@@ -18,6 +18,14 @@
 
   const ASSINATURA_PADRAO = 'Danilo Ferreira Bortoli\nOAB/SP 409.024';
 
+  // Dados de contato impressos no rodapé de todo documento. Edite aqui.
+  // Campo vazio = omitido do rodapé.
+  const RODAPE = {
+    site: 'danilobortoli.github.io',
+    email: 'danilobortoli@icloud.com',
+    telefone: '(14) 9 9187-5566',
+  };
+
   const JUIZOS = [
     'Juízo de Direito',
     'Juízo Federal',
@@ -360,6 +368,33 @@
     </header>`;
   }
 
+  function rodapeHtml() {
+    const parts = [];
+    if (RODAPE.site) parts.push(escapeHtml(RODAPE.site));
+    if (RODAPE.email) parts.push(escapeHtml(RODAPE.email));
+    if (RODAPE.telefone) parts.push(escapeHtml(RODAPE.telefone));
+    if (!parts.length) return '';
+    const inner = parts.map((p) => `<span>${p}</span>`)
+      .join('<span class="esc-rodape-sep">·</span>');
+    return `<footer class="esc-rodape">${inner}</footer>`;
+  }
+
+  // Notas em estilo sidenote (Tufte): sintaxe inline ^[texto da nota].
+  // Cada ocorrência vira um número sobrescrito no corpo e a nota flutua na
+  // margem direita. Processado ANTES do marked; o HTML inline sobrevive à
+  // conversão. A numeração é sequencial na ordem de aparição.
+  function renderSidenotes(md) {
+    let n = 0;
+    return (md || '').replace(/\^\[((?:[^\[\]]|\[[^\]]*\])*)\]/g, function (_m, txt) {
+      n++;
+      const clean = escapeHtml(txt.trim());
+      return '<span class="esc-sn">' +
+        '<span class="esc-sn-ref">' + n + '</span>' +
+        '<span class="esc-sn-note"><span class="esc-sn-num">' + n + '</span>' + clean + '</span>' +
+        '</span>';
+    });
+  }
+
   function assinaturaHtml() {
     const out = [];
     const fecho = f('fecho');
@@ -487,15 +522,19 @@
     }
 
     let bodyHtml = '';
-    try { bodyHtml = marked.parse(state.source || ''); }
+    try { bodyHtml = marked.parse(renderSidenotes(state.source || '')); }
     catch (e) { bodyHtml = `<p style="color:var(--color-accent)">Erro ao renderizar: ${escapeHtml(e.message)}</p>`; }
-    out.push(`<div class="esc-body">${bodyHtml}</div>`);
+    // Reserva a coluna de margem só quando o documento realmente usa notas —
+    // petições sem notas mantêm o texto em largura plena.
+    const hasNotes = bodyHtml.indexOf('esc-sn-note') !== -1;
+    out.push(`<div class="esc-body${hasNotes ? ' esc-has-notes' : ''}">${bodyHtml}</div>`);
 
     if (doc === 'proposta') out.push(quadroHonorariosHtml());
     if (doc === 'peticao' && f('valorCausa')) {
       out.push(`<p class="esc-valor-causa">Dá-se à causa o valor de ${escapeHtml(f('valorCausa'))}.</p>`);
     }
     out.push(assinaturaHtml());
+    out.push(rodapeHtml());
 
     sheet.innerHTML = out.join('');
     updateStatusBar();
@@ -596,6 +635,23 @@
     saveClienteAtual();
     persist();
 
+    // Feedback imediato: paginar com o Paged.js leva um instante e o diálogo
+    // de impressão não abre na hora — sem sinal, o botão parece travado.
+    const pdfBtn = document.getElementById('ed-action-pdf');
+    let btnRestored = false;
+    const restoreBtn = () => {
+      if (btnRestored || !pdfBtn) return;
+      btnRestored = true;
+      pdfBtn.disabled = false;
+      pdfBtn.textContent = pdfBtn.dataset.pdfLabel || 'Exportar PDF';
+    };
+    if (pdfBtn) {
+      pdfBtn.dataset.pdfLabel = pdfBtn.textContent;
+      pdfBtn.disabled = true;
+      pdfBtn.textContent = 'Gerando PDF…';
+      setTimeout(restoreBtn, 12000); // seguro: nunca deixa o botão preso
+    }
+
     const content = sheet.innerHTML; // só o interior da folha, sem o wrapper
     const assets = printAssetUrls();
 
@@ -622,6 +678,7 @@
     const doPrint = () => {
       if (printed) return;
       printed = true;
+      restoreBtn();
       try {
         frame.contentWindow.focus();
         frame.contentWindow.print();
@@ -842,6 +899,10 @@
     },
 
     pedidos: () => insertBlock('Requer-se:\n\n(i) …;\n\n(ii) …;\n\n(iii) ….'),
+
+    // Nota lateral (sidenote) no ponto do cursor: ^[texto]. Numeração
+    // automática; a nota flutua na margem direita, sem rodapé de página.
+    nota: () => insertText('^[', ']', 'texto da nota'),
   };
 
   // ===========================================================================
@@ -997,6 +1058,7 @@
     { label: 'Seção', hint: '## I — SEÇÃO', cmd: 'h2' },
     { label: 'Subseção', hint: '###', cmd: 'h3' },
     { label: 'Citação longa', hint: 'recuada', cmd: 'quote' },
+    { label: 'Nota lateral', hint: 'sidenote — ^[texto]', cmd: 'nota' },
     { label: 'Jurisprudência', hint: 'trecho + referência', cmd: 'jurisprudencia' },
     { label: 'Dispositivo legal', hint: 'art. + diploma', cmd: 'dispositivo' },
     { label: 'Pedidos', hint: '(i), (ii)…', cmd: 'pedidos' },

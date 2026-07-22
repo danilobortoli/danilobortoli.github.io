@@ -35,12 +35,14 @@ body,
   }
 }
 
-/* Base tipográfica do corpo impresso: et-book maior e em preto pleno. */
+/* Base tipográfica idêntica à folha da prévia (.esc-sheet):
+   mesmo corpo, entrelinha e cor — antes 13pt/1.62/#000, que deixavam o PDF
+   mais pesado que a tela. */
 .pagedjs_page_content {
   font-family: var(--font-serif, "et-book", Georgia, serif);
-  font-size: 13pt;
-  line-height: 1.62;
-  color: #000;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: #111;
 }
 
 /* O Paged.js fragmenta o texto para paginar; sem isto a última linha
