@@ -5,6 +5,21 @@
    elas, numeração de folha e sem os carimbos automáticos do navegador.
    ============================================================ */
 
+/* Suavização idêntica à da prévia em tela. Sem isto, o iframe de
+   impressão (que NÃO carrega o site.css) cai no subpixel antialiasing
+   padrão do macOS: traços mais pesados e com franja de cor (o "ruído"
+   do PDF). Forçar grayscale (antialiased) alinha o PDF exportado à
+   folha limpa que se vê no editor. */
+html,
+body,
+.pagedjs_page,
+.pagedjs_page_content,
+.esc-sheet {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 @page {
   size: A4;
   margin: 25mm 22mm 24mm 28mm;
