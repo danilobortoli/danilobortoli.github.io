@@ -14,7 +14,7 @@ E ainda:
 
 > Também vale contextualizar o perfil geral do Brasil: uso mais voltado a trabalho (57,4% vs. 43,4% global) e ligeiramente mais automatizado que a média mundial (51,2% automação vs. 48,6% globalmente).
 
-Coloquei todo o relatório [aqui](https://github.com/danilobortoli/danilobortoli.github.io/blob/cd5d9c3d0192748dd738cd93bfeaf06e2a8854dd/assets/advogados-e-claude-economic-index.html).
+Coloquei todo o relatório [aqui](assets/advogados-e-claude-economic-index.html).
 
 
 [^1]: Visto [aqui](https://www.anthropic.com/news/anthropic-economic-index-connector).
