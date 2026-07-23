@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Como advogados usam o Claude — Anthropic Economic Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family: "et-book"; src: url("https://edwardtufte.github.io/et-book/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff") format("woff"); font-weight: normal; font-style: normal; font-display: swap; }
+  @font-face { font-family: "et-book"; src: url("https://edwardtufte.github.io/et-book/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff") format("woff"); font-weight: normal; font-style: italic; font-display: swap; }
+  @font-face { font-family: "et-book"; src: url("https://edwardtufte.github.io/et-book/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff") format("woff"); font-weight: bold; font-style: normal; font-display: swap; }
+
+  :root {
+    --color-surface: #ffffff;
+    --color-text-primary: #111111;
+    --color-text-body: #222222;
+    --color-text-muted: #666666;
+    --color-text-subtle: #888888;
+    --color-accent: #d91f5d;
+    --color-accent-soft: #f7dbe6;
+    --color-border: #cccccc;
+    --color-bar-neutral: #b9b9b9;
+    --font-serif: "et-book", Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    --font-sans: "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-text-body);
+    font-family: var(--font-serif);
+    padding: 0 24px 80px;
+  }
+
+  .page { max-width: 760px; margin: 0 auto; }
+
+  /* ---------- masthead ---------- */
+  .masthead { padding: 72px 0 40px; border-bottom: 1px solid var(--color-border); margin-bottom: 48px; }
+  .eyebrow {
+    font-family: var(--font-sans); font-size: 11pt; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    color: var(--color-text-primary); line-height: 1.12; font-size: 40pt;
+    max-width: 620px;
+  }
+  .masthead .subtitle {
+    font-family: var(--font-serif); font-style: italic; font-size: 14pt;
+    color: var(--color-text-muted); margin-top: 18px; max-width: 520px;
+  }
+  .masthead .meta {
+    font-family: var(--font-sans); font-size: 10pt; color: var(--color-text-subtle);
+    margin-top: 28px; letter-spacing: 0.03em;
+  }
+  .masthead .meta a { color: var(--color-text-subtle); }
+
+  /* ---------- section scaffolding ---------- */
+  section { margin-bottom: 64px; }
+  .section-eyebrow {
+    font-family: var(--font-sans); font-size: 10.5pt; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent);
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    color: var(--color-text-primary); font-size: 25pt; margin-bottom: 26px;
+    line-height: 1.18;
+  }
+  h3 {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    color: var(--color-text-primary); font-size: 15pt; margin: 32px 0 14px;
+  }
+
+  .split { display: flex; gap: 44px; margin-bottom: 30px; }
+  .split .main-col { flex: 62; }
+  .split .side-col {
+    flex: 38; border-left: 1px solid var(--color-border); padding-left: 22px;
+  }
+
+  .prose p, .side-note p {
+    font-family: var(--font-serif); font-size: 12.5pt; color: var(--color-text-body);
+    text-align: justify; hyphens: auto; line-height: 1.58; text-indent: 1.4em; margin: 0;
+  }
+  .prose p:first-of-type { text-indent: 0; }
+  .prose p + p, .side-note p + p { margin-top: 0.9em; }
+
+  .incipit {
+    font-family: var(--font-sans); font-variant-caps: all-small-caps;
+    letter-spacing: 0.07em; font-weight: 500; color: var(--color-text-primary);
+  }
+
+  .side-note p {
+    font-style: italic; font-size: 11pt; color: var(--color-text-muted);
+    text-indent: 0;
+  }
+  .side-note .side-label {
+    font-family: var(--font-sans); font-style: normal; font-size: 9pt;
+    font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--color-text-subtle); display: block; margin-bottom: 6px;
+  }
+
+  /* ---------- charts (barras horizontais, sem chartjunk) ---------- */
+  .chart { margin: 28px 0 30px; }
+  .chart-row { display: flex; align-items: center; margin-bottom: 9px; }
+  .chart-label {
+    width: 210px; flex-shrink: 0; font-family: var(--font-sans); font-size: 9.5pt;
+    color: var(--color-text-body); text-align: right; padding-right: 12px; line-height: 1.25;
+  }
+  .chart-label.accent { color: var(--color-accent); font-weight: 500; }
+  .chart-bar-wrap { flex: 1; display: flex; align-items: center; }
+  .chart-bar { height: 13px; background: var(--color-bar-neutral); }
+  .chart-bar.accent { background: var(--color-accent); }
+  .chart-value {
+    font-family: var(--font-sans); font-size: 9pt; color: var(--color-text-muted);
+    margin-left: 9px; white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+  .chart-value.accent { color: var(--color-accent); font-weight: 500; }
+  .chart-caption {
+    font-family: var(--font-sans); font-size: 9pt; color: var(--color-text-subtle);
+    margin-top: 4px; font-style: normal;
+  }
+
+  /* barras empilhadas 100% (augmentação / automação) */
+  .stack-legend {
+    font-family: var(--font-sans); font-size: 9pt; color: var(--color-text-muted);
+    margin-bottom: 14px;
+  }
+  .stack-legend .sw { display: inline-block; width: 10px; height: 10px; margin-right: 5px; vertical-align: -1px; }
+  .stack-row { display: flex; align-items: center; margin-bottom: 10px; }
+  .stack-label {
+    width: 260px; flex-shrink: 0; font-family: var(--font-sans); font-size: 9.5pt;
+    color: var(--color-text-body); padding-right: 12px; line-height: 1.3;
+  }
+  .stack-bar { display: flex; width: 300px; height: 13px; flex-shrink: 0; }
+  .stack-aug { background: var(--color-accent); }
+  .stack-auto { background: var(--color-bar-neutral); }
+  .stack-nums {
+    font-family: var(--font-sans); font-size: 8.5pt; color: var(--color-text-muted);
+    margin-left: 10px; white-space: nowrap;
+  }
+
+  /* ---------- tabelas ---------- */
+  table { width: 100%; border-collapse: collapse; margin: 22px 0 8px; }
+  th {
+    font-family: var(--font-sans); font-size: 8.5pt; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted);
+    text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--color-text-primary);
+  }
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td {
+    font-family: var(--font-serif); font-size: 11.5pt; color: var(--color-text-body);
+    padding: 9px 10px; border-bottom: 1px solid var(--color-border);
+  }
+  tr.highlight td { color: var(--color-accent); }
+  tr:last-child td { border-bottom: none; }
+  .table-caption {
+    font-family: var(--font-sans); font-size: 9pt; color: var(--color-text-subtle);
+    margin-top: 6px;
+  }
+
+  /* ---------- big stat callout ---------- */
+  .big-stat {
+    background: var(--color-accent-soft); padding: 44px 48px; margin: 34px 0 40px;
+    text-align: center;
+  }
+  .big-stat .number {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: 64pt; color: var(--color-accent); line-height: 1;
+  }
+  .big-stat .caption {
+    font-family: var(--font-sans); font-size: 11pt; font-weight: 500;
+    letter-spacing: 0.04em; color: var(--color-text-primary); margin-top: 10px;
+    max-width: 460px; margin-left: auto; margin-right: auto; line-height: 1.4;
+  }
+  .big-stat .sub {
+    font-family: var(--font-sans); font-size: 9.5pt; color: var(--color-text-muted);
+    margin-top: 10px;
+  }
+
+  /* ---------- ressalvas / metodologia ---------- */
+  .caveats {
+    border-left: 3px solid var(--color-accent); padding-left: 22px;
+  }
+  .caveats p {
+    font-family: var(--font-serif); font-style: italic; font-size: 11.5pt;
+    color: var(--color-text-muted); text-align: justify; line-height: 1.55;
+    text-indent: 0; margin-bottom: 12px;
+  }
+
+  footer {
+    border-top: 1px solid var(--color-border); padding-top: 24px; margin-top: 60px;
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px;
+  }
+  footer .sig {
+    font-family: var(--font-sans); font-size: 10pt; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-primary);
+  }
+  footer .src {
+    font-family: var(--font-sans); font-size: 9.5pt; color: var(--color-text-subtle);
+  }
+  footer .src a { color: var(--color-accent); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 28pt; }
+    h2 { font-size: 20pt; }
+    .split { flex-direction: column; gap: 18px; }
+    .split .side-col { border-left: none; border-top: 1px solid var(--color-border); padding-left: 0; padding-top: 14px; }
+    .chart-label { width: 130px; font-size: 8.5pt; }
+    .stack-label { width: 150px; font-size: 8.5pt; }
+    .stack-bar { width: 140px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="eyebrow">Anthropic Economic Index &middot; dados observados</p>
+    <h1>Como advogados usam o Claude</h1>
+    <p class="subtitle">Um retrato do uso jurídico do Claude a partir de conversas anonimizadas — panorama global, o perfil da categoria &ldquo;Legal&rdquo; e um desvio notável no Brasil.</p>
+    <p class="meta">Período de referência: maio de 2026 &middot; Fonte: <a href="https://www.anthropic.com/economic-index">anthropic.com/economic-index</a></p>
+  </header>
+
+  <!-- ============ I. PANORAMA GLOBAL ============ -->
+  <section id="panorama">
+    <p class="section-eyebrow">I. Panorama global</p>
+    <h2>Uma fatia pequena, entre gigantes técnicos</h2>
+
+    <div class="split">
+      <div class="main-col prose">
+        <p><span class="incipit">Das vinte e duas</span> categorias ocupacionais do Índice, &ldquo;Legal&rdquo; responde por 1,02% do uso global do Claude. É uma fatia modesta diante de Computação e Matemática (23,8%) ou Artes, Design e Mídia (13,55%) — mas ainda maior do que áreas como manutenção, construção ou agropecuária.</p>
+        <p>O dado descreve conteúdo de conversas equivalente a tarefas comumente realizadas por uma ocupação — não quantas pessoas daquela profissão efetivamente usam o Claude.</p>
+      </div>
+      <div class="side-col side-note">
+        <span class="side-label">Como ler</span>
+        <p>É um retrato do período, sem série histórica: o Índice não permite afirmar se essa fatia está subindo ou caindo em relação a antes.</p>
+      </div>
+    </div>
+
+    <div class="chart">
+      <div class="chart-row">
+        <div class="chart-label">Computação e Matemática</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:100%"></div><span class="chart-value">23,80%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Artes, Design e Mídia</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:56.9%"></div><span class="chart-value">13,55%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Instrução Educacional</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:53.7%"></div><span class="chart-value">12,79%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Vendas</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:38.4%"></div><span class="chart-value">9,14%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Administrativo</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:33.2%"></div><span class="chart-value">7,89%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Gestão</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:24.8%"></div><span class="chart-value">5,90%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Negócios e Finanças</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:24.2%"></div><span class="chart-value">5,77%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Ciências da Vida, Físicas e Sociais</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:19.0%"></div><span class="chart-value">4,51%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Arquitetura e Engenharia</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:15.0%"></div><span class="chart-value">3,56%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label accent">Jurídico (Legal)</div>
+        <div class="chart-bar-wrap"><div class="chart-bar accent" style="width:4.3%"></div><span class="chart-value accent">1,02%</span></div>
+      </div>
+      <p class="chart-caption">Barras escaladas pela maior categoria (Computação e Matemática = 23,80%). 14&ordm; lugar de 22 categorias.</p>
+    </div>
+  </section>
+
+  <!-- ============ II. OCUPAÇÕES ============ -->
+  <section id="ocupacoes">
+    <p class="section-eyebrow">II. Quem, dentro do jurídico</p>
+    <h2>Advogados dominam a categoria</h2>
+
+    <div class="split">
+      <div class="main-col prose">
+        <p><span class="incipit">Dentro de</span> &ldquo;Legal&rdquo;, sete ocupações aparecem no Índice — e advogados concentram, disparado, a maior fatia: 0,62% do uso global, posição 38&ordm; entre 718 ocupações catalogadas. Paralegais e assistentes jurídicos vêm em segundo lugar, com menos de um terço desse volume.</p>
+      </div>
+      <div class="side-col side-note">
+        <span class="side-label">Augmentação × automação</span>
+        <p>Augmentação: a pessoa permanece ativamente envolvida na tarefa. Automação: a pessoa delega a conclusão ao Claude. Descreve o estilo da conversa — não se o trabalho está sendo substituído.</p>
+      </div>
+    </div>
+
+    <div class="chart">
+      <div class="chart-row">
+        <div class="chart-label accent">Advogados</div>
+        <div class="chart-bar-wrap"><div class="chart-bar accent" style="width:100%"></div><span class="chart-value accent">0,62%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Paralegais e assistentes jurídicos</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:32.3%"></div><span class="chart-value">0,20%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Assessores judiciais</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:12.9%"></div><span class="chart-value">0,08%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Árbitros, mediadores e conciliadores</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:11.3%"></div><span class="chart-value">0,07%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Juízes administrativos</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:4.8%"></div><span class="chart-value">0,03%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Examinadores de título de propriedade</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:3.2%"></div><span class="chart-value">0,02%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Juízes e magistrados</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:1.6%"></div><span class="chart-value">0,01%</span></div>
+      </div>
+      <p class="chart-caption">Barras escaladas pela maior ocupação da categoria (Advogados = 0,62% do uso global).</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Ocupação</th>
+          <th class="num">Fatia global</th>
+          <th class="num">Posição (de 718)</th>
+          <th class="num">Augment.</th>
+          <th class="num">Automação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>Advogados</td><td class="num">0,62%</td><td class="num">38&ordm;</td><td class="num">68,5%</td><td class="num">31,5%</td>
+        </tr>
+        <tr>
+          <td>Paralegais e assistentes jurídicos</td><td class="num">0,20%</td><td class="num">103&ordm;</td><td class="num">62,5%</td><td class="num">37,5%</td>
+        </tr>
+        <tr>
+          <td>Assessores judiciais</td><td class="num">0,08%</td><td class="num">187&ordm;</td><td class="num">60,3%</td><td class="num">39,7%</td>
+        </tr>
+        <tr>
+          <td>Árbitros, mediadores e conciliadores</td><td class="num">0,07%</td><td class="num">203&ordm;</td><td class="num">62,2%</td><td class="num">37,8%</td>
+        </tr>
+        <tr>
+          <td>Juízes administrativos</td><td class="num">0,03%</td><td class="num">279&ordm;</td><td class="num">64,0%</td><td class="num">36,0%</td>
+        </tr>
+        <tr>
+          <td>Examinadores de título de propriedade</td><td class="num">0,02%</td><td class="num">318&ordm;</td><td class="num">41,1%</td><td class="num">58,9%</td>
+        </tr>
+        <tr>
+          <td>Juízes e magistrados</td><td class="num">0,01%</td><td class="num">374&ordm;</td><td class="num">49,4%</td><td class="num">50,6%</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ III. TAREFAS DOS ADVOGADOS ============ -->
+  <section id="tarefas">
+    <p class="section-eyebrow">III. O que aparece nas conversas</p>
+    <h2>As sete tarefas mais associadas a advogados</h2>
+
+    <div class="prose">
+      <p><span class="incipit">Interpretar leis</span> e regulamentos é a tarefa mais colaborativa — três em cada quatro conversas mantêm o usuário ativamente envolvido. Já examinar dados jurídicos para avaliar a viabilidade de mover ou defender uma ação é a única em que a automação supera a augmentação.</p>
+    </div>
+
+    <div class="stack-legend">
+      <span class="sw" style="background:var(--color-accent);"></span>augmentação &nbsp;&nbsp;
+      <span class="sw" style="background:var(--color-bar-neutral);"></span>automação
+    </div>
+
+    <div class="chart">
+      <div class="stack-row">
+        <div class="stack-label">Interpretar leis, decisões e regulamentos</div>
+        <div class="stack-bar"><div class="stack-aug" style="width:75%"></div><div class="stack-auto" style="width:25%"></div></div>
+        <div class="stack-nums">75 / 25</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-label">Estudar Constituição, leis e regulamentos de órgãos quase-judiciais</div>
+        <div class="stack-bar"><div class="stack-aug" style="width:68%"></div><div class="stack-auto" style="width:32%"></div></div>
+        <div class="stack-nums">68 / 32</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-label">Aconselhar clientes sobre transações, responsabilidade, ações</div>
+        <div class="stack-bar"><div class="stack-aug" style="width:66%"></div><div class="stack-auto" style="width:34%"></div></div>
+        <div class="stack-nums">66 / 34</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-label">Analisar resultados prováveis de casos com base em precedentes</div>
+        <div class="stack-bar"><div class="stack-aug" style="width:66%"></div><div class="stack-auto" style="width:34%"></div></div>
+        <div class="stack-nums">66 / 34</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-label">Redigir, preparar e revisar documentos jurídicos</div>
+        <div class="stack-bar"><div class="stack-aug" style="width:61%"></div><div class="stack-auto" style="width:39%"></div></div>
+        <div class="stack-nums">61 / 39</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-label">Avaliar constatações e desenvolver estratégias de caso</div>
+        <div class="stack-bar"><div class="stack-aug" style="width:61%"></div><div class="stack-auto" style="width:39%"></div></div>
+        <div class="stack-nums">61 / 39</div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-label">Examinar dados jurídicos p/ viabilidade de mover/defender ação</div>
+        <div class="stack-bar"><div class="stack-aug" style="width:47%"></div><div class="stack-auto" style="width:53%"></div></div>
+        <div class="stack-nums">47 / 53</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ IV. O BRASIL ============ -->
+  <section id="brasil">
+    <p class="section-eyebrow">IV. Recorte Brasil</p>
+    <h2>O Brasil foge muito do padrão global</h2>
+
+    <div class="prose">
+      <p><span class="incipit">No Brasil</span>, &ldquo;Legal&rdquo; responde por 4,0% do uso do Claude — um dos desvios mais fortes entre todas as categorias no perfil do país frente à média mundial.</p>
+    </div>
+
+    <div class="big-stat">
+      <div class="number">3,92&times;</div>
+      <div class="caption">Uso relacionado a tarefas jurídicas no Brasil, em proporção ao uso total do país, é quase quatro vezes mais comum do que a média mundial.</div>
+      <div class="sub">4,0% no Brasil &nbsp;vs.&nbsp; 1,02% no mundo</div>
+    </div>
+
+    <div class="chart">
+      <div class="chart-row">
+        <div class="chart-label">Brasil</div>
+        <div class="chart-bar-wrap"><div class="chart-bar accent" style="width:100%"></div><span class="chart-value accent">4,00%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Média global</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:25.5%"></div><span class="chart-value">1,02%</span></div>
+      </div>
+      <p class="chart-caption">Fatia da categoria &ldquo;Legal&rdquo; sobre o uso total do Claude, Brasil vs. mundo.</p>
+    </div>
+
+    <h3>Perfil geral do país</h3>
+    <div class="split">
+      <div class="main-col prose">
+        <p><span class="incipit">O uso brasileiro</span> do Claude é mais orientado a trabalho do que a média mundial, e ligeiramente mais automatizado.</p>
+      </div>
+      <div class="side-col side-note">
+        <span class="side-label">Índice de uso (AUI)</span>
+        <p>Brasil = 0,96 — praticamente proporcional ao peso populacional do país, ligeiramente abaixo. Posição 61&ordm; entre 121 países cobertos.</p>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Dimensão</th><th class="num">Brasil</th><th class="num">Média global</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Uso para trabalho</td><td class="num">57,4%</td><td class="num">43,4%</td></tr>
+        <tr><td>Uso pessoal</td><td class="num">31,1%</td><td class="num">40,2%</td></tr>
+        <tr><td>Uso para estudos/coursework</td><td class="num">11,5%</td><td class="num">16,5%</td></tr>
+        <tr><td>Augmentação</td><td class="num">48,8%</td><td class="num">51,4%</td></tr>
+        <tr><td>Automação</td><td class="num">51,2%</td><td class="num">48,6%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Ocupações jurídicas dentro do Brasil</h3>
+    <div class="chart">
+      <div class="chart-row">
+        <div class="chart-label accent">Advogados</div>
+        <div class="chart-bar-wrap"><div class="chart-bar accent" style="width:100%"></div><span class="chart-value accent">1,72%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Paralegais e assistentes jurídicos</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:57.0%"></div><span class="chart-value">0,98%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Assessores judiciais</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:43.6%"></div><span class="chart-value">0,75%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Árbitros, mediadores e conciliadores</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:15.1%"></div><span class="chart-value">0,26%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Juízes e magistrados</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:7.0%"></div><span class="chart-value">0,12%</span></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-label">Juízes administrativos</div>
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:7.0%"></div><span class="chart-value">0,12%</span></div>
+      </div>
+      <p class="chart-caption">Fatia de cada ocupação sobre o uso total do Claude no Brasil (não sobre a categoria Legal isoladamente).</p>
+    </div>
+
+    <h3>Tarefas mais associadas ao jurídico brasileiro</h3>
+    <table>
+      <thead>
+        <tr><th>Tarefa</th><th>Ocupação</th><th class="num">Fatia no Brasil</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Preparar, editar ou revisar documentos jurídicos (legislação, petições, contratos)</td><td>Paralegais</td><td class="num">0,82%</td></tr>
+        <tr><td>Aconselhar clientes sobre transações, responsabilidade, viabilidade de ações</td><td>Advogados</td><td class="num">0,69%</td></tr>
+        <tr><td>Interpretar leis e regulamentos para indivíduos e empresas</td><td>Advogados</td><td class="num">0,55%</td></tr>
+        <tr><td>Preparar, protocolar ou processar documentos (intimações, petições, moções)</td><td>Secretários jurídicos</td><td class="num">0,35%</td></tr>
+        <tr><td>Redigir, preparar e revisar documentos jurídicos (testamentos, contratos, escrituras)</td><td>Advogados</td><td class="num">0,20%</td></tr>
+        <tr><td>Aplicar leis, regulamentos e precedentes para chegar a conclusões</td><td>Árbitros/mediadores</td><td class="num">0,20%</td></tr>
+        <tr><td>Avaliar constatações e desenvolver estratégias e argumentos de caso</td><td>Advogados</td><td class="num">0,11%</td></tr>
+        <tr><td>Ler petições e moções para apurar fatos e questões</td><td>Assessores judiciais</td><td class="num">0,10%</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ V. METODOLOGIA ============ -->
+  <section id="metodologia">
+    <p class="section-eyebrow">V. Notas metodológicas</p>
+    <h2>O que este dado não mostra</h2>
+    <div class="caveats">
+      <p>É um retrato de conteúdo de conversa equivalente a tarefas de uma ocupação — não uma contagem de quantos profissionais daquela área usam o Claude.</p>
+      <p>É um recorte estático de maio de 2026, sem série histórica: não sustenta afirmações de que o uso jurídico está crescendo ou encolhendo.</p>
+      <p>Augmentação e automação descrevem o estilo da conversa, não se o trabalho humano está sendo substituído — e não devem ser lidas como sinal de risco ou segurança de emprego para qualquer ocupação.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span class="sig">Danilo Bortoli &middot; Advocacia</span>
+    <span class="src">Dados: Anthropic Economic Index (CC BY 4.0) &middot; <a href="https://www.anthropic.com/economic-index">anthropic.com/economic-index</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
