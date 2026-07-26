@@ -59,17 +59,17 @@ lendo:
 #                       3. Para canção: pegue o ID do "Recording"
 # ---------------------------------------------------------------------
 ouvindo:
-  - titulo: "you seem pretty sad for a girl so in love"
-    artista: "Olivia Rodrigo"
+  - titulo: "Music, Fashion Film"
+    artista: "Charli xcx"
     ano: "2026"
     tipo: "álbum"
-    musicbrainz_id: "e142765a-1fb3-4980-90b5-2b39044eb01f"
+    musicbrainz_id: "0ca9e17c-6173-4b4f-a650-8c40511a3c42"
 
-  - titulo: "If This Is It"
-    artista: "DJ Seinfeld"
-    ano: "2026"
+  - titulo: "America"
+    artista: "Dan Deacon"
+    ano: "2012"
     tipo: "álbum"
-    musicbrainz_id: "55c3ccae-a016-48ac-b236-58aeb7927537"
+    musicbrainz_id: "47ced6d4-6932-488b-86e6-da8ddd054f13"
  
 # ---------------------------------------------------------------------
 # FILMES E SÉRIES (opcional — se estiver assistindo algo)
