@@ -14,13 +14,11 @@ permalink: /categories/pessoal/
   {% assign matched = false %}
   {% if post.categories and post.categories.size > 0 %}
     {% for c in post.categories %}
-      {% if c | downcase == target %}
+      {% assign c_slug = c | downcase %}
+      {% if c_slug == target %}
         {% assign matched = true %}
       {% endif %}
     {% endfor %}
-  {% endif %}
-  {% if post.category and post.category | downcase == target %}
-    {% assign matched = true %}
   {% endif %}
 
   {% if matched %}
