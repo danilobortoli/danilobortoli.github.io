@@ -58,32 +58,66 @@ jobs:
       - name: Verificar sitemap e robots
         run: |
           python3 - <<'PY'
-          import sys, xml.etree.ElementTree as ET
+          import sys, re, xml.etree.ElementTree as ET
           NS = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+          ORDER = ["loc", "lastmod", "changefreq", "priority"]
+          W3C = re.compile(r"^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}([+-]\d{2}:\d{2}|Z))?$")
 
-          try:
-              root = ET.parse("_site/sitemap.xml").getroot()
-          except FileNotFoundError:
-              sys.exit("❌ _site/sitemap.xml não foi gerado (jekyll-sitemap não rodou).")
-          except ET.ParseError as e:
-              sys.exit(f"❌ _site/sitemap.xml não é XML válido: {e}")
+          def check(path):
+              try:
+                  raw = open(path, "rb").read()
+              except FileNotFoundError:
+                  sys.exit(f"❌ {path} não foi gerado.")
 
-          if root.tag != NS + "urlset":
-              sys.exit(f"❌ raiz inesperada no sitemap: {root.tag}")
+              if raw[:3] == b"\xef\xbb\xbf":
+                  sys.exit(f"❌ {path} começa com BOM; o Google não consegue lê-lo.")
+              if not raw.startswith(b"<?xml"):
+                  sys.exit(f"❌ {path} não começa em <?xml: {raw[:40]!r}")
 
-          locs = [e.text or "" for e in root.iter(NS + "loc")]
-          if not locs:
-              sys.exit("❌ sitemap sem nenhuma <loc>.")
+              try:
+                  root = ET.fromstring(raw)
+              except ET.ParseError as e:
+                  sys.exit(f"❌ {path} não é XML válido: {e}")
 
-          bad = [l for l in locs if not l.startswith("https://danilobortoli.github.io/")]
-          if bad:
-              sys.exit(f"❌ {len(bad)} URL(s) fora do domínio do site, ex.: {bad[0]}")
+              if root.tag != NS + "urlset":
+                  sys.exit(f"❌ raiz inesperada em {path}: {root.tag}")
+
+              for url in root:
+                  names = [c.tag.replace(NS, "") for c in url]
+                  estranhos = [n for n in names if n not in ORDER]
+                  if estranhos:
+                      sys.exit(f"❌ {path}: elemento fora do esquema: {estranhos}")
+                  idx = [ORDER.index(n) for n in names]
+                  if idx != sorted(idx):
+                      sys.exit(f"❌ {path}: ordem de elementos fora do esquema: {names}")
+
+              locs = [e.text or "" for e in root.iter(NS + "loc")]
+              if not locs:
+                  sys.exit(f"❌ {path} sem nenhuma <loc>.")
+              fora = [l for l in locs if not l.startswith("https://danilobortoli.github.io/")]
+              if fora:
+                  sys.exit(f"❌ {path}: {len(fora)} URL(s) fora do domínio, ex.: {fora[0]}")
+              dups = len(locs) - len(set(locs))
+              if dups:
+                  sys.exit(f"❌ {path}: {dups} URL(s) duplicada(s).")
+              ruins = [x.text for x in root.iter(NS + "lastmod") if not W3C.match(x.text or "")]
+              if ruins:
+                  sys.exit(f"❌ {path}: lastmod fora do padrão W3C, ex.: {ruins[0]}")
+
+              print(f"✅ {path}: {len(locs)} URLs, esquema sitemaps.org 0.9 conforme.")
+              return set(locs)
+
+          a = check("_site/sitemap.xml")
+          b = check("_site/sitemap-alt.xml")
+          if a != b:
+              sys.exit(f"❌ os dois sitemaps divergem: {len(a ^ b)} URL(s) de diferença.")
 
           robots = open("_site/robots.txt", encoding="utf-8").read()
-          if "/sitemap.xml" not in robots:
-              sys.exit("❌ robots.txt não aponta para o sitemap.")
+          for s in ("/sitemap.xml", "/sitemap-alt.xml"):
+              if s not in robots:
+                  sys.exit(f"❌ robots.txt não aponta para {s}.")
 
-          print(f"✅ sitemap.xml válido com {len(locs)} URLs; robots.txt aponta para ele.")
+          print("✅ os dois sitemaps cobrem as mesmas URLs e o robots.txt aponta para ambos.")
           PY
 
       - name: Upload artifact

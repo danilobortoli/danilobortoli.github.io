@@ -1,0 +1,40 @@
+---
+layout: null
+permalink: /sitemap-alt.xml
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- assign docs = site.pages | concat: site.posts | concat: site.notas -%}
+{%- for doc in docs -%}
+{%- unless doc.sitemap == false -%}
+{%- assign last_char = doc.url | slice: -1, 1 -%}
+{%- assign is_page = false -%}
+{%- if last_char == '/' -%}{%- assign is_page = true -%}{%- endif -%}
+{%- if doc.url contains '.html' -%}{%- assign is_page = true -%}{%- endif -%}
+{%- if doc.url contains '.pdf' -%}{%- assign is_page = true -%}{%- endif -%}
+{%- if is_page -%}
+<url>
+<loc>{{ doc.url | absolute_url | xml_escape }}</loc>
+{%- if doc.date %}
+<lastmod>{{ doc.date | date_to_xmlschema }}</lastmod>
+{%- elsif doc.last_modified_at %}
+<lastmod>{{ doc.last_modified_at | date_to_xmlschema }}</lastmod>
+{%- endif %}
+</url>
+{% endif -%}
+{%- endunless -%}
+{%- endfor -%}
+{%- comment -%}
+Arquivos sem front matter (HTML solto em assets/, PDFs) não entram em
+site.pages; o jekyll-sitemap os inclui a partir de site.static_files.
+{%- endcomment -%}
+{%- for file in site.static_files -%}
+{%- if file.extname == '.html' or file.extname == '.pdf' -%}
+<url>
+<loc>{{ file.path | absolute_url | xml_escape }}</loc>
+<lastmod>{{ file.modified_time | date_to_xmlschema }}</lastmod>
+</url>
+{% endif -%}
+{%- endfor -%}
+</urlset>
