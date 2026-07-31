@@ -62,4 +62,8 @@ exclude:
   - vendor
   - Gemfile
   - Gemfile.lock
+  # Documentação interna e páginas de demonstração: não devem entrar no
+  # sitemap nem ser indexadas.
+  - EMAIL_SETUP.md
+  - exemplo.md
 

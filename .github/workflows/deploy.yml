@@ -55,6 +55,37 @@ jobs:
           source: ./
           destination: ./_site
 
+      - name: Verificar sitemap e robots
+        run: |
+          python3 - <<'PY'
+          import sys, xml.etree.ElementTree as ET
+          NS = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+
+          try:
+              root = ET.parse("_site/sitemap.xml").getroot()
+          except FileNotFoundError:
+              sys.exit("❌ _site/sitemap.xml não foi gerado (jekyll-sitemap não rodou).")
+          except ET.ParseError as e:
+              sys.exit(f"❌ _site/sitemap.xml não é XML válido: {e}")
+
+          if root.tag != NS + "urlset":
+              sys.exit(f"❌ raiz inesperada no sitemap: {root.tag}")
+
+          locs = [e.text or "" for e in root.iter(NS + "loc")]
+          if not locs:
+              sys.exit("❌ sitemap sem nenhuma <loc>.")
+
+          bad = [l for l in locs if not l.startswith("https://danilobortoli.github.io/")]
+          if bad:
+              sys.exit(f"❌ {len(bad)} URL(s) fora do domínio do site, ex.: {bad[0]}")
+
+          robots = open("_site/robots.txt", encoding="utf-8").read()
+          if "/sitemap.xml" not in robots:
+              sys.exit("❌ robots.txt não aponta para o sitemap.")
+
+          print(f"✅ sitemap.xml válido com {len(locs)} URLs; robots.txt aponta para ele.")
+          PY
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
