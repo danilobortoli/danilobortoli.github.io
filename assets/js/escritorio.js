@@ -41,6 +41,32 @@
     'Por hora',
   ];
 
+  // ---- Procuração ----------------------------------------------------------
+  // Qualificação do outorgado impressa por padrão no instrumento. Edite aqui.
+  const OUTORGADO_PADRAO =
+    'Danilo Ferreira Bortoli, brasileiro, advogado, inscrito na OAB/SP sob o nº 409.024, ' +
+    'com escritório profissional em Marília, São Paulo, onde recebe intimações';
+
+  const PODERES = [
+    'Ad judicia et extra',
+    'Ad judicia',
+    'Ad negotia (extrajudicial)',
+  ];
+
+  const SUBSTABELECIMENTOS = [
+    'Com ou sem reserva de poderes',
+    'Com reserva de poderes',
+    'Sem reserva de poderes',
+    'Vedado o substabelecimento',
+  ];
+
+  // Rol do art. 105 do CPC — em linha única, já redigido. O campo aceita
+  // também um poder por linha, e a frase é montada com vírgulas e "e".
+  const PODERES_ESPECIAIS_PADRAO =
+    'receber citação, confessar, reconhecer a procedência do pedido, transigir, desistir, ' +
+    'renunciar ao direito sobre o qual se funda a ação, receber, dar quitação, firmar compromisso ' +
+    'e assinar declaração de hipossuficiência econômica';
+
   // Linha compartilhada de fecho/assinatura — anexada a todos os tipos.
   function assinaturaRow(fechoDefault) {
     return [
@@ -125,6 +151,43 @@
       ],
     },
 
+    // A procuração é assinada pelo OUTORGANTE, não pelo advogado: por isso
+    // não usa a linha de fecho/assinaturas comum aos demais tipos.
+    procuracao: {
+      label: 'Procuração',
+      rows: [
+        [
+          { id: 'outorgante', label: 'Outorgante (cliente)', grow: 1, list: 'esc-clientes-list' },
+          { id: 'referencia', label: 'Ref. interna', placeholder: 'PROC-2026-001' },
+          { id: 'data', label: 'Data', type: 'date' },
+        ],
+        [
+          { id: 'qualificacao', label: 'Qualificação do outorgante', type: 'textarea', placeholder: 'brasileiro, casado, engenheiro, RG nº…, CPF nº…, residente e domiciliado na…', grow: 2 },
+          { id: 'representante', label: 'Representante legal (se pessoa jurídica)', type: 'textarea', placeholder: 'Fulano de Tal, sócio-administrador, CPF nº…', grow: 1 },
+        ],
+        [
+          { id: 'outorgados', label: 'Outorgado(s) — nome e qualificação, um por linha', type: 'textarea', default: OUTORGADO_PADRAO, grow: 1 },
+        ],
+        [
+          { id: 'poderes', label: 'Cláusula de poderes', type: 'select', options: PODERES },
+          { id: 'substabelecimento', label: 'Substabelecimento', type: 'select', options: SUBSTABELECIMENTOS },
+          { id: 'finalidade', label: 'Finalidade específica (opcional)', placeholder: 'propor ação de indenização em face de…', grow: 2 },
+          { id: 'processo', label: 'Processo relacionado (opcional)', grow: 1 },
+        ],
+        [
+          { id: 'poderesEspeciais', label: 'Poderes especiais (art. 105 do CPC) — um por linha', type: 'textarea', default: PODERES_ESPECIAIS_PADRAO, grow: 2 },
+          { id: 'validade', label: 'Validade / prazo', placeholder: 'prazo indeterminado' },
+        ],
+        [
+          { id: 'poderesCustom', label: 'Cláusula de poderes personalizada (substitui a automática)', type: 'textarea', grow: 1 },
+          { id: 'testemunhas', label: 'Testemunhas (uma por linha: nome — CPF)', type: 'textarea', grow: 1 },
+        ],
+        [
+          { id: 'local', label: 'Local', default: 'Marília' },
+        ],
+      ],
+    },
+
     proposta: {
       label: 'Proposta',
       rows: [
@@ -170,6 +233,9 @@
     peticao: '## I — O CASO\n\n1 …\n\n## II — O DIREITO\n\n2 …\n\n## III — PEDIDOS\n\n3 Requer-se:\n\n(i) …;\n\n(ii) ….\n',
     recurso: '## I — O CASO\n\n1 …\n\n## II — AS RAZÕES\n\n2 …\n\n## III — PEDIDOS\n\n3 Requer-se:\n\n(i) …;\n\n(ii) ….\n',
     parecer: '## I — A CONSULTA\n\n1 …\n\n## II — A ANÁLISE\n\n2 …\n\n## III — A CONCLUSÃO\n\n3 …\n',
+    // Partes, poderes e assinatura vêm dos campos; o corpo fica livre para
+    // cláusulas extras (vigência, foro, condições particulares do mandato).
+    procuracao: '',
     proposta: '## ESCOPO DA ATUAÇÃO\n\n…\n\n## HONORÁRIOS\n\nAs condições de honorários constam do quadro-resumo ao final desta proposta.\n\n## CONDIÇÕES GERAIS\n\n…\n',
     generico: '',
   };
@@ -290,7 +356,7 @@
       const evt = el.tagName === 'SELECT' ? 'change' : 'input';
       el.addEventListener(evt, () => {
         state.fields[el.dataset.field] = el.value;
-        if (el.dataset.field === 'cliente' || el.dataset.field === 'consulente') maybeFillQualificacao();
+        if (el.dataset.field === 'cliente' || el.dataset.field === 'consulente' || el.dataset.field === 'outorgante') maybeFillQualificacao();
         render();
         autosave();
       });
@@ -478,6 +544,151 @@
     return html + '</table>';
   }
 
+  // ---- Procuração ----------------------------------------------------------
+  // As partes, a cláusula de poderes e a linha de assinatura são montadas dos
+  // campos; o corpo em markdown fica para cláusulas extras.
+
+  function stripEndPunct(s) {
+    return String(s || '').trim().replace(/[.,;]+$/, '');
+  }
+
+  // Linhas do campo → "a, b, c e d". Uma linha só já vem redigida: passa direto.
+  function poderesEspeciaisFrase() {
+    const itens = (state.fields.poderesEspeciais || '').split('\n')
+      .map(stripEndPunct).filter(Boolean);
+    if (itens.length <= 1) return itens[0] || '';
+    if (itens.length === 2) return itens.join(' e ');
+    return itens.slice(0, -1).join(', ') + ' e ' + itens[itens.length - 1];
+  }
+
+  function procuracaoTitulo() {
+    const latim = (f('poderes') || PODERES[0]).replace(/\s*\(.*\)\s*$/, '').toLowerCase();
+    return `Procuração <em>${escapeHtml(latim)}</em>`;
+  }
+
+  function parteHtml(nome, complementos) {
+    const bits = [];
+    if (nome) bits.push(`<span class="esc-parte-nome">${escapeHtml(nome)}</span>`);
+    (complementos || []).forEach((c) => { if (c) bits.push(escapeHtml(stripEndPunct(c))); });
+    if (!bits.length) return '';
+    return bits.join(', ') + '.';
+  }
+
+  function partesHtml() {
+    const linhas = [];
+
+    const outorgante = parteHtml(f('outorgante'), [
+      f('qualificacao'),
+      f('representante') ? `neste ato representado(a) por ${stripEndPunct(f('representante'))}` : '',
+    ]);
+    if (outorgante) linhas.push(['Outorgante', outorgante]);
+
+    const outorgados = (state.fields.outorgados || '').split('\n')
+      .map((l) => l.trim()).filter(Boolean);
+    if (outorgados.length) {
+      const html = outorgados
+        .map((l) => `<span class="esc-parte-linha">${parteHtml('', [l])}</span>`).join('');
+      linhas.push([outorgados.length > 1 ? 'Outorgados' : 'Outorgado', html]);
+    }
+
+    if (f('processo')) linhas.push(['Processo', escapeHtml(f('processo'))]);
+
+    if (!linhas.length) return '';
+    return '<dl class="esc-partes">' +
+      linhas.map(([k, v]) => `<div><dt>${escapeHtml(k)}</dt><dd>${v}</dd></div>`).join('') +
+      '</dl>';
+  }
+
+  function outorgaHtml() {
+    const custom = f('poderesCustom');
+    if (custom) {
+      return custom.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
+        .map((p) => `<p class="esc-outorga">${escapeHtml(p)}</p>`).join('');
+    }
+
+    const modalidade = f('poderes') || PODERES[0];
+    // "Ad negotia (extrajudicial)" contém "judicia" — daí a âncora no início.
+    const judicial = /^ad judicia/i.test(modalidade);
+    const latim = modalidade.replace(/\s*\(.*\)\s*$/, '').toLowerCase();
+
+    let txt = 'Pelo presente instrumento particular de mandato, o(a) outorgante nomeia e constitui ' +
+      'seu bastante procurador o(a) outorgado(a) acima qualificado(a), a quem confere os poderes ' +
+      `da cláusula <em>${escapeHtml(latim)}</em>`;
+
+    txt += judicial
+      ? ', para o foro em geral, em qualquer juízo, instância ou tribunal, podendo propor as ações ' +
+        'competentes e defendê-lo(a) nas contrárias, seguindo umas e outras até final decisão'
+      : ', para representá-lo(a) perante repartições públicas, órgãos da administração direta e ' +
+        'indireta, instituições financeiras e pessoas jurídicas de direito privado, praticando ' +
+        'todos os atos necessários ao fiel cumprimento deste mandato';
+
+    const especiais = poderesEspeciaisFrase();
+    if (especiais) {
+      txt += `, bem como os poderes especiais para ${escapeHtml(especiais)}` +
+        (judicial ? ' (art. 105 do Código de Processo Civil)' : '');
+    }
+
+    const sub = f('substabelecimento');
+    if (sub) {
+      txt += /vedado/i.test(sub)
+        ? ', vedado o substabelecimento'
+        : `, podendo substabelecer esta procuração, ${escapeHtml(sub.toLowerCase())}`;
+    }
+
+    let html = `<p class="esc-outorga">${txt}.</p>`;
+
+    const finalidade = f('finalidade');
+    if (finalidade) {
+      html += `<p class="esc-outorga">Os poderes ora conferidos destinam-se especificamente a ` +
+        `${escapeHtml(stripEndPunct(finalidade))}.</p>`;
+    }
+    return html;
+  }
+
+  function validadeHtml() {
+    const v = stripEndPunct(f('validade'));
+    if (!v) return '';
+    // \s no lugar de \b: "até" termina em caractere acentuado, que não é
+    // limite de palavra para o motor de regex.
+    const preposto = /^(por|pelo|pela|até|enquanto|durante|com)\s/i.test(v) ? '' : 'por ';
+    return `<p class="esc-validade">Esta procuração vigora ${preposto}${escapeHtml(v)}.</p>`;
+  }
+
+  function testemunhasHtml() {
+    const linhas = (state.fields.testemunhas || '').split('\n')
+      .map((l) => l.trim()).filter(Boolean);
+    if (!linhas.length) return '';
+    const itens = linhas.map((line) => {
+      const m = line.match(/^(.*)(?:\s+[—–-]\s+|\s*\|\s*|\t+)(.*)$/);
+      const nome = m && m[1].trim() ? m[1].trim() : line;
+      const doc = m && m[1].trim() ? m[2].trim() : '';
+      return `<div class="esc-testemunha"><span class="esc-assin-linha"></span>` +
+        `<span class="esc-testemunha-nome">${escapeHtml(nome)}</span>` +
+        (doc ? `<span class="esc-testemunha-doc">${escapeHtml(doc)}</span>` : '') +
+        '</div>';
+    }).join('');
+    return '<div class="esc-testemunhas"><span class="esc-testemunhas-label">Testemunhas</span>' +
+      `<div class="esc-testemunhas-lista">${itens}</div></div>`;
+  }
+
+  // Fecho da procuração: local, data e a assinatura do OUTORGANTE (o advogado
+  // não assina o instrumento que o constitui).
+  function procuracaoClosingHtml() {
+    const out = [];
+    const local = f('local');
+    if (local) out.push(`<p class="esc-local-data">${escapeHtml(local)}, ${dateExtenso()}.</p>`);
+
+    const nome = f('outorgante');
+    const papel = f('representante') ? 'Outorgante, por seu representante legal' : 'Outorgante';
+    out.push('<div class="esc-assinaturas esc-assinatura-outorgante">' +
+      '<span class="esc-assin-linha"></span>' +
+      (nome ? `<span class="esc-assin-nome">${escapeHtml(nome)}</span>` : '') +
+      `<span class="esc-assin-oab">${papel}</span></div>`);
+
+    out.push(testemunhasHtml());
+    return `<div class="esc-closing">${out.join('')}</div>`;
+  }
+
   // ===========================================================================
   // 5. Render da folha A4
   // ===========================================================================
@@ -509,6 +720,12 @@
       }
     }
 
+    if (doc === 'procuracao') {
+      out.push(`<h1 class="esc-doc-title">${procuracaoTitulo()}</h1>`);
+      out.push(partesHtml());
+      out.push(outorgaHtml());
+    }
+
     if (doc === 'proposta') {
       out.push('<h1 class="esc-doc-title">Proposta de honorários advocatícios</h1>');
       if (f('destinatario')) out.push(`<p class="esc-destinatario">Ao(À): ${escapeHtml(f('destinatario'))}</p>`);
@@ -533,7 +750,8 @@
     if (doc === 'peticao' && f('valorCausa')) {
       out.push(`<p class="esc-valor-causa">Dá-se à causa o valor de ${escapeHtml(f('valorCausa'))}.</p>`);
     }
-    out.push(assinaturaHtml());
+    if (doc === 'procuracao') out.push(validadeHtml());
+    out.push(doc === 'procuracao' ? procuracaoClosingHtml() : assinaturaHtml());
     out.push(rodapeHtml());
 
     sheet.innerHTML = out.join('');
@@ -558,7 +776,7 @@
   }
 
   function generateFilename() {
-    const base = f('referencia') || f('cliente') || f('consulente') || f('destinatario') || f('titulo') || 'documento';
+    const base = f('referencia') || f('cliente') || f('consulente') || f('outorgante') || f('destinatario') || f('titulo') || 'documento';
     return `${f('data') || todayISO()}-${state.doc}-${slugify(base) || 'documento'}.md`;
   }
 
@@ -755,7 +973,7 @@
   }
 
   function saveClienteAtual() {
-    const nome = f('cliente') || f('consulente');
+    const nome = f('cliente') || f('consulente') || f('outorgante');
     if (!nome) return;
     const clientes = readClientes();
     const qual = f('qualificacao');
@@ -767,7 +985,7 @@
   }
 
   function maybeFillQualificacao() {
-    const nome = f('cliente');
+    const nome = f('cliente') || f('outorgante');
     if (!nome || f('qualificacao')) return;
     const clientes = readClientes();
     if (clientes[nome]) {
@@ -1053,15 +1271,17 @@
   // 11. Slash menu
   // ===========================================================================
 
+  // hideFor: tipos de documento em que o bloco não faz sentido (a procuração
+  // não tem abertura nem pedidos — a outorga vem dos campos).
   const SLASH_ITEMS = [
-    { label: 'Abertura (dos campos)', hint: 'parágrafo inicial', cmd: 'abertura' },
+    { label: 'Abertura (dos campos)', hint: 'parágrafo inicial', cmd: 'abertura', hideFor: ['procuracao'] },
     { label: 'Seção', hint: '## I — SEÇÃO', cmd: 'h2' },
     { label: 'Subseção', hint: '###', cmd: 'h3' },
     { label: 'Citação longa', hint: 'recuada', cmd: 'quote' },
     { label: 'Nota lateral', hint: 'sidenote — ^[texto]', cmd: 'nota' },
     { label: 'Jurisprudência', hint: 'trecho + referência', cmd: 'jurisprudencia' },
     { label: 'Dispositivo legal', hint: 'art. + diploma', cmd: 'dispositivo' },
-    { label: 'Pedidos', hint: '(i), (ii)…', cmd: 'pedidos' },
+    { label: 'Pedidos', hint: '(i), (ii)…', cmd: 'pedidos', hideFor: ['procuracao'] },
     { label: 'Lista', hint: 'bullet', cmd: 'ul' },
     { label: 'Lista numerada', hint: '1.', cmd: 'ol' },
     { label: 'Régua', hint: '---', cmd: 'hr' },
@@ -1098,9 +1318,10 @@
   }
 
   function filteredSlashItems() {
+    const items = SLASH_ITEMS.filter(i => !(i.hideFor || []).includes(state.doc));
     const q = getSlashQuery().toLowerCase();
-    if (!q) return SLASH_ITEMS;
-    return SLASH_ITEMS.filter(i =>
+    if (!q) return items;
+    return items.filter(i =>
       i.label.toLowerCase().includes(q) || i.hint.toLowerCase().includes(q) || i.cmd.toLowerCase().includes(q)
     );
   }
@@ -1359,7 +1580,7 @@
 
   function draftTitle(d) {
     const fl = d.fields || {};
-    return fl.referencia || fl.tituloPeca || fl.cliente || fl.consulente || fl.destinatario || fl.titulo || '';
+    return fl.referencia || fl.tituloPeca || fl.cliente || fl.consulente || fl.outorgante || fl.destinatario || fl.titulo || '';
   }
 
   function showDraftsModal() {

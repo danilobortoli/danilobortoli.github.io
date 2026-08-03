@@ -49,6 +49,8 @@ body,
    de parágrafos justificados sai esticada. */
 .esc-body { text-align: justify; }
 .esc-body p,
+.esc-outorga,
+.esc-partes dd,
 .esc-enderecamento,
 .esc-destinatario,
 .esc-ref { text-align-last: left; }
@@ -58,6 +60,8 @@ body,
 .esc-closing,
 .esc-quadro,
 .esc-ementa,
+.esc-testemunha,
+.esc-partes > div,
 .esc-parecer-meta { break-inside: avoid; }
 
 /* Título de seção nunca fica órfão no fim da página. */
