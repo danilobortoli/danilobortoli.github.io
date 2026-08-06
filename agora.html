@@ -6,10 +6,13 @@ title: Agora
 {%- assign a = site.data.agora -%}
 
 <section class="agora-head">
-  <p class="eyebrow">Agora · página viva</p>
-  <h1 class="page-title">Agora</h1>
-  <p class="page-lede">O que estou fazendo, lendo e ouvindo neste momento. Atualizada quando algo muda.</p>
-  <p class="agora-stamp">Atualizada em {{ a.atualizada_em }} · {{ a.local }}</p>
+  {% include ornamento-parede.html %}
+  <div class="agora-head-text">
+    <p class="eyebrow">Agora · página viva</p>
+    <h1 class="page-title">Agora</h1>
+    <p class="page-lede">O que estou fazendo, lendo e ouvindo neste momento. Atualizada quando algo muda.</p>
+    <p class="agora-stamp">Atualizada em {{ a.atualizada_em }} · {{ a.local }}</p>
+  </div>
 </section>
 
 {% if a.advocacia and a.advocacia != "" or a.escrevendo and a.escrevendo != "" %}

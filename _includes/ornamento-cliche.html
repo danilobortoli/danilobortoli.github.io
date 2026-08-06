@@ -1,0 +1,36 @@
+{%- comment -%}
+  Ornamento «clichê» — meia-tinta em pontos, corpo iluminado e órbitas.
+  Sobre: na coluna da direita, na altura do primeiro parágrafo. Ocupa a
+  margem que já é reservada às sidenotes, então não briga com o texto.
+  Sistema Tufte-Bortoli · projeto «Ornamentos em contexto» (2b).
+{%- endcomment -%}
+<figure class="ornamento ornamento--cliche" role="presentation">
+  <svg viewBox="0 0 476 340" width="100%" aria-hidden="true" focusable="false">
+    <defs>
+      <pattern id="orn-cliche-pontos" width="7" height="7" patternUnits="userSpaceOnUse">
+        <circle cx="3.5" cy="3.5" r="2.4" fill="#f1ede4"></circle>
+      </pattern>
+      <radialGradient id="orn-cliche-luz" cx="0.36" cy="0.32" r="0.72">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="1"></stop>
+        <stop offset="52%" stop-color="#ffffff" stop-opacity="0.55"></stop>
+        <stop offset="100%" stop-color="#000000" stop-opacity="0"></stop>
+      </radialGradient>
+      <mask id="orn-cliche-m-luz">
+        <rect width="476" height="340" fill="url(#orn-cliche-luz)"></rect>
+      </mask>
+      <mask id="orn-cliche-m-corpo">
+        <circle cx="214" cy="150" r="98" fill="#ffffff"></circle>
+      </mask>
+    </defs>
+    <rect width="476" height="340" fill="#16150f"></rect>
+    <g mask="url(#orn-cliche-m-corpo)">
+      <rect width="476" height="340" fill="url(#orn-cliche-pontos)" mask="url(#orn-cliche-m-luz)"></rect>
+    </g>
+    <ellipse cx="214" cy="152" rx="176" ry="42" fill="none" stroke="#f1ede4" stroke-width="1.2" transform="rotate(-13 214 152)"></ellipse>
+    <ellipse cx="214" cy="152" rx="152" ry="34" fill="none" stroke="#f1ede4" stroke-width="1.2" transform="rotate(-13 214 152)"></ellipse>
+    <ellipse cx="214" cy="152" rx="132" ry="27" fill="none" stroke="var(--color-accent, #d91f5d)" stroke-width="1.4" transform="rotate(-13 214 152)"></ellipse>
+    <path d="M0 262 Q60 250 120 262 T240 262 T360 262 T480 262 L480 340 L0 340 Z" fill="#16150f"></path>
+    <path d="M0 262 Q60 250 120 262 T240 262 T360 262 T480 262" fill="none" stroke="#4a4740" stroke-width="1"></path>
+    <path d="M0 286 Q70 274 140 286 T280 286 T420 286" fill="none" stroke="#3a382f" stroke-width="1"></path>
+  </svg>
+</figure>

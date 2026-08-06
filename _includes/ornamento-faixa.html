@@ -1,0 +1,37 @@
+{%- comment -%}
+  Ornamento «grade», variante faixa — sangria total.
+  Home: entre a assinatura e o índice. Cumpre a função de régua (separa sem
+  desenhar uma linha) e o módulo magenta cai fora do centro, puxando o olho
+  para a direita, onde o índice começa.
+
+  Duas variantes: a larga (12 módulos) e a mini (3 módulos), trocadas por
+  media query em site.css. Em telas estreitas o corte central da larga
+  jogaria o módulo magenta para fora da tela — daí a mini, que traz o acento
+  já colado à direita.
+
+  Sistema Tufte-Bortoli · projeto «Ornamentos em contexto» (2a).
+{%- endcomment -%}
+<div class="ornamento ornamento--faixa" role="presentation">
+  <svg class="orn-faixa-larga" viewBox="0 0 1248 104" preserveAspectRatio="xMidYMid slice"
+       width="100%" height="100%" aria-hidden="true" focusable="false">
+    <defs>
+      <pattern id="orn-faixa-grade" width="104" height="104" patternUnits="userSpaceOnUse">
+        <rect width="104" height="104" fill="#111111"></rect>
+        <circle cx="52" cy="52" r="50.5" fill="#fffdf7"></circle>
+      </pattern>
+    </defs>
+    <rect width="1248" height="104" fill="url(#orn-faixa-grade)"></rect>
+    <circle cx="884" cy="52" r="50.5" fill="var(--color-accent, #d91f5d)"></circle>
+  </svg>
+  <svg class="orn-faixa-estreita" viewBox="0 0 312 104" preserveAspectRatio="xMidYMid slice"
+       width="100%" height="100%" aria-hidden="true" focusable="false">
+    <defs>
+      <pattern id="orn-faixa-grade-mini" width="104" height="104" patternUnits="userSpaceOnUse">
+        <rect width="104" height="104" fill="#111111"></rect>
+        <circle cx="52" cy="52" r="50.5" fill="#fffdf7"></circle>
+      </pattern>
+    </defs>
+    <rect width="312" height="104" fill="url(#orn-faixa-grade-mini)"></rect>
+    <circle cx="260" cy="52" r="50.5" fill="var(--color-accent, #d91f5d)"></circle>
+  </svg>
+</div>

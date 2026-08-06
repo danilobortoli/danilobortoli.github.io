@@ -1,0 +1,34 @@
+{%- comment -%}
+  Ornamento «parede» — desenho de parede à LeWitt, traçado uma vez ao carregar.
+  Agora: bloco de abertura à esquerda do texto. A página do «agora» é a única
+  com movimento, o que a marca como a viva. Em telas estreitas o quadrado vira
+  faixa horizontal acima do texto (via preserveAspectRatio="slice").
+  Sistema Tufte-Bortoli · projeto «Ornamentos em contexto» (2c).
+{%- endcomment -%}
+<div class="ornamento ornamento--parede" role="presentation">
+  {%- comment -%}
+    yMax: no desktop o bloco é quadrado e o alinhamento não tem efeito; na
+    faixa estreita ele ancora o corte embaixo, onde está o módulo magenta.
+  {%- endcomment -%}
+  <svg viewBox="0 0 520 520" preserveAspectRatio="xMidYMax slice"
+       width="100%" height="100%" fill="none" stroke="#f1ede4" stroke-width="1.3"
+       aria-hidden="true" focusable="false">
+    <rect width="520" height="520" fill="#111111" stroke="none"></rect>
+    <path d="M0 96 Q130 16 260 96 T520 96"></path>
+    <path d="M0 246 Q130 336 260 246 T520 246"></path>
+    <path d="M0 414 Q130 334 260 414 T520 414"></path>
+    <path d="M104 0 Q186 130 104 260 T104 520"></path>
+    <path d="M364 0 Q282 130 364 260 T364 520"></path>
+    <path d="M0 520 A520 520 0 0 1 520 0"></path>
+    <path d="M0 0 A340 340 0 0 0 340 340"></path>
+    <path d="M520 130 A260 260 0 0 1 260 390"></path>
+    <line class="orn-tracejado" x1="0" y1="470" x2="470" y2="0"></line>
+    <line class="orn-tracejado" x1="60" y1="0" x2="520" y2="440"></line>
+    <line class="orn-tracejado" x1="0" y1="182" x2="520" y2="338"></line>
+    <line x1="182" y1="30" x2="182" y2="120"></line>
+    <line x1="286" y1="400" x2="286" y2="490"></line>
+    <line x1="30" y1="312" x2="120" y2="312"></line>
+    <line x1="400" y1="208" x2="490" y2="208"></line>
+    <circle cx="390" cy="390" r="64" stroke="var(--color-accent, #d91f5d)"></circle>
+  </svg>
+</div>
