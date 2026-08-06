@@ -661,6 +661,10 @@ a:hover {
    AGORA
    ============================================================ */
 .agora-head {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
   padding: 80px 0 32px;
   border-bottom: 1px solid var(--color-border);
 }
@@ -1333,3 +1337,88 @@ figcaption {
   line-height: 1.6;
 }
 .page-generic a { color: var(--color-accent); }
+
+/* ============================================================
+   ORNAMENTOS
+   Três peças do projeto «Ornamentos em contexto» (Tufte-Bortoli):
+   grade/faixa na home, clichê na margem do Sobre, parede no Agora.
+   O acento magenta vem de --color-accent para acompanhar o tema.
+   ============================================================ */
+.ornamento { line-height: 0; }
+.ornamento svg { display: block; }
+
+/* ---- 2a · faixa de sangria total (Home, entre assinatura e índice) ---- */
+.ornamento--faixa {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  height: clamp(104px, 9vw, 132px);
+  overflow: hidden;
+}
+.ornamento--faixa svg { width: 100%; height: 100%; }
+.ornamento--faixa .orn-faixa-estreita { display: none; }
+
+/* A faixa é a régua: dispensa o filete que fecharia a introdução. */
+.home-intro:has(+ .ornamento--faixa) { border-bottom: none; }
+
+/* Abaixo de 640px a faixa larga esconderia o módulo magenta no corte
+   central, então entra a variante mini (3 módulos, acento à direita). */
+@media (max-width: 640px) {
+  .ornamento--faixa { height: min(33.33vw, 132px); }
+  .ornamento--faixa .orn-faixa-larga { display: none; }
+  .ornamento--faixa .orn-faixa-estreita { display: block; }
+}
+
+/* ---- 2b · clichê na margem do Sobre ---- */
+.ornamento--cliche {
+  margin: 22px 0 0;
+  max-width: 300px;
+  padding: 14px 14px 10px;
+  background: #fffdf7;
+  border: 1px solid var(--color-border);
+}
+.ornamento--cliche svg { width: 100%; height: auto; }
+
+/* ---- 2c · parede (LeWitt) na abertura do Agora ---- */
+.ornamento--parede {
+  width: 320px;
+  height: 320px;
+  overflow: hidden;
+}
+.ornamento--parede svg { width: 100%; height: 100%; }
+
+@keyframes ornamento-traco {
+  from { stroke-dashoffset: 1400; }
+  to   { stroke-dashoffset: 0; }
+}
+.ornamento--parede path,
+.ornamento--parede line,
+.ornamento--parede circle {
+  stroke-dasharray: 1400;
+  animation: ornamento-traco 3.2s ease-out forwards;
+}
+.ornamento--parede .orn-tracejado {
+  stroke-dasharray: 5 9;
+  animation: none;
+}
+
+@media (max-width: 900px) {
+  .agora-head { grid-template-columns: 240px minmax(0, 1fr); gap: 32px; }
+  .ornamento--parede { width: 240px; height: 240px; }
+}
+
+/* Em telas estreitas o quadrado vira faixa horizontal acima do texto. */
+@media (max-width: 760px) {
+  .agora-head { grid-template-columns: 1fr; gap: 28px; }
+  .ornamento--parede { width: 100%; height: 132px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ornamento--parede path,
+  .ornamento--parede line,
+  .ornamento--parede circle {
+    stroke-dasharray: none;
+    animation: none;
+  }
+  .ornamento--parede .orn-tracejado { stroke-dasharray: 5 9; }
+}
