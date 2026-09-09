@@ -1,6 +1,6 @@
 ---
 title: A volta dos que nunca foram
-date: 2026-09-09
+date: 2026-09-09 16:35:16 -0300
 ---
 Nova do The War On Drugs em alguns anos.
 
