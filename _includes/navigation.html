@@ -9,6 +9,7 @@
       <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active" aria-current="page"{% endif %}>Início</a>
       <a href="{{ '/escrita.html' | relative_url }}" {% if page.url == '/escrita.html' or page.layout == 'post' %}class="active" aria-current="page"{% endif %}>Escrita</a>
       <a href="{{ '/notas/' | relative_url }}" {% if page.url contains '/notas/' or page.layout == 'nota' %}class="active" aria-current="page"{% endif %}>Notas</a>
+      <a href="{{ '/artigos/' | relative_url }}" {% if page.url contains '/artigos/' or page.layout == 'artigo' %}class="active" aria-current="page"{% endif %}>Artigos</a>
       <a href="{{ '/advocacia.html' | relative_url }}" {% if page.url == '/advocacia.html' %}class="active" aria-current="page"{% endif %}>Advocacia</a>
       <a href="{{ '/agora.html' | relative_url }}" {% if page.url == '/agora.html' %}class="active" aria-current="page"{% endif %}>Agora</a>
       <a href="{{ '/sobre.html' | relative_url }}" {% if page.url == '/sobre.html' %}class="active" aria-current="page"{% endif %}>Sobre</a>

@@ -1,0 +1,526 @@
+/* ============================================================
+   Artigos "vintage" — página composta à maneira dos periódicos
+   científicos antigos (LuaLaTeX + fiziko, via Foadsf/vintage-latex
+   e jemmybutton/fiziko). Papel quente, tinta amaciada, EB Garamond
+   com algarismos antigos, duas colunas com filete, seções em
+   versaletes espaçados, figuras "Fig. 1." em itálico, pranchas.
+   Depende de tokens.css + site.css (carregados antes).
+   ============================================================ */
+
+:root {
+  --art-paper:       #f3ecda;
+  --art-paper-deep:  #eadfc6;
+  --art-paper-edge:  #d9cdb0;
+  --art-ink:         #2a2521;
+  --art-ink-soft:    #4a4238;
+  --art-ink-faint:   #7d7262;
+  --art-rule:        #6d6353;
+  --art-font: "EB Garamond", "Cormorant Garamond", Garamond, "et-book", "Palatino Linotype", Georgia, serif;
+}
+
+/* ------------------------------------------------------------
+   Moldura na página do site
+   ------------------------------------------------------------ */
+.artigo-back { padding: 36px 0 0; }
+.artigo-back a {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* ------------------------------------------------------------
+   A folha
+   ------------------------------------------------------------ */
+.artigo-paper {
+  position: relative;
+  max-width: 960px;
+  margin: 28px auto 0;
+  padding: 64px 72px 60px;
+  background:
+    radial-gradient(ellipse at 18% 8%, rgba(255,255,255,0.35), transparent 55%),
+    radial-gradient(ellipse at 85% 100%, rgba(120, 90, 40, 0.10), transparent 60%),
+    var(--art-paper);
+  color: var(--art-ink);
+  font-family: var(--art-font);
+  font-size: 1.04rem;
+  line-height: 1.42;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  font-feature-settings: "kern", "liga", "onum";
+  font-kerning: normal;
+  box-shadow:
+    0 0 0 1px var(--art-paper-edge),
+    0 1px 2px rgba(40, 30, 10, 0.10),
+    0 14px 40px rgba(60, 45, 15, 0.16);
+  -webkit-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+}
+.artigo-paper ::selection { background: rgba(120, 90, 40, 0.22); }
+
+/* Links na folha: tinta, sem magenta. */
+.artigo-paper a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--art-ink-faint);
+}
+.artigo-paper a:hover { border-bottom-style: solid; text-decoration: none; }
+
+/* Cabeçalho corrido (opcional: série / número · mês) */
+.artigo-running {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: -28px 0 30px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--art-rule);
+  font-size: 0.72rem;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.14em;
+  color: var(--art-ink-soft);
+}
+
+/* Cabeçalho da matéria */
+.artigo-head {
+  text-align: center;
+  margin: 0 auto 30px;
+  max-width: 34em;
+}
+.artigo-kicker {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.22em;
+  color: var(--art-ink-soft);
+}
+.artigo-title {
+  margin: 0;
+  font-family: var(--art-font);
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(1.7rem, 3.2vw, 2.15rem);
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  color: var(--art-ink);
+}
+.artigo-subtitle {
+  margin: 6px 0 0;
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--art-ink-soft);
+}
+.artigo-rule {
+  width: 44%;
+  min-width: 140px;
+  margin: 18px auto 0;
+  border: 0;
+  border-top: 1px solid var(--art-rule);
+}
+
+/* ------------------------------------------------------------
+   Corpo em colunas
+   ------------------------------------------------------------ */
+.artigo-body {
+  columns: 2;
+  column-gap: 48px;
+  column-rule: 1px solid var(--art-rule);
+  column-fill: balance;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  orphans: 2;
+  widows: 2;
+}
+.formato-coluna .artigo-body,
+.formato-prancha .artigo-body {
+  columns: 1;
+  max-width: 38em;
+  margin: 0 auto;
+}
+.formato-prancha .artigo-body { max-width: 100%; }
+
+.artigo-body p {
+  margin: 0;
+  text-indent: 1.35em;
+}
+.artigo-body > p:first-child,
+.artigo-body h2 + p,
+.artigo-body h3 + p,
+.artigo-body h4 + p,
+.artigo-body figure + p,
+.artigo-body .art-ornament + p,
+.artigo-body table + p,
+.artigo-body blockquote + p,
+.artigo-body ul + p,
+.artigo-body ol + p,
+.artigo-body pre + p,
+.artigo-body mjx-container + p { text-indent: 0; }
+.artigo-body p + p { margin-top: 0; }
+
+.artigo-body em { font-style: italic; }
+.artigo-body strong { font-weight: 600; }
+.artigo-body sup { font-size: 0.68em; line-height: 0; vertical-align: 0.55em; }
+
+/* Capitular */
+.has-capitular .artigo-body > p:first-of-type { text-indent: 0; }
+.has-capitular .artigo-body > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.4em;
+  line-height: 0.82;
+  padding: 0.06em 0.08em 0 0;
+  color: var(--art-ink);
+}
+
+/* Seções: versaletes espaçados, centrados (“Of the Cart”) */
+.artigo-body h2 {
+  margin: 1.5em 0 0.55em;
+  font-family: var(--art-font);
+  font-weight: 500;
+  font-style: normal;
+  font-size: 0.86rem;
+  line-height: 1.3;
+  text-align: center;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.2em;
+  color: var(--art-ink);
+  break-after: avoid;
+  page-break-after: avoid;
+}
+.artigo-body h2:first-child { margin-top: 0; }
+.artigo-body h3 {
+  margin: 1.2em 0 0.4em;
+  font-family: var(--art-font);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1rem;
+  text-align: center;
+  color: var(--art-ink);
+  break-after: avoid;
+}
+.artigo-body h4 {
+  margin: 1em 0 0.3em;
+  font-family: var(--art-font);
+  font-weight: 500;
+  font-style: normal;
+  font-size: 0.8rem;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.12em;
+  text-align: left;
+}
+
+/* Listas, citações, código, réguas */
+.artigo-body ul, .artigo-body ol {
+  margin: 0.4em 0 0.6em;
+  padding-left: 1.6em;
+}
+.artigo-body li { margin: 0 0 0.15em; }
+.artigo-body blockquote {
+  margin: 0.6em 1.4em 0.8em;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-style: italic;
+  font-size: 0.95em;
+  color: var(--art-ink-soft);
+}
+.artigo-body blockquote p { text-indent: 0; }
+.artigo-body hr {
+  width: 30%;
+  margin: 1.2em auto;
+  border: 0;
+  border-top: 1px solid var(--art-rule);
+}
+.artigo-body pre, .artigo-body code {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  background: transparent;
+}
+.artigo-body pre {
+  padding: 0.5em 0.8em;
+  border-left: 1px solid var(--art-rule);
+  overflow-x: auto;
+}
+.artigo-body img { max-width: 100%; height: auto; }
+
+/* Ornamento (fleuron) */
+.art-ornament {
+  text-align: center;
+  margin: 0.9em 0;
+  font-size: 1.15rem;
+  color: var(--art-ink-soft);
+  break-inside: avoid;
+}
+
+/* ------------------------------------------------------------
+   Figuras e pranchas
+   ------------------------------------------------------------ */
+.art-fig {
+  --art-fig-w: 100%;
+  margin: 1em 0 1.1em;
+  text-align: center;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.art-fig img {
+  display: block;
+  width: var(--art-fig-w);
+  max-width: 100%;
+  margin: 0 auto;
+  mix-blend-mode: multiply;
+}
+.art-fig figcaption,
+.art-plate figcaption {
+  font-family: var(--art-font);
+  margin-top: 0.45em;
+  font-style: italic;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--art-ink-soft);
+  text-align: center;
+  text-indent: 0;
+}
+.art-fig-num {
+  font-style: normal;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+}
+
+.art-plate {
+  column-span: all;
+  margin: 0.6em 0 1.6em;
+  text-align: center;
+  break-inside: avoid;
+}
+.art-plate-head { margin: 0 0 14px; font-family: var(--art-font); }
+.art-plate-num {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.22em;
+  color: var(--art-ink-soft);
+}
+.art-plate-title {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+.art-plate-sub {
+  margin: 4px 0 0;
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--art-ink-soft);
+}
+.art-plate img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  mix-blend-mode: multiply;
+}
+.art-plate + p { text-indent: 0; }
+
+/* ------------------------------------------------------------
+   Tabelas (à maneira das tábuas de logaritmos)
+   ------------------------------------------------------------ */
+.artigo-body table {
+  margin: 0.7em auto 1em;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  font-variant-numeric: lining-nums tabular-nums;
+  border-top: 1px solid var(--art-ink);
+  border-bottom: 1px solid var(--art-ink);
+  break-inside: avoid;
+}
+.artigo-body th {
+  padding: 4px 10px 3px;
+  font-weight: 500;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.08em;
+  text-align: center;
+  border-bottom: 1px solid var(--art-rule);
+}
+.artigo-body td {
+  padding: 2px 10px;
+  text-align: right;
+  white-space: nowrap;
+}
+.artigo-body td:first-child, .artigo-body th:first-child { text-align: left; }
+
+/* ------------------------------------------------------------
+   Equações (MathJax) e notas de rodapé
+   ------------------------------------------------------------ */
+.artigo-body mjx-container[display="true"] {
+  margin: 0.55em 0 0.6em !important;
+  break-inside: avoid;
+}
+.artigo-body mjx-container { color: var(--art-ink); }
+
+.artigo-paper .footnotes {
+  column-span: all;
+  margin-top: 2em;
+  padding-top: 0.5em;
+  width: 40%;
+  min-width: 220px;
+  border-top: 1px solid var(--art-rule);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  text-align: left;
+}
+.artigo-paper .footnotes ol {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.artigo-paper .footnotes li { margin: 0 0 0.25em; }
+.artigo-paper .footnotes p { text-indent: 0; display: inline; }
+.artigo-paper .footnotes .reversefootnote { border: 0; margin-left: 0.3em; color: var(--art-ink-faint); }
+.artigo-paper .footnote,
+.artigo-paper .art-fnref a { border: 0; }
+
+/* ------------------------------------------------------------
+   Rodapé da matéria
+   ------------------------------------------------------------ */
+.artigo-continua {
+  margin: 2.4em 0 0;
+  text-align: center;
+  font-size: 0.66rem;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.24em;
+  color: var(--art-ink-soft);
+}
+
+.artigo-colofao {
+  max-width: 960px;
+  margin: 18px auto 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  text-align: center;
+}
+.artigo-colofao a { color: var(--color-accent); }
+
+/* ------------------------------------------------------------
+   Índice das matérias (artigos.html)
+   ------------------------------------------------------------ */
+.artigo-toc { max-width: 40em; margin: 0 auto; }
+.artigo-toc-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin: 0 0 0.55em;
+  color: inherit;
+  border: 0 !important;
+  text-decoration: none;
+}
+.artigo-toc-item:hover .artigo-toc-title { text-decoration: underline; text-underline-offset: 0.15em; }
+.artigo-toc-num {
+  flex: 0 0 2.4em;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--art-ink-soft);
+}
+.artigo-toc-title { flex: 0 1 auto; }
+.artigo-toc-sub {
+  display: block;
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--art-ink-soft);
+}
+.artigo-toc-leader {
+  flex: 1 1 1em;
+  min-width: 1.5em;
+  border-bottom: 1px dotted var(--art-ink-faint);
+  transform: translateY(-0.28em);
+}
+.artigo-toc-date {
+  flex: 0 0 auto;
+  font-size: 0.86rem;
+  color: var(--art-ink-soft);
+  white-space: nowrap;
+}
+.artigo-toc-empty {
+  text-align: center;
+  font-style: italic;
+  color: var(--art-ink-soft);
+}
+.artigo-toc-nota {
+  margin: 2.2em auto 0;
+  max-width: 34em;
+  font-size: 0.82rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--art-ink-soft);
+}
+
+/* ------------------------------------------------------------
+   Responsivo
+   ------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .artigo-paper { padding: 44px 40px 44px; }
+}
+@media (max-width: 720px) {
+  .artigo-paper {
+    margin-top: 20px;
+    padding: 34px 24px 36px;
+    font-size: 1rem;
+  }
+  .artigo-body { columns: 1; column-rule: none; }
+  .artigo-running { margin-top: -12px; }
+  .artigo-paper .footnotes { width: 100%; }
+  .artigo-toc-item { flex-wrap: wrap; }
+}
+
+/* ------------------------------------------------------------
+   Impressão: só a folha
+   ------------------------------------------------------------ */
+@media print {
+  .site-header, .site-footer, .artigo-back, .artigo-colofao, .post-nav { display: none !important; }
+  .site-main { max-width: none; padding: 0; }
+  .artigo-paper {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background: #fff;
+    color: #000;
+    max-width: none;
+  }
+  .artigo-paper a { border: 0; }
+}
+
+/* ------------------------------------------------------------
+   Figuras SVG inline (gravura) — ver _includes/gravura-defs.html
+   ------------------------------------------------------------ */
+:root { --art-accent: #8a3b3b; }
+.art-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.artigo-body svg,
+.art-fig svg,
+.art-plate svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: visible;
+  color: var(--art-ink);
+  font-family: var(--art-font);
+}
+.art-fig svg { width: var(--art-fig-w); }
+.artigo-body svg text {
+  font-family: var(--art-font);
+  font-style: italic;
+  font-size: 11px;
+  fill: var(--art-ink);
+}
+.artigo-body svg .art-tinta { stroke: var(--art-ink); fill: none; }
+.artigo-body svg .art-rubra { stroke: var(--art-accent); fill: none; }
+.artigo-body svg .art-rubra-cheio { fill: var(--art-accent); }
+.artigo-body svg text.art-rubra { stroke: none; fill: var(--art-accent); }
+.artigo-body svg .art-tracejada { stroke-dasharray: 3 2.5; }
+.artigo-body svg .art-pontilhada { stroke-dasharray: 0.8 2.4; stroke-linecap: round; }
+.artigo-body svg .art-rotulo { font-style: italic; }
+.artigo-body svg .art-rotulo-reto { font-style: normal; font-variant-caps: small-caps; letter-spacing: 0.08em; }
+.artigo-body svg .art-miudo { font-size: 9px; }

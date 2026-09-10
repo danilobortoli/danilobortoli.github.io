@@ -1,0 +1,96 @@
+{% comment %}
+Biblioteca de gravura para figuras SVG inline dos artigos.
+Incluída uma vez por página (layout artigo + editor). Qualquer <svg> escrito
+no markdown pode referenciar estes ids:
+
+  fill="url(#art-hachura)"        hachura diagonal (sombra, corte)
+  fill="url(#art-hachura-fina)"   hachura cerrada
+  fill="url(#art-cruzada)"        hachura cruzada (corte a 45°)
+  fill="url(#art-madeira)"        veios de madeira (cunhas, tábuas)
+  fill="url(#art-ponteado)"       ponteado
+  fill="url(#art-hachura-rubra)"  hachura em tinta vermelha (seções, planos de corte)
+  mask="url(#art-sombra)"         máscara radial: hachura só na sombra da esfera
+  <use href="#art-bola" .../>     esfera sombreada a traço (viewBox 0 0 100 100)
+  <use href="#art-peso" .../>     peso cilíndrico (viewBox 0 0 60 60)
+  marker-end="url(#art-seta)"     ponta de seta fechada (forças)
+  marker-start/end="url(#art-cota-i)/(#art-cota-f)"  cotas com pontas abertas
+  filter="url(#art-traco)"        leve tremor de buril no traço
+
+Classes CSS (em artigo.css): .art-tinta (traço em tinta), .art-rubra (traço
+vermelho), .art-rotulo (rótulo itálico), .art-tracejada (linha tracejada),
+.art-solo (linha de solo com hachura embaixo, via pattern).
+{% endcomment %}
+<svg class="art-defs" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <pattern id="art-hachura" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#2a2521" stroke-width="0.7"/>
+    </pattern>
+    <pattern id="art-hachura-fina" patternUnits="userSpaceOnUse" width="2.6" height="2.6" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="2.6" stroke="#2a2521" stroke-width="0.55"/>
+    </pattern>
+    <pattern id="art-cruzada" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#2a2521" stroke-width="0.6"/>
+      <line x1="0" y1="2.5" x2="5" y2="2.5" stroke="#2a2521" stroke-width="0.6"/>
+    </pattern>
+    <pattern id="art-madeira" patternUnits="userSpaceOnUse" width="90" height="26">
+      <path d="M0 4 C 15 1, 30 8, 45 4 S 75 1, 90 4" fill="none" stroke="#2a2521" stroke-width="0.55"/>
+      <path d="M0 10 C 12 14, 28 7, 45 11 S 78 15, 90 10" fill="none" stroke="#2a2521" stroke-width="0.5"/>
+      <path d="M0 17 C 18 13, 32 21, 48 17 S 72 13, 90 17" fill="none" stroke="#2a2521" stroke-width="0.6"/>
+      <path d="M0 23 C 14 26, 30 20, 46 23 S 76 27, 90 23" fill="none" stroke="#2a2521" stroke-width="0.45"/>
+      <ellipse cx="60" cy="13" rx="9" ry="3" fill="none" stroke="#2a2521" stroke-width="0.45"/>
+      <ellipse cx="60" cy="13" rx="4.5" ry="1.4" fill="none" stroke="#2a2521" stroke-width="0.45"/>
+    </pattern>
+    <pattern id="art-ponteado" patternUnits="userSpaceOnUse" width="4" height="4">
+      <circle cx="1" cy="1" r="0.5" fill="#2a2521"/>
+      <circle cx="3" cy="3" r="0.5" fill="#2a2521"/>
+    </pattern>
+    <pattern id="art-hachura-rubra" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="5" stroke="#8a3b3b" stroke-width="0.6"/>
+    </pattern>
+    <pattern id="art-solo" patternUnits="userSpaceOnUse" width="6" height="7">
+      <line x1="0" y1="7" x2="4" y2="0" stroke="#2a2521" stroke-width="0.6"/>
+    </pattern>
+
+    <radialGradient id="art-sombra-grad" cx="0.36" cy="0.32" r="0.72">
+      <stop offset="0" stop-color="#000"/>
+      <stop offset="0.42" stop-color="#000"/>
+      <stop offset="0.78" stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff"/>
+    </radialGradient>
+    <mask id="art-sombra" maskContentUnits="objectBoundingBox">
+      <rect x="0" y="0" width="1" height="1" fill="url(#art-sombra-grad)"/>
+    </mask>
+
+    <symbol id="art-bola" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="47" fill="url(#art-hachura-fina)" mask="url(#art-sombra)"/>
+      <circle cx="50" cy="50" r="47" fill="url(#art-hachura)" mask="url(#art-sombra)" transform="rotate(90 50 50)" opacity="0.7"/>
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#2a2521" stroke-width="1.4"/>
+    </symbol>
+    <symbol id="art-peso" viewBox="0 0 60 60">
+      <path d="M8 14 v34 a22 6 0 0 0 44 0 v-34" fill="url(#art-hachura)"/>
+      <path d="M8 14 v34 a22 6 0 0 0 44 0 v-34" fill="none" stroke="#2a2521" stroke-width="1.2"/>
+      <ellipse cx="30" cy="14" rx="22" ry="6" fill="#f3ecda" stroke="#2a2521" stroke-width="1.2"/>
+      <path d="M22 9 a8 5 0 0 1 16 0" fill="none" stroke="#2a2521" stroke-width="1.6"/>
+      <line x1="16" y1="20" x2="16" y2="46" stroke="#2a2521" stroke-width="0.5"/>
+      <line x1="20" y1="21" x2="20" y2="48" stroke="#2a2521" stroke-width="0.5"/>
+    </symbol>
+
+    <marker id="art-seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L10 5 L0 9.5 z" fill="#2a2521"/>
+    </marker>
+    <marker id="art-seta-rubra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0.5 L10 5 L0 9.5 z" fill="#8a3b3b"/>
+    </marker>
+    <marker id="art-cota-i" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M9 1 L1 5 L9 9" fill="none" stroke="#2a2521" stroke-width="1"/>
+    </marker>
+    <marker id="art-cota-f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#2a2521" stroke-width="1"/>
+    </marker>
+
+    <filter id="art-traco" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="7" result="ruido"/>
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="0.9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>

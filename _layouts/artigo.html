@@ -1,0 +1,49 @@
+---
+layout: default
+---
+{%- assign formato = page.formato | default: 'colunas' -%}
+
+{% include gravura-defs.html %}
+
+<div class="artigo-back">
+  <a href="{{ '/artigos/' | relative_url }}">← Artigos</a>
+</div>
+
+<article class="artigo-paper formato-{{ formato }}{% if page.capitular %} has-capitular{% endif %}" lang="{{ page.lang | default: site.lang }}">
+
+  {% if page.serie or page.numero %}
+  <header class="artigo-running" aria-label="Cabeçalho corrido">
+    <span>{{ page.serie }}</span>
+    <span>{% if page.numero %}N.º {{ page.numero }}{% endif %}{% if page.numero and page.date %} · {% endif %}{% if page.date %}{{ page.date | date: "%B de %Y" | replace: "January", "janeiro" | replace: "February", "fevereiro" | replace: "March", "março" | replace: "April", "abril" | replace: "May", "maio" | replace: "June", "junho" | replace: "July", "julho" | replace: "August", "agosto" | replace: "September", "setembro" | replace: "October", "outubro" | replace: "November", "novembro" | replace: "December", "dezembro" }}{% endif %}</span>
+  </header>
+  {% endif %}
+
+  <header class="artigo-head">
+    {% if page.capitulo %}<p class="artigo-kicker">{{ page.capitulo }}</p>{% endif %}
+    <h1 class="artigo-title">{{ page.title }}</h1>
+    {% if page.subtitle %}<p class="artigo-subtitle">{{ page.subtitle }}</p>{% endif %}
+    <hr class="artigo-rule">
+  </header>
+
+  <div class="artigo-body">
+    {{ content }}
+  </div>
+
+  {% if page.continua %}
+  <p class="artigo-continua">Continua no próximo número</p>
+  {% endif %}
+</article>
+
+<p class="artigo-colofao">
+  Composto por Danilo Bortoli · {% include data-pt.html date=page.date %} ·
+  <a href="{{ '/' | absolute_url }}">danilobortoli.github.io</a>
+</p>
+
+<nav class="post-nav" aria-label="Navegação entre artigos">
+  <span>
+    {% if page.previous.url %}<a href="{{ page.previous.url | relative_url }}" rel="prev">« {{ page.previous.title }}</a>{% endif %}
+  </span>
+  <span>
+    {% if page.next.url %}<a href="{{ page.next.url | relative_url }}" rel="next">{{ page.next.title }} »</a>{% endif %}
+  </span>
+</nav>

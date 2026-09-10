@@ -1,0 +1,26 @@
+{% comment %}
+Prancha — figura de página inteira que atravessa as duas colunas,
+com cabeçalho "Prancha II" e título, à maneira das gravuras antigas.
+
+Uso:
+{% include prancha.html src="/assets/img/artigos/telescopio.svg" alt="Telescópio de Kepler" num="II" title="O telescópio astronômico de Kepler" caption="o curso dos raios traçado através de duas lentes convexas" %}
+
+Parâmetros:
+- src, alt: (obrigatórios)
+- num: (opcional) numeração da prancha, em romanos
+- title: (opcional) título da prancha
+- caption: (opcional) subtítulo/legenda em itálico
+{% endcomment %}
+<figure class="art-plate">
+  {% if include.num or include.title %}
+  <header class="art-plate-head">
+    {% if include.num %}<p class="art-plate-num">Prancha {{ include.num }}</p>{% endif %}
+    {% if include.title %}<p class="art-plate-title">{{ include.title }}</p>{% endif %}
+    {% if include.caption %}<p class="art-plate-sub">{{ include.caption }}</p>{% endif %}
+  </header>
+  {% endif %}
+  <img src="{{ include.src | relative_url }}" alt="{{ include.alt }}" loading="lazy"/>
+  {% if include.caption and include.num == nil and include.title == nil %}
+  <figcaption>{{ include.caption }}</figcaption>
+  {% endif %}
+</figure>

@@ -13,7 +13,7 @@
 
   const state = {
     draftId: null,         // id do rascunho atual no localStorage
-    doc: 'post',          // 'post' | 'nota' | 'media'
+    doc: 'post',          // 'post' | 'nota' | 'media' | 'artigo'
     mode: 'split',         // 'markdown' | 'split' | 'tufte'
     source: '',
     meta: {
@@ -34,6 +34,7 @@
         capa: '',
         nota: '',
       },
+      artigo: { capitulo: '', serie: '', numero: '', formato: 'colunas', capitular: true, continua: false },
     },
     savedAt: null,
   };
@@ -84,8 +85,29 @@
   /**
    * Converte includes Liquid e footnotes kramdown em HTML inline antes do marked.
    */
+  // LaTeX ($…$ e $$…$$) protegido do marked: caracteres que o markdown
+  // interpretaria (\ _ * ` [ ~ <) viram entidades; o TeX original fica em
+  // data-tex para a volta HTML→markdown (modo Tufte/Papel) e o MathJax lê o
+  // texto já decodificado pelo navegador.
+  function protectTex(tex) {
+    return String(tex)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\\/g, '&#92;').replace(/_/g, '&#95;').replace(/\*/g, '&#42;')
+      .replace(/`/g, '&#96;').replace(/\[/g, '&#91;').replace(/~/g, '&#126;')
+      .replace(/\{/g, '&#123;').replace(/\}/g, '&#125;');
+  }
+  function protectMath(md) {
+    md = md.replace(/\$\$([\s\S]+?)\$\$/g, (_, tex) =>
+      `\n\n<div class="art-math art-math-display" data-tex="${escapeAttr(tex)}">$$${protectTex(tex)}$$</div>\n\n`);
+    md = md.replace(/(^|[^\\$\w])\$([^\n$]+?)\$(?![\w$])/g, (m, pre, tex) =>
+      `${pre}<span class="art-math" data-tex="${escapeAttr(tex)}">$${protectTex(tex)}$</span>`);
+    return md;
+  }
+
   function preprocessMarkdown(md) {
     if (!md) return '';
+
+    md = protectMath(md);
 
     md = md.replace(/\{%\s*include\s+sidenote\.html\s+([^%]+)%\}/g, (_, args) => {
       const a = parseLiquidArgs(args);
@@ -127,13 +149,40 @@
       return `\n\n<figure class="fullwidth"><img src="${escapeAttr(a.src || '')}" alt="${escapeAttr(a.alt || '')}"/>${cap}</figure>\n\n`;
     });
 
-    // Kramdown footnote syntax → Tufte sidenotes
+    // Includes do artigo "vintage" (ver _includes/figura-artigo.html etc.)
+    md = md.replace(/\{%\s*include\s+figura-artigo\.html\s+([^%]+)%\}/g, (_, args) => {
+      const a = parseLiquidArgs(args);
+      const style = a.largura ? ` style="--art-fig-w: ${escapeAttr(a.largura)}%"` : '';
+      const cap = (a.caption || a.num)
+        ? `<figcaption>${a.num ? `<span class="art-fig-num">Fig. ${escapeHtml(a.num)}.</span> ` : ''}${escapeHtml(a.caption || '')}</figcaption>`
+        : '';
+      return `\n\n<figure class="art-fig"${style}><img src="${escapeAttr(a.src || '')}" alt="${escapeAttr(a.alt || '')}"/>${cap}</figure>\n\n`;
+    });
+
+    md = md.replace(/\{%\s*include\s+prancha\.html\s+([^%]+)%\}/g, (_, args) => {
+      const a = parseLiquidArgs(args);
+      let head = '';
+      if (a.num || a.title) {
+        head = '<header class="art-plate-head">' +
+          (a.num ? `<p class="art-plate-num">Prancha ${escapeHtml(a.num)}</p>` : '') +
+          (a.title ? `<p class="art-plate-title">${escapeHtml(a.title)}</p>` : '') +
+          (a.caption ? `<p class="art-plate-sub">${escapeHtml(a.caption)}</p>` : '') +
+          '</header>';
+      }
+      const cap = (!head && a.caption) ? `<figcaption>${escapeHtml(a.caption)}</figcaption>` : '';
+      return `\n\n<figure class="art-plate">${head}<img src="${escapeAttr(a.src || '')}" alt="${escapeAttr(a.alt || '')}"/>${cap}</figure>\n\n`;
+    });
+
+    md = md.replace(/\{%\s*include\s+ornamento-artigo\.html\s*%\}/g, '\n\n<div class="art-ornament" aria-hidden="true">❦</div>\n\n');
+
+    // Kramdown footnote syntax → Tufte sidenotes (post/nota) ou rodapé (artigo)
     const fnDefs = {};
     md = md.replace(/^\[\^([^\]]+)\]:[ \t]+(.*(?:\n[ \t]+.*)*)/gm, (_, name, body) => {
       fnDefs[name] = body.replace(/\n[ \t]+/g, '\n').trim();
       return '';
     });
     let snCounter = 0;
+    const footList = [];
     md = md.replace(/\[\^([^\]]+)\]/g, (_, name) => {
       snCounter++;
       const id = `sn-fn-${snCounter}`;
@@ -144,8 +193,15 @@
       } else {
         content = `<em>nota '${escapeHtml(name)}' não definida</em>`;
       }
+      if (state.doc === 'artigo') {
+        footList.push(`<li id="fn:${snCounter}">${content}</li>`);
+        return `<sup class="art-fnref" id="fnref:${snCounter}"><a href="#fn:${snCounter}">${snCounter}</a></sup>`;
+      }
       return `<label for="${id}" class="margin-toggle sidenote-number"></label><input type="checkbox" id="${id}" class="margin-toggle"/><span class="sidenote">${content}</span>`;
     });
+    if (footList.length) {
+      md = md.trimEnd() + `\n\n<div class="footnotes" role="doc-endnotes"><ol>${footList.join('')}</ol></div>\n`;
+    }
 
     return md;
   }
@@ -161,8 +217,18 @@
     try { renderedHtml = marked.parse(processed); }
     catch (e) { renderedHtml = `<p style="color:var(--color-accent)">Erro ao renderizar: ${escapeHtml(e.message)}</p>`; }
 
+    const isArt = state.doc === 'artigo';
+    const article = $('#ed-preview-article');
+    article.className = 'ed-preview-article' + (isArt
+      ? ` artigo-paper formato-${state.meta.artigo.formato || 'colunas'}${state.meta.artigo.capitular ? ' has-capitular' : ''}`
+      : '');
+    previewContent.className = isArt
+      ? 'ed-preview-content artigo-body'
+      : 'ed-preview-content post-content nota-single-content';
+
     if (state.mode !== 'tufte') {
       previewContent.innerHTML = renderedHtml;
+      if (isArt) scheduleTypeset();
     }
     updatePreviewMeta();
     updateMediaPreview();
@@ -170,7 +236,47 @@
     updateFilenameDisplay();
   }
 
+  // MathJax no preview do artigo (adiado: não recompor a cada tecla)
+  let typesetTimer = null;
+  function scheduleTypeset() {
+    clearTimeout(typesetTimer);
+    typesetTimer = setTimeout(() => {
+      if (state.doc !== 'artigo' || state.mode === 'tufte') return;
+      const MJ = window.MathJax;
+      if (!MJ || !MJ.typesetPromise) return;
+      try {
+        if (MJ.typesetClear) MJ.typesetClear([previewContent]);
+        MJ.typesetPromise([previewContent]).catch(() => {});
+      } catch (e) { /* MathJax ainda carregando */ }
+    }, 350);
+  }
+
+  function updateArtigoPreviewHead() {
+    const isArt = state.doc === 'artigo';
+    const m = state.meta;
+    const a = m.artigo;
+    const running = $('#ed-preview-art-running');
+    const head = $('#ed-preview-art-head');
+    const cont = $('#ed-preview-art-continua');
+    if (!isArt) { running.hidden = true; head.hidden = true; cont.hidden = true; return; }
+    head.hidden = false;
+    $('#ed-preview-art-kicker').textContent = a.capitulo || '';
+    $('#ed-preview-art-title').textContent = m.title || 'Sem título';
+    $('#ed-preview-art-subtitle').textContent = m.subtitle || '';
+    const hasRunning = !!(a.serie || a.numero);
+    running.hidden = !hasRunning;
+    if (hasRunning) {
+      $('#ed-preview-art-serie').textContent = a.serie || '';
+      const d = m.date instanceof Date && !isNaN(m.date) ? m.date : new Date();
+      const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+      $('#ed-preview-art-numero').textContent =
+        (a.numero ? `N.º ${a.numero} · ` : '') + `${months[d.getMonth()]} de ${d.getFullYear()}`;
+    }
+    cont.hidden = !a.continua;
+  }
+
   function updatePreviewMeta() {
+    updateArtigoPreviewHead();
     const m = state.meta;
     const hasHero = state.doc === 'post' && !!m.image;
     htmlEl.setAttribute('data-has-hero', hasHero ? 'true' : 'false');
@@ -186,7 +292,7 @@
 
     // Cabeçalho editorial: kicker · título italic · subtítulo · meta (data · leitura).
     const header = $('#ed-preview-header');
-    header.hidden = false;
+    header.hidden = state.doc === 'artigo';
     if (state.doc === 'post') {
       $('#ed-preview-eyebrow').textContent = m.category ? (m.category + ' · ensaio') : 'ensaio';
       $('#ed-preview-title').textContent = m.title || 'Sem título';
@@ -488,6 +594,9 @@
       const slug = m.title || 'sem-titulo';
       return `${dateForFilename(d)}-${slug}.md`;
     }
+    if (state.doc === 'artigo') {
+      return `${dateForFilename(d)}-${slugify(m.title) || 'artigo'}.md`;
+    }
     const t = (m.title || 'Nota').replace(/\s+/g, '');
     return `${dateForFilename(d)}-${t}.md`;
   }
@@ -512,6 +621,17 @@
       lines.push(`date: ${dateForFilename(d)}`);
       if (m.category) lines.push(`category: ${yamlString(m.category)}`);
       if (m.image) lines.push(`image: ${m.image}`);
+    } else if (state.doc === 'artigo') {
+      const a = m.artigo;
+      if (m.title) lines.push(`title: ${yamlString(m.title)}`);
+      if (m.subtitle) lines.push(`subtitle: ${yamlString(m.subtitle)}`);
+      lines.push(`date: ${dateForFilename(d)}`);
+      if (a.capitulo) lines.push(`capitulo: ${yamlString(a.capitulo)}`);
+      if (a.serie) lines.push(`serie: ${yamlString(a.serie)}`);
+      if (a.numero) lines.push(`numero: ${yamlString(a.numero)}`);
+      lines.push(`formato: ${a.formato || 'colunas'}`);
+      lines.push(`capitular: ${a.capitular ? 'true' : 'false'}`);
+      if (a.continua) lines.push('continua: true');
     } else {
       if (m.title) lines.push(`title: ${yamlString(m.title)}`);
       lines.push(`date: ${dateTimeISO(d)}`);
@@ -622,6 +742,25 @@
     return max + 1;
   }
 
+  function nextFigNum() {
+    const src = state.source || '';
+    let max = 0;
+    (src.match(/\bnum="(\d+)"/g) || []).forEach(m => { const n = parseInt(m.match(/\d+/)[0], 10); if (n > max) max = n; });
+    (src.match(/Fig\.\s*(\d+)\./g) || []).forEach(m => { const n = parseInt(m.match(/\d+/)[0], 10); if (n > max) max = n; });
+    return max + 1;
+  }
+
+  const SVG_FIG_TEMPLATE = (n, caption) => `<figure class="art-fig">
+<svg viewBox="0 0 300 160" role="img" aria-label="${escapeAttr(caption || 'Figura')}">
+  <rect x="20" y="130" width="260" height="9" fill="url(#art-solo)"/>
+  <line x1="20" y1="130" x2="280" y2="130" class="art-tinta" stroke-width="1.2"/>
+  <use href="#art-bola" x="122" y="74" width="56" height="56"/>
+  <line x1="150" y1="102" x2="150" y2="150" class="art-tinta" stroke-width="1.1" marker-end="url(#art-seta)"/>
+  <text x="156" y="152" class="art-rotulo">mg</text>
+</svg>
+<figcaption><span class="art-fig-num">Fig. ${n}.</span> ${escapeHtml(caption || 'Legenda da figura.')}</figcaption>
+</figure>`;
+
   const cmds = {
     bold:    () => insertText('**', '**', 'texto'),
     italic:  () => insertText('*', '*', 'texto'),
@@ -699,6 +838,45 @@
       }
       insertBlock(`{% include figure.html ${args.join(' ')} %}`);
     },
+
+    // ---- Artigo (papel vintage) ----
+    secao:   () => lineWrap('## ', 'Da alavanca'),
+    incipit: () => insertText('<span class="newthought">', '</span>', 'As primeiras palavras'),
+
+    figura: () => {
+      const src = prompt('URL/caminho da imagem (SVG ou traço, fundo transparente):');
+      if (!src) return;
+      const alt = prompt('Texto alternativo:') || '';
+      const caption = prompt('Legenda (itálico, opcional):') || '';
+      const n = nextFigNum();
+      const args = [`src="${src.replace(/"/g, '\\"')}"`, `alt="${alt.replace(/"/g, '\\"')}"`, `num="${n}"`];
+      if (caption) args.push(`caption="${caption.replace(/"/g, '\\"')}"`);
+      insertBlock(`{% include figura-artigo.html ${args.join(' ')} %}`);
+    },
+
+    figsvg: () => {
+      const caption = prompt('Legenda da figura (o SVG de partida é uma esfera sobre o solo; edite as coordenadas):') || '';
+      insertBlock(SVG_FIG_TEMPLATE(nextFigNum(), caption));
+    },
+
+    prancha: () => {
+      const src = prompt('URL/caminho da imagem da prancha:');
+      if (!src) return;
+      const alt = prompt('Texto alternativo:') || '';
+      const num = prompt('Número da prancha (romano, ex.: II):') || '';
+      const title = prompt('Título da prancha (opcional):') || '';
+      const caption = prompt('Subtítulo/legenda em itálico (opcional):') || '';
+      const args = [`src="${src.replace(/"/g, '\\"')}"`, `alt="${alt.replace(/"/g, '\\"')}"`];
+      if (num) args.push(`num="${num.replace(/"/g, '\\"')}"`);
+      if (title) args.push(`title="${title.replace(/"/g, '\\"')}"`);
+      if (caption) args.push(`caption="${caption.replace(/"/g, '\\"')}"`);
+      insertBlock(`{% include prancha.html ${args.join(' ')} %}`);
+    },
+
+    rodape: () => cmds.sidenote(),
+    equacao: () => insertBlock('$$ $1 $$', 'W_1\\, a = W_2\\, b'),
+    tabela: () => insertBlock('| Peso | 1 | 2 | 3 |\n|:-----|--:|--:|--:|\n| 1 | 1 | 2 | 3 |\n| 2 | 2 | 4 | 6 |'),
+    ornamento: () => insertBlock('{% include ornamento-artigo.html %}'),
 
     fullwidth: () => {
       const src = prompt('URL da imagem (full-width):');
@@ -825,8 +1003,82 @@
     });
   }
 
+  function initTurndownArtigo() {
+    if (!turndown || turndown._artigoRules) return;
+    turndown._artigoRules = true;
+
+    turndown.addRule('artMath', {
+      filter: (n) => n.classList && n.classList.contains('art-math'),
+      replacement: (content, node) => {
+        const tex = node.getAttribute('data-tex') || node.textContent.replace(/^\$+|\$+$/g, '');
+        return node.classList.contains('art-math-display') ? `\n\n$$${tex}$$\n\n` : `$${tex}$`;
+      },
+    });
+
+    turndown.addRule('artFootnotesDiv', {
+      filter: (n) => n.classList && n.classList.contains('footnotes'),
+      replacement: () => '',
+    });
+
+    turndown.addRule('artFnref', {
+      filter: (n) => n.tagName === 'SUP' && n.classList && n.classList.contains('art-fnref'),
+      replacement: (content, node) => {
+        const href = (node.querySelector('a') || {}).getAttribute ? node.querySelector('a').getAttribute('href') : '';
+        const id = (href || '').replace('#', '');
+        const li = id ? previewContent.querySelector(`.footnotes li[id="${id}"]`) : null;
+        const text = li ? li.textContent.replace(/\s+/g, ' ').trim() : content.trim();
+        sidenoteCounter.n++;
+        sidenoteCounter.defs.push(`[^${sidenoteCounter.n}]: ${text}`);
+        return `[^${sidenoteCounter.n}]`;
+      },
+    });
+
+    turndown.addRule('artOrnament', {
+      filter: (n) => n.classList && n.classList.contains('art-ornament'),
+      replacement: () => '\n\n{% include ornamento-artigo.html %}\n\n',
+    });
+
+    turndown.addRule('artFigure', {
+      filter: (n) => n.tagName === 'FIGURE' && n.classList && (n.classList.contains('art-fig') || n.classList.contains('art-plate')),
+      replacement: (content, node) => {
+        const isPlate = node.classList.contains('art-plate');
+        const img = node.querySelector(':scope > img');
+        const svg = node.querySelector(':scope > svg');
+        if (svg || !img) {
+          // Figura desenhada em SVG: volta como HTML literal
+          return '\n\n' + node.outerHTML.replace(/\s+contenteditable="[^"]*"/g, '') + '\n\n';
+        }
+        const q = (v) => (v || '').replace(/"/g, '\\"').trim();
+        const args = [`src="${img.getAttribute('src') || ''}"`, `alt="${q(img.getAttribute('alt'))}"`];
+        if (isPlate) {
+          const num = node.querySelector('.art-plate-num');
+          const title = node.querySelector('.art-plate-title');
+          const sub = node.querySelector('.art-plate-sub, figcaption');
+          if (num) args.push(`num="${q(num.textContent.replace(/^Prancha\s*/i, ''))}"`);
+          if (title) args.push(`title="${q(title.textContent)}"`);
+          if (sub) args.push(`caption="${q(sub.textContent)}"`);
+          return `\n\n{% include prancha.html ${args.join(' ')} %}\n\n`;
+        }
+        const cap = node.querySelector('figcaption');
+        const numEl = cap && cap.querySelector('.art-fig-num');
+        if (numEl) args.push(`num="${q(numEl.textContent.replace(/^Fig\.\s*/i, '').replace(/\.$/, ''))}"`);
+        if (cap) {
+          const c = cap.cloneNode(true);
+          const ne = c.querySelector('.art-fig-num');
+          if (ne) ne.remove();
+          const text = c.textContent.replace(/\s+/g, ' ').trim();
+          if (text) args.push(`caption="${q(text)}"`);
+        }
+        const w = node.style && node.style.getPropertyValue('--art-fig-w');
+        if (w) args.push(`largura="${q(w.replace('%', ''))}"`);
+        return `\n\n{% include figura-artigo.html ${args.join(' ')} %}\n\n`;
+      },
+    });
+  }
+
   function htmlToMarkdown(htmlIn) {
     initTurndown();
+    initTurndownArtigo();
     if (!turndown) return state.source;
     sidenoteCounter.n = 0;
     sidenoteCounter.defs = [];
@@ -876,7 +1128,7 @@
     if (mode === 'tufte') {
       render();
       previewContent.setAttribute('contenteditable', 'true');
-      previewContent.setAttribute('data-placeholder', 'Comece a escrever no design Tufte…');
+      previewContent.setAttribute('data-placeholder', state.doc === 'artigo' ? 'Comece a escrever no papel…' : 'Comece a escrever no design Tufte…');
       previewContent.addEventListener('input', scheduleTufteSync);
       previewContent.focus();
     } else {
@@ -944,6 +1196,12 @@
     bindMeta('#meta-media-album', (v) => state.meta.media.album = v);
     bindMeta('#meta-media-capa', (v) => state.meta.media.capa = v);
     bindMeta('#meta-media-nota', (v) => state.meta.media.nota = v);
+    bindMeta('#meta-art-capitulo', (v) => state.meta.artigo.capitulo = v);
+    bindMeta('#meta-art-serie', (v) => state.meta.artigo.serie = v);
+    bindMeta('#meta-art-numero', (v) => state.meta.artigo.numero = v);
+    bindMeta('#meta-art-formato', (v) => state.meta.artigo.formato = v);
+    bindCheck('#meta-art-capitular', (v) => state.meta.artigo.capitular = v);
+    bindCheck('#meta-art-continua', (v) => state.meta.artigo.continua = v);
 
     $$('.ed-toolbar button[data-cmd]').forEach(b => {
       b.addEventListener('click', (e) => {
@@ -967,6 +1225,16 @@
 
     document.addEventListener('keydown', handleKeydown);
     source.addEventListener('keydown', handleSourceKeydown);
+  }
+
+  function bindCheck(sel, setter) {
+    const el = $(sel);
+    if (!el) return;
+    el.addEventListener('change', () => {
+      setter(!!el.checked);
+      render();
+      autosave();
+    });
   }
 
   function bindMeta(sel, setter) {
@@ -1076,7 +1344,18 @@
     { label: 'Epígrafo', hint: 'epigraph', cmd: 'epigraph' },
     { label: 'Figura', hint: 'figure', cmd: 'figure' },
     { label: 'Figura full-width', hint: 'fullwidth', cmd: 'fullwidth' },
+    // Só no artigo (papel vintage)
+    { label: 'Seção em versaletes', hint: '## seção', cmd: 'secao', only: 'artigo' },
+    { label: 'Incipit', hint: 'versaletes', cmd: 'incipit', only: 'artigo' },
+    { label: 'Figura (arquivo)', hint: 'Fig. n.', cmd: 'figura', only: 'artigo' },
+    { label: 'Figura em SVG', hint: 'gravura', cmd: 'figsvg', only: 'artigo' },
+    { label: 'Prancha', hint: 'colunas', cmd: 'prancha', only: 'artigo' },
+    { label: 'Nota de rodapé', hint: '[^n]', cmd: 'rodape', only: 'artigo' },
+    { label: 'Equação', hint: '$$', cmd: 'equacao', only: 'artigo' },
+    { label: 'Tabela', hint: '| |', cmd: 'tabela', only: 'artigo' },
+    { label: 'Ornamento', hint: '❦', cmd: 'ornamento', only: 'artigo' },
   ];
+  const TUFTE_ONLY = ['newthought', 'sidenote', 'marginnote', 'epigraph', 'figure', 'fullwidth'];
 
   let slashOpen = false;
   let slashStart = -1;
@@ -1110,8 +1389,13 @@
 
   function filteredSlashItems() {
     const q = getSlashQuery().toLowerCase();
-    if (!q) return SLASH_ITEMS;
-    return SLASH_ITEMS.filter(i =>
+    const base = SLASH_ITEMS.filter(i => {
+      if (i.only && i.only !== state.doc) return false;
+      if (state.doc === 'artigo' && TUFTE_ONLY.includes(i.cmd)) return false;
+      return true;
+    });
+    if (!q) return base;
+    return base.filter(i =>
       i.label.toLowerCase().includes(q) || i.hint.toLowerCase().includes(q) || i.cmd.toLowerCase().includes(q)
     );
   }
@@ -1297,6 +1581,10 @@
         type: 'livro', id: '', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '',
         ...((d.meta && d.meta.media) || {}),
       },
+      artigo: {
+        ...{ capitulo: '', serie: '', numero: '', formato: 'colunas', capitular: true, continua: false },
+        ...((d.meta && d.meta.artigo) || {}),
+      },
     };
     try { localStorage.setItem(CURRENT_DRAFT_KEY, id); } catch (e) {}
     return true;
@@ -1355,6 +1643,7 @@
     state.meta = {
       title: '', subtitle: '', date: new Date(), category: '', image: '',
       media: { type: 'livro', id: '', titulo: '', creator: '', ano: '', generos: '', publisher: '', album: '', capa: '', nota: '' },
+      artigo: { capitulo: '', serie: '', numero: '', formato: 'colunas', capitular: true, continua: false },
     };
     applyStateToDom();
     render();
@@ -1416,7 +1705,7 @@
       const title = d.meta && d.meta.title
         ? escapeHtml(d.meta.title)
         : '<em>Sem título</em>';
-      const docLabel = d.doc === 'post' ? 'Post' : d.doc === 'media' ? 'Mídia' : 'Nota';
+      const docLabel = d.doc === 'post' ? 'Post' : d.doc === 'media' ? 'Mídia' : d.doc === 'artigo' ? 'Artigo' : 'Nota';
       const updated = formatRelativeDate(d.updatedAt);
       const words = countWords(d.source || '');
       const isCurrent = d.id === state.draftId ? ' current' : '';
@@ -1472,6 +1761,13 @@
     $('#meta-media-album').value = state.meta.media.album || '';
     $('#meta-media-capa').value = state.meta.media.capa || '';
     $('#meta-media-nota').value = state.meta.media.nota || '';
+    const art = state.meta.artigo || { capitulo: '', serie: '', numero: '', formato: 'colunas', capitular: true, continua: false };
+    $('#meta-art-capitulo').value = art.capitulo || '';
+    $('#meta-art-serie').value = art.serie || '';
+    $('#meta-art-numero').value = art.numero || '';
+    $('#meta-art-formato').value = art.formato || 'colunas';
+    $('#meta-art-capitular').checked = art.capitular !== false;
+    $('#meta-art-continua').checked = !!art.continua;
     setDoc(state.doc);
     updateMediaTypeFields();
   }
@@ -1516,6 +1812,14 @@
 
   function init() {
     load();
+    // /editor/?doc=artigo abre direto no tipo pedido (novo rascunho se o atual for de outro tipo)
+    try {
+      const qd = new URLSearchParams(location.search).get('doc');
+      if (qd && ['post', 'nota', 'media', 'artigo'].includes(qd) && qd !== state.doc) {
+        if (state.draftId && (state.source || state.meta.title)) newDraft(true);
+        state.doc = qd;
+      }
+    } catch (e) {}
     applyStateToDom();
     setupBindings();
     render();

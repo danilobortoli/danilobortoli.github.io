@@ -1,0 +1,19 @@
+{% comment %}
+Figura de artigo — imagem centrada na coluna, com legenda "Fig. n."
+
+Uso:
+{% include figura-artigo.html src="/assets/img/artigos/carro.svg" alt="Um carro carregado" num="1" caption="Um carro carregado puxado sobre terreno plano." %}
+
+Parâmetros:
+- src: (obrigatório) caminho da imagem (SVG ou bitmap em traço, fundo transparente)
+- alt: (obrigatório) texto alternativo
+- num: (opcional) número da figura; sem ele a legenda sai sem "Fig."
+- caption: (opcional) legenda, em itálico
+- largura: (opcional) largura máxima em % da coluna (ex.: "70")
+{% endcomment %}
+<figure class="art-fig"{% if include.largura %} style="--art-fig-w: {{ include.largura }}%"{% endif %}>
+  <img src="{{ include.src | relative_url }}" alt="{{ include.alt }}" loading="lazy"/>
+  {% if include.caption or include.num %}
+  <figcaption>{% if include.num %}<span class="art-fig-num">Fig. {{ include.num }}.</span> {% endif %}{{ include.caption }}</figcaption>
+  {% endif %}
+</figure>

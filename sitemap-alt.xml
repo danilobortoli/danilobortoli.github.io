@@ -5,7 +5,7 @@ sitemap: false
 ---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{%- assign docs = site.pages | concat: site.posts | concat: site.notas -%}
+{%- assign docs = site.pages | concat: site.posts | concat: site.notas | concat: site.artigos -%}
 {%- for doc in docs -%}
 {%- unless doc.sitemap == false -%}
 {%- assign last_char = doc.url | slice: -1, 1 -%}

@@ -7,3 +7,6 @@ Gemfile.lock
 _site/
 .jekyll-cache/
 .jekyll-metadata
+
+# Gems locais (bundle path)
+vendor/
