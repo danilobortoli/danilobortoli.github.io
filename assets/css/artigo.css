@@ -355,14 +355,14 @@
    redução, θ, m, W₁ etc. saltam do texto corrido. */
 .artigo-body mjx-container {
   color: var(--art-ink);
-  font-size: 0.84em;
+  font-size: 0.94em;
 }
 .artigo-body mjx-container[display="true"] {
-  font-size: 0.92em;
+  font-size: 1em;
   margin: 0.55em 0 0.6em !important;
   break-inside: avoid;
 }
-.artigo-paper .footnotes mjx-container { font-size: 0.9em; }
+.artigo-paper .footnotes mjx-container { font-size: 1em; }
 
 .artigo-paper .footnotes {
   column-span: all;
@@ -503,7 +503,8 @@
    ------------------------------------------------------------ */
 :root { --art-accent: #8a3b3b; }
 .art-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-.artigo-body svg,
+/* Só os SVGs de figura; o MathJax também gera <svg> e não pode herdar isto. */
+.artigo-body svg:not(mjx-container > svg),
 .art-fig svg,
 .art-plate svg {
   display: block;
@@ -516,10 +517,10 @@
   font-family: var(--art-font);
 }
 .art-fig svg { width: var(--art-fig-w); }
-.artigo-body svg text {
+.artigo-body svg:not(mjx-container > svg) text {
   font-family: var(--art-font);
   font-style: italic;
-  font-size: 9.5px;
+  font-size: 11px;
   fill: var(--art-ink);
 }
 .artigo-body svg .art-tinta { stroke: var(--art-ink); fill: none; }
@@ -530,7 +531,7 @@
 .artigo-body svg .art-pontilhada { stroke-dasharray: 0.8 2.4; stroke-linecap: round; }
 .artigo-body svg .art-rotulo { font-style: italic; }
 .artigo-body svg .art-rotulo-reto { font-style: normal; font-variant-caps: small-caps; letter-spacing: 0.08em; }
-.artigo-body svg .art-miudo { font-size: 8px; }
+.artigo-body svg .art-miudo { font-size: 9px; }
 
 /* ============================================================
    Tema vintage de página inteira (body.artigo-theme)
@@ -556,7 +557,7 @@ body.artigo-theme .site-header {
   position: static;
   backdrop-filter: none;
 }
-body.artigo-theme .site-header-inner { max-width: 960px; padding: 18px 32px 12px; }
+body.artigo-theme .site-header-inner { max-width: 884px; padding: 18px 32px 12px; }
 body.artigo-theme .site-wordmark-name {
   font-family: var(--art-font);
   font-style: italic;
@@ -589,7 +590,7 @@ body.artigo-theme .site-nav a[aria-current="page"] {
 }
 
 /* Miolo: a folha é a página */
-body.artigo-theme .site-main { max-width: 960px; }
+body.artigo-theme .site-main { max-width: 884px; }
 body.artigo-theme .artigo-back { padding-top: 28px; }
 body.artigo-theme .artigo-back a {
   font-family: var(--art-font);
@@ -606,7 +607,7 @@ body.artigo-theme .artigo-paper {
   box-shadow: none;
   margin: 12px auto 0;
   padding: 40px 0 36px;
-  max-width: 960px;
+  max-width: 820px;
 }
 body.artigo-theme .artigo-running { margin-top: 0; }
 
