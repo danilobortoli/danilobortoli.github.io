@@ -351,11 +351,18 @@
 /* ------------------------------------------------------------
    Equações (MathJax) e notas de rodapé
    ------------------------------------------------------------ */
+/* As fontes TeX do MathJax têm altura-x maior que a EB Garamond; sem
+   redução, θ, m, W₁ etc. saltam do texto corrido. */
+.artigo-body mjx-container {
+  color: var(--art-ink);
+  font-size: 0.84em;
+}
 .artigo-body mjx-container[display="true"] {
+  font-size: 0.92em;
   margin: 0.55em 0 0.6em !important;
   break-inside: avoid;
 }
-.artigo-body mjx-container { color: var(--art-ink); }
+.artigo-paper .footnotes mjx-container { font-size: 0.9em; }
 
 .artigo-paper .footnotes {
   column-span: all;
@@ -512,7 +519,7 @@
 .artigo-body svg text {
   font-family: var(--art-font);
   font-style: italic;
-  font-size: 11px;
+  font-size: 9.5px;
   fill: var(--art-ink);
 }
 .artigo-body svg .art-tinta { stroke: var(--art-ink); fill: none; }
@@ -523,4 +530,132 @@
 .artigo-body svg .art-pontilhada { stroke-dasharray: 0.8 2.4; stroke-linecap: round; }
 .artigo-body svg .art-rotulo { font-style: italic; }
 .artigo-body svg .art-rotulo-reto { font-style: normal; font-variant-caps: small-caps; letter-spacing: 0.08em; }
-.artigo-body svg .art-miudo { font-size: 9px; }
+.artigo-body svg .art-miudo { font-size: 8px; }
+
+/* ============================================================
+   Tema vintage de página inteira (body.artigo-theme)
+   Nas páginas de artigo e no índice o site todo vira o papel:
+   fundo, cabeçalho, navegação, rodapé. A folha deixa de ser uma
+   caixa com sombra e passa a ser a própria página.
+   ============================================================ */
+body.artigo-theme {
+  background-color: var(--art-paper);
+  background-image: radial-gradient(ellipse at 12% 0%, rgba(255,255,255,0.4), transparent 60%);
+  background-repeat: no-repeat;
+  background-size: 100% 520px;
+  color: var(--art-ink);
+  font-family: var(--art-font);
+  -webkit-font-smoothing: auto;
+}
+body.artigo-theme ::selection { background: rgba(120, 90, 40, 0.22); }
+
+/* Cabeçalho: tinta sobre papel, sem branco */
+body.artigo-theme .site-header {
+  background: transparent;
+  border-bottom: 1px solid var(--art-rule);
+  position: static;
+  backdrop-filter: none;
+}
+body.artigo-theme .site-header-inner { max-width: 960px; padding: 18px 32px 12px; }
+body.artigo-theme .site-wordmark-name {
+  font-family: var(--art-font);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--art-ink);
+}
+body.artigo-theme .site-wordmark-tag {
+  font-family: var(--art-font);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: none;
+  font-variant-caps: small-caps;
+  color: var(--art-ink-soft);
+}
+body.artigo-theme .site-nav {
+  font-family: var(--art-font);
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: none;
+  font-variant-caps: small-caps;
+}
+body.artigo-theme .site-nav a { color: var(--art-ink-soft); }
+body.artigo-theme .site-nav a:hover { color: var(--art-ink); text-decoration: none; border-bottom: 1px solid var(--art-ink); }
+body.artigo-theme .site-nav a.active,
+body.artigo-theme .site-nav a[aria-current="page"] {
+  color: var(--art-accent);
+  border-bottom: 1px solid var(--art-accent);
+}
+
+/* Miolo: a folha é a página */
+body.artigo-theme .site-main { max-width: 960px; }
+body.artigo-theme .artigo-back { padding-top: 28px; }
+body.artigo-theme .artigo-back a {
+  font-family: var(--art-font);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: none;
+  font-variant-caps: small-caps;
+  color: var(--art-ink-soft);
+  border: 0;
+}
+body.artigo-theme .artigo-back a:hover { color: var(--art-ink); }
+body.artigo-theme .artigo-paper {
+  background: transparent;
+  box-shadow: none;
+  margin: 12px auto 0;
+  padding: 40px 0 36px;
+  max-width: 960px;
+}
+body.artigo-theme .artigo-running { margin-top: 0; }
+
+/* Colofão e navegação entre artigos, em tinta */
+body.artigo-theme .artigo-colofao {
+  font-family: var(--art-font);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: none;
+  font-variant-caps: small-caps;
+  color: var(--art-ink-soft);
+  margin-top: 6px;
+}
+body.artigo-theme .artigo-colofao a { color: var(--art-ink-soft); border-bottom: 1px dotted var(--art-ink-faint); }
+body.artigo-theme .post-nav {
+  max-width: none;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--art-rule);
+}
+body.artigo-theme .post-nav a {
+  font-family: var(--art-font);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--art-ink-soft);
+  border: 0;
+}
+body.artigo-theme .post-nav a:hover { color: var(--art-ink); text-decoration: none; border-bottom: 1px solid var(--art-ink); }
+
+/* Rodapé do site */
+body.artigo-theme .site-footer {
+  border-top: 1px solid var(--art-rule);
+  font-family: var(--art-font);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: none;
+  font-variant-caps: small-caps;
+  color: var(--art-ink-soft);
+  margin-top: 44px;
+}
+body.artigo-theme .site-footer a { color: var(--art-ink-soft); border-bottom: 1px dotted var(--art-ink-faint); }
+body.artigo-theme .site-footer a:hover { color: var(--art-ink); text-decoration: none; }
+
+@media (max-width: 720px) {
+  body.artigo-theme .site-header-inner { padding: 14px 22px 10px; }
+  body.artigo-theme .artigo-paper { padding: 26px 0 30px; }
+}
+@media print {
+  body.artigo-theme { background: #fff; }
+}

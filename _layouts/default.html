@@ -49,7 +49,7 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </head>
-<body>
+<body{% if page.body_class %} class="{{ page.body_class }}"{% endif %}>
   {% include navigation.html %}
 
   {%- assign main_class = 'site-main' -%}
