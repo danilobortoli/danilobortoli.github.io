@@ -74,6 +74,8 @@
         let globalCounter = 0;
 
         footnoteSections.forEach(function(footnotesDiv) {
+          // Nos artigos "vintage" as notas ficam ao pé da folha, não na margem.
+          if (footnotesDiv.closest('.artigo-paper')) return;
           var container = footnotesDiv.parentElement;
           if (!container) return;
 

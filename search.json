@@ -4,11 +4,11 @@ permalink: /search.json
 ---
 {
   "items": [
-    {%- assign all_items = site.posts | concat: site.notas -%}
+    {%- assign all_items = site.posts | concat: site.notas | concat: site.artigos -%}
     {%- for item in all_items -%}
       {
         "id": {{ forloop.index }},
-        "type": {% if item.collection == "notas" %}"nota"{% else %}"post"{% endif %},
+        "type": {% if item.collection == "notas" %}"nota"{% elsif item.collection == "artigos" %}"artigo"{% else %}"post"{% endif %},
         "title": {{ item.title | default: "" | jsonify }},
         "subtitle": {{ item.subtitle | default: "" | jsonify }},
         "url": {{ item.url | relative_url | jsonify }},

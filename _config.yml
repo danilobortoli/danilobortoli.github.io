@@ -38,6 +38,12 @@ collections:
     output: true
     permalink: /notas/:year-:month-:day-:hour-:minute/
     sort_by: date
+  # Artigos "vintage": memórias e pranchas compostas à maneira dos
+  # periódicos científicos antigos (ver _layouts/artigo.html).
+  artigos:
+    output: true
+    permalink: /artigos/:slug/
+    sort_by: date
 
 # Defaults
 defaults:
@@ -46,6 +52,14 @@ defaults:
       type: "notas"
     values:
       layout: "nota"
+  - scope:
+      path: ""
+      type: "artigos"
+    values:
+      layout: "artigo"
+      main_class: "site-main--wide"
+      extra_css: "artigo.css"
+      extra_head: '<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">'
 
 # TMDB API key (obtenha grátis em https://www.themoviedb.org/settings/api)
 tmdb_api_key: "eaf970feafeeed38a6b698f623c66e94"
@@ -57,6 +71,7 @@ exclude:
   - .github
   - _notas/_template.md
   - _posts/_template.md
+  - _artigos/_template.md
   - _guia-media-review.html
   - telegram-bot
   - vendor

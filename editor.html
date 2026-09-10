@@ -15,11 +15,24 @@ sitemap: false
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- EB Garamond: papel dos artigos "vintage" -->
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
   <!-- Sistema de design Tufte-Bortoli (modo Spiekermann) -->
   <link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}"/>
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/artigo.css' | relative_url }}"/>
   <link rel="stylesheet" href="{{ '/assets/css/editor.css' | relative_url }}"/>
+
+  <!-- MathJax: equações no preview dos artigos -->
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' },
+      startup: { typeset: false }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </head>
 <body class="editor-body">
 
@@ -36,6 +49,7 @@ sitemap: false
         <button type="button" data-doc="post" class="active">Post</button>
         <button type="button" data-doc="nota">Nota</button>
         <button type="button" data-doc="media">Mídia</button>
+        <button type="button" data-doc="artigo" title="Artigo vintage (papel, colunas, gravuras)">Artigo</button>
       </div>
     </div>
 
@@ -43,7 +57,7 @@ sitemap: false
       <div class="ed-segmented" data-segmented="mode" role="tablist" aria-label="Modo de visualização">
         <button type="button" data-mode="markdown" title="Só markdown (⌘⇧M)">MD</button>
         <button type="button" data-mode="split" class="active" title="Lado a lado (⌘⇧P)">Split</button>
-        <button type="button" data-mode="tufte" title="Escrever direto no Tufte (⌘⇧T)">Tufte</button>
+        <button type="button" data-mode="tufte" title="Escrever direto no preview (⌘⇧T)"><span class="ed-mode-tufte-label">Tufte</span><span class="ed-mode-papel-label">Papel</span></button>
       </div>
       <div class="ed-actions">
         <button type="button" id="ed-action-help" title="Atalhos (?)">?</button>
@@ -61,7 +75,7 @@ sitemap: false
         <span>Título</span>
         <input type="text" id="meta-title" placeholder="Sem título"/>
       </label>
-      <label class="ed-only-post ed-meta-grow">
+      <label class="ed-only-post ed-only-artigo ed-meta-grow">
         <span>Subtítulo</span>
         <input type="text" id="meta-subtitle" placeholder="Opcional"/>
       </label>
@@ -79,6 +93,37 @@ sitemap: false
       <label class="ed-meta-grow ed-meta-grow-2">
         <span>Imagem hero (URL)</span>
         <input type="text" id="meta-image" placeholder="https://…"/>
+      </label>
+    </div>
+
+    <div class="ed-meta-row ed-only-artigo">
+      <label class="ed-meta-grow">
+        <span>Capítulo / kicker</span>
+        <input type="text" id="meta-art-capitulo" placeholder="Capítulo Terceiro, Proposição VI…"/>
+      </label>
+      <label class="ed-meta-grow">
+        <span>Série (cabeçalho corrido)</span>
+        <input type="text" id="meta-art-serie" placeholder="Elementos de Mecânica, Livro I"/>
+      </label>
+      <label>
+        <span>N.º</span>
+        <input type="text" id="meta-art-numero" placeholder="1" size="4"/>
+      </label>
+      <label>
+        <span>Formato</span>
+        <select id="meta-art-formato">
+          <option value="colunas">Duas colunas</option>
+          <option value="coluna">Uma coluna</option>
+          <option value="prancha">Prancha (larga)</option>
+        </select>
+      </label>
+      <label class="ed-meta-check">
+        <span>Capitular</span>
+        <input type="checkbox" id="meta-art-capitular" checked/>
+      </label>
+      <label class="ed-meta-check">
+        <span>Continua</span>
+        <input type="checkbox" id="meta-art-continua"/>
       </label>
     </div>
 
@@ -165,6 +210,18 @@ sitemap: false
       <button type="button" data-cmd="figure" title="Figura com legenda">▭ fig</button>
       <button type="button" data-cmd="fullwidth" title="Figura full-width">▦ full</button>
     </div>
+    <div class="ed-toolbar-group ed-toolbar-artigo">
+      <span class="ed-toolbar-label">Gravura</span>
+      <button type="button" data-cmd="secao" title="Seção em versaletes (## …)">§ seção</button>
+      <button type="button" data-cmd="incipit" title="Incipit em versaletes">Inc.</button>
+      <button type="button" data-cmd="figura" title="Figura a partir de arquivo (Fig. n.)">▭ fig</button>
+      <button type="button" data-cmd="figsvg" title="Figura desenhada em SVG (biblioteca de gravura)">✎ svg</button>
+      <button type="button" data-cmd="prancha" title="Prancha atravessando as colunas">▦ prancha</button>
+      <button type="button" data-cmd="rodape" title="Nota de rodapé">¹ nota</button>
+      <button type="button" data-cmd="equacao" title="Equação destacada (LaTeX)">∑ eq</button>
+      <button type="button" data-cmd="tabela" title="Tabela">⊞ tab</button>
+      <button type="button" data-cmd="ornamento" title="Ornamento (fleuron)">❦</button>
+    </div>
   </nav>
 
   <main class="ed-main">
@@ -180,7 +237,20 @@ sitemap: false
     </section>
 
     <section class="ed-pane ed-pane-preview" aria-label="Preview Tufte">
-      <article class="ed-preview-article">
+      <article class="ed-preview-article" id="ed-preview-article">
+
+        {% include gravura-defs.html %}
+
+        <header class="artigo-running ed-only-artigo-preview" id="ed-preview-art-running" hidden>
+          <span id="ed-preview-art-serie"></span>
+          <span id="ed-preview-art-numero"></span>
+        </header>
+        <header class="artigo-head ed-only-artigo-preview" id="ed-preview-art-head" hidden>
+          <p class="artigo-kicker" id="ed-preview-art-kicker"></p>
+          <h1 class="artigo-title" id="ed-preview-art-title"></h1>
+          <p class="artigo-subtitle" id="ed-preview-art-subtitle"></p>
+          <hr class="artigo-rule">
+        </header>
 
         <header class="ed-preview-header" id="ed-preview-header">
           <p class="ed-preview-eyebrow" id="ed-preview-eyebrow"></p>
@@ -196,6 +266,8 @@ sitemap: false
         <aside id="ed-preview-media" class="media-review media-review--marginalia" hidden></aside>
 
         <div class="ed-preview-content post-content nota-single-content" id="ed-preview-content"></div>
+
+        <p class="artigo-continua ed-only-artigo-preview" id="ed-preview-art-continua" hidden>Continua no próximo número</p>
 
       </article>
     </section>
@@ -234,6 +306,17 @@ sitemap: false
         <li><strong>Marginnote</strong>: <code>{% raw %}{% include marginnote.html id="mn-1" text="..." %}{% endraw %}</code></li>
         <li><strong>Epigraph</strong>: <code>{% raw %}{% include epigraph.html quote="..." author="..." %}{% endraw %}</code></li>
         <li><strong>Figura</strong>: <code>{% raw %}{% include figure.html src="..." alt="..." caption="..." %}{% endraw %}</code></li>
+      </ul>
+      <h3>Convenções do artigo (papel)</h3>
+      <ul class="ed-help-list">
+        <li><strong>Seção</strong>: <code>## Da alavanca</code> sai centrada, em versaletes espaçados; <code>###</code> em itálico.</li>
+        <li><strong>Incipit</strong>: <code>&lt;span class="newthought"&gt;As primeiras palavras&lt;/span&gt;</code>; a capitular vem do campo “Capitular”.</li>
+        <li><strong>Figura de arquivo</strong>: <code>{% raw %}{% include figura-artigo.html src="..." alt="..." num="1" caption="..." %}{% endraw %}</code></li>
+        <li><strong>Figura em SVG</strong>: <code>&lt;figure class="art-fig"&gt;&lt;svg viewBox="…"&gt;…&lt;/svg&gt;&lt;figcaption&gt;…&lt;/figcaption&gt;&lt;/figure&gt;</code>, usando <code>fill="url(#art-hachura)"</code>, <code>url(#art-madeira)</code>, <code>&lt;use href="#art-bola"&gt;</code>, <code>marker-end="url(#art-seta)"</code> etc. (ver <code>_includes/gravura-defs.html</code>).</li>
+        <li><strong>Prancha</strong>: <code>{% raw %}{% include prancha.html src="..." alt="..." num="II" title="..." caption="..." %}{% endraw %}</code></li>
+        <li><strong>Nota de rodapé</strong>: <code>[^1]</code> + <code>[^1]: texto</code> — sai ao pé da folha, não na margem.</li>
+        <li><strong>Equação</strong>: <code>$…$</code> em linha, <code>$$…$$</code> destacada (MathJax).</li>
+        <li><strong>Ornamento</strong>: <code>{% raw %}{% include ornamento-artigo.html %}{% endraw %}</code></li>
       </ul>
     </div>
   </div>

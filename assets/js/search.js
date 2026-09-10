@@ -124,7 +124,7 @@
       var li = document.createElement('li');
       li.className = 'search-result';
 
-      var typeLabel = doc.type === 'nota' ? 'Nota' : 'Post';
+      var typeLabel = doc.type === 'nota' ? 'Nota' : doc.type === 'artigo' ? 'Artigo' : 'Post';
       var title = doc.title || (doc.type === 'nota' ? 'Nota sem título' : 'Sem título');
       var excerpt = buildExcerpt(doc.content, trimmed);
 

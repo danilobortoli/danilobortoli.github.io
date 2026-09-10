@@ -865,3 +865,62 @@ body.editor-body {
     margin: 0.8rem 0;
   }
 }
+
+/* ==========================================================================
+   12. Documento "Artigo" (papel vintage) — ver artigo.css
+   ========================================================================== */
+
+.ed-only-artigo { display: none !important; }
+[data-doc="artigo"] .ed-only-artigo { display: flex !important; }
+[data-doc="artigo"] .ed-only-post:not(.ed-only-artigo),
+[data-doc="artigo"] .ed-only-media { display: none !important; }
+
+.ed-toolbar-artigo { display: none; }
+[data-doc="artigo"] .ed-toolbar-artigo { display: inline-flex; }
+[data-doc="artigo"] .ed-toolbar-tufte { display: none; }
+.ed-toolbar-artigo button {
+  color: var(--art-accent, #8a3b3b);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ed-meta label.ed-meta-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+  padding-top: 1.05rem;
+}
+.ed-meta label.ed-meta-check input { width: auto; margin: 0; accent-color: var(--color-accent); }
+
+/* Rótulo do modo WYSIWYG muda de "Tufte" para "Papel" no artigo */
+.ed-mode-papel-label { display: none; }
+[data-doc="artigo"] .ed-mode-tufte-label { display: none; }
+[data-doc="artigo"] .ed-mode-papel-label { display: inline; }
+
+/* Preview: a folha sobre um fundo neutro */
+[data-doc="artigo"] .ed-preview-header,
+[data-doc="artigo"] .ed-preview-hero,
+[data-doc="artigo"] #ed-preview-media { display: none !important; }
+[data-doc="artigo"] .ed-pane-preview { background: #e7e2d7; }
+.ed-preview-article.artigo-paper {
+  max-width: 900px;
+  margin: 2rem auto 4rem;
+  padding: 48px 52px 44px;
+}
+.ed-preview-article.artigo-paper .artigo-running { margin-top: -16px; }
+.ed-preview-article.artigo-paper .artigo-kicker:empty,
+.ed-preview-article.artigo-paper .artigo-subtitle:empty { display: none; }
+/* No split o painel é estreito: uma coluna; no modo Papel, as duas. */
+[data-mode="split"] .ed-preview-article.artigo-paper .artigo-body { columns: 1; column-rule: none; }
+[data-mode="tufte"] .ed-preview-article.artigo-paper .artigo-body[contenteditable="true"] { outline: none; min-height: 12em; }
+[data-mode="tufte"] .ed-preview-article.artigo-paper .artigo-body[contenteditable="true"]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--art-ink-faint, #7d7262);
+  font-style: italic;
+}
+@media (max-width: 760px) {
+  .ed-preview-article.artigo-paper { padding: 28px 20px 30px; margin: 1rem auto 3rem; }
+}

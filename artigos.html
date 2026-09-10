@@ -1,0 +1,44 @@
+---
+layout: default
+title: Artigos
+permalink: /artigos/
+main_class: site-main--wide
+extra_css: artigo.css
+extra_head: '<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">'
+sitemap:
+  changefreq: weekly
+---
+
+{%- assign artigos = site.artigos | sort: 'date' | reverse -%}
+
+<article class="artigo-paper formato-coluna" aria-label="Índice dos artigos">
+  <header class="artigo-running">
+    <span>Artigos</span>
+    <span>{{ artigos.size }} {% if artigos.size == 1 %}matéria{% else %}matérias{% endif %}</span>
+  </header>
+
+  <header class="artigo-head">
+    <p class="artigo-kicker">Arquivo</p>
+    <h1 class="artigo-title">Índice das matérias</h1>
+    <p class="artigo-subtitle">artigos compostos à maneira das memórias científicas antigas</p>
+    <hr class="artigo-rule">
+  </header>
+
+  <div class="artigo-body">
+    <div class="artigo-toc">
+      {% for a in artigos %}
+      <a class="artigo-toc-item" href="{{ a.url | relative_url }}">
+        <span class="artigo-toc-num">{{ artigos.size | minus: forloop.index0 }}.</span>
+        <span class="artigo-toc-title">{{ a.title }}{% if a.subtitle %}<span class="artigo-toc-sub">{{ a.subtitle }}</span>{% endif %}</span>
+        <span class="artigo-toc-leader" aria-hidden="true"></span>
+        <span class="artigo-toc-date">{% include data-pt.html date=a.date %}</span>
+      </a>
+      {% endfor %}
+      {% if artigos.size == 0 %}
+      <p class="artigo-toc-empty">Nenhuma matéria composta ainda.</p>
+      {% endif %}
+    </div>
+
+    <p class="artigo-toc-nota">Textos de fôlego médio, ilustrados com figuras e pranchas gravadas a traço, na tradição dos periódicos científicos do século XIX. Para os ensaios, ver a <a href="{{ '/escrita.html' | relative_url }}">Escrita</a>; para o caderno de fragmentos, as <a href="{{ '/notas/' | relative_url }}">Notas</a>.</p>
+  </div>
+</article>
