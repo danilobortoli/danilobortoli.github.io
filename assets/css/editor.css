@@ -870,7 +870,9 @@ body.editor-body {
    12. Documento "Artigo" (papel vintage) — ver artigo.css
    ========================================================================== */
 
-.ed-only-artigo { display: none !important; }
+/* Campos exclusivos de artigo somem fora dele; o que também é de post
+   (ex.: subtítulo) segue a regra de post. */
+.ed-only-artigo:not(.ed-only-post) { display: none !important; }
 [data-doc="artigo"] .ed-only-artigo { display: flex !important; }
 [data-doc="artigo"] .ed-only-post:not(.ed-only-artigo),
 [data-doc="artigo"] .ed-only-media { display: none !important; }

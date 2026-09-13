@@ -1126,7 +1126,10 @@ a:hover {
 .nota-body { counter-reset: sidenote-counter; }
 
 input.margin-toggle { display: none; }
-label.sidenote-number { display: inline-block; max-height: 2rem; }
+/* O rótulo numerado precisa ser inline (não inline-block): em parágrafos
+   justificados, Safari e Chromium tratam um inline-block como ponto de
+   justificação e abrem um vão entre a palavra e o número da nota. */
+label.sidenote-number { display: inline; }
 label.margin-toggle:not(.sidenote-number) { display: none; }
 
 @media (max-width: 1180px) {
