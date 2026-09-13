@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+# Prepara imagens para o site e devolve o markdown pronto para colar.
+#
+#   ./nova-imagem foto.HEIC "Captura de Tela 2026-09-13.png" [mais arquivos…]
+#
+# Para cada arquivo:
+#   1. converte para JPEG (ou mantém PNG/GIF/SVG), reduzindo o lado maior a
+#      1600 px e removendo metadados quando a ferramenta permitir;
+#   2. batiza como assets/images/AAAA/AAAA-MM-DD-<slug>[-n].<ext>;
+#   3. imprime a linha ![](/assets/images/…) — e copia para a área de
+#      transferência se houver pbcopy (macOS) ou xclip.
+#
+# Opções (antes dos arquivos):
+#   -s, --slug NOME      slug base (padrão: nome do arquivo, sem acentos)
+#   -d, --data AAAA-MM-DD data usada no nome e na pasta (padrão: hoje)
+#   -m, --max PIXELS     lado maior (padrão: 1600)
+#   -l, --legenda TEXTO  emite {% include figure.html … %} em vez de ![]()
+#   -p, --png            mantém PNG como PNG (padrão: PNG vira JPEG)
+#   -n, --dry-run        só mostra o que faria
+#
+# Usa `sips` (macOS) ou ImageMagick (`magick`/`convert`), o que existir.
+set -euo pipefail
+
+MAX=1600
+SLUG=""
+DATA="$(date +%Y-%m-%d)"
+LEGENDA=""
+KEEP_PNG=0
+DRY=0
+
+usage() { sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -s|--slug) SLUG="$2"; shift 2 ;;
+    -d|--data) DATA="$2"; shift 2 ;;
+    -m|--max) MAX="$2"; shift 2 ;;
+    -l|--legenda) LEGENDA="$2"; shift 2 ;;
+    -p|--png) KEEP_PNG=1; shift ;;
+    -n|--dry-run) DRY=1; shift ;;
+    -h|--help) usage 0 ;;
+    --) shift; break ;;
+    -*) echo "❌ Opção desconhecida: $1" >&2; usage 1 ;;
+    *) break ;;
+  esac
+done
+
+[ $# -gt 0 ] || { echo "❌ Informe ao menos um arquivo de imagem." >&2; usage 1; }
+[ -d assets/images ] || { echo "❌ Rode na raiz do site (não achei assets/images/)." >&2; exit 1; }
+[[ "$DATA" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "❌ Data inválida: $DATA (use AAAA-MM-DD)" >&2; exit 1; }
+
+ANO="${DATA%%-*}"
+DEST_DIR="assets/images/$ANO"
+
+# Ferramenta de conversão disponível
+TOOL=""
+if command -v magick >/dev/null 2>&1; then TOOL="magick"
+elif command -v convert >/dev/null 2>&1; then TOOL="convert"
+elif command -v sips >/dev/null 2>&1; then TOOL="sips"
+fi
+
+# Remove acentos (python3 é o caminho confiável; iconv é o plano B)
+sem_acentos() {
+  if command -v python3 >/dev/null 2>&1; then
+    python3 -c 'import sys,unicodedata; print(unicodedata.normalize("NFKD", sys.argv[1]).encode("ascii","ignore").decode())' "$1"
+  else
+    printf '%s' "$1" | LC_ALL=C.UTF-8 iconv -f UTF-8 -t ASCII//TRANSLIT 2>/dev/null || printf '%s' "$1"
+  fi
+}
+
+slugify() {
+  sem_acentos "$1" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+# Nomes já atribuídos nesta execução (importa no --dry-run e com vários
+# arquivos). Devolve em DST, não por stdout, para a lista sobreviver
+# (um $(...) rodaria em subshell e perderia a variável).
+USADOS=" "
+unique_path() {
+  local base="$1" ext="$2" n=2
+  DST="$DEST_DIR/$base.$ext"
+  while [ -e "$DST" ] || [[ "$USADOS" == *" ${DST%.*} "* ]]; do
+    DST="$DEST_DIR/$base-$n.$ext"; n=$((n + 1))
+  done
+  USADOS="$USADOS${DST%.*} "
+}
+
+convert_image() {
+  local src="$1" dst="$2" fmt="$3"
+  case "$TOOL" in
+    magick|convert)
+      "$TOOL" "$src" -auto-orient -strip -resize "${MAX}x${MAX}>" -quality 85 "$dst"
+      ;;
+    sips)
+      local sfmt="$fmt"
+      [ "$sfmt" = "jpg" ] && sfmt="jpeg"
+      sips -s format "$sfmt" -s formatOptions 85 -Z "$MAX" "$src" --out "$dst" >/dev/null
+      ;;
+    *)
+      cp "$src" "$dst"
+      ;;
+  esac
+}
+
+SAIDA=""
+for SRC in "$@"; do
+  [ -f "$SRC" ] || { echo "❌ Não encontrei: $SRC" >&2; continue; }
+  NOME="$(basename "$SRC")"
+  EXT_ORIG="$(printf '%s' "${NOME##*.}" | tr '[:upper:]' '[:lower:]')"
+  BASE_NOME="${NOME%.*}"
+
+  # Formato de saída
+  case "$EXT_ORIG" in
+    gif|svg) FMT="$EXT_ORIG"; COPIA=1 ;;
+    png) if [ "$KEEP_PNG" = 1 ]; then FMT="png"; else FMT="jpg"; fi; COPIA=0 ;;
+    heic|heif|tif|tiff|jpg|jpeg|webp|avif|bmp) FMT="jpg"; COPIA=0 ;;
+    *) echo "⚠️  $NOME: extensão desconhecida, copiando sem converter." >&2; FMT="$EXT_ORIG"; COPIA=1 ;;
+  esac
+  if [ "$COPIA" = 0 ] && [ -z "$TOOL" ]; then
+    echo "⚠️  Sem sips nem ImageMagick: $NOME será copiado sem redimensionar." >&2
+    COPIA=1; FMT="$EXT_ORIG"
+  fi
+
+  # Slug: opção -s (com sufixo se houver vários arquivos) ou nome do arquivo
+  if [ -n "$SLUG" ]; then
+    S="$(slugify "$SLUG")"
+  else
+    S="$(slugify "$BASE_NOME")"
+    # Nomes de câmera/captura não dizem nada: cai para "imagem"
+    case "$S" in
+      img-*|image-*|captura-de-tela-*|screenshot-*|screen-shot-*|photo-*|foto-*|"") S="imagem" ;;
+    esac
+  fi
+
+  unique_path "$DATA-$S" "$FMT"
+
+  if [ "$DRY" = 1 ]; then
+    echo "→ $SRC  ⇒  $DST"
+  else
+    mkdir -p "$DEST_DIR"
+    if [ "$COPIA" = 1 ]; then cp "$SRC" "$DST"; else convert_image "$SRC" "$DST" "$FMT"; fi
+    TAM="$(du -k "$DST" | cut -f1)"
+    echo "✅ $DST (${TAM} KB)"
+  fi
+
+  if [ -n "$LEGENDA" ]; then
+    ID="fig-$(printf '%s' "$DST" | cksum | cut -c1-5)"
+    LINHA="{% include figure.html src=\"/$DST\" alt=\"\" caption=\"$LEGENDA\" id=\"$ID\" %}"
+  else
+    LINHA="![](/$DST)"
+  fi
+  SAIDA="${SAIDA:+$SAIDA
+
+}$LINHA"
+done
+
+[ -n "$SAIDA" ] || exit 1
+
+echo
+echo "$SAIDA"
+if command -v pbcopy >/dev/null 2>&1; then
+  printf '%s' "$SAIDA" | pbcopy && echo "📋 Copiado para a área de transferência."
+elif command -v xclip >/dev/null 2>&1; then
+  printf '%s' "$SAIDA" | xclip -selection clipboard && echo "📋 Copiado para a área de transferência."
+fi

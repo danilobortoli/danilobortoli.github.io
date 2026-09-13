@@ -37,6 +37,7 @@
       artigo: { capitulo: '', serie: '', numero: '', formato: 'colunas', capitular: true, continua: false },
     },
     savedAt: null,
+    published: null,    // { at, path, commit } depois de publicar no GitHub
   };
 
   // ===========================================================================
@@ -228,6 +229,7 @@
 
     if (state.mode !== 'tufte') {
       previewContent.innerHTML = renderedHtml;
+      resolvePreviewImages(previewContent);
       if (isArt) scheduleTypeset();
     }
     updatePreviewMeta();
@@ -285,7 +287,7 @@
     const hero = $('#ed-preview-hero');
     if (hasHero) {
       hero.hidden = false;
-      $('#ed-preview-hero-image').src = m.image;
+      $('#ed-preview-hero-image').src = resolveImageSrc(m.image);
     } else {
       hero.hidden = true;
     }
@@ -350,7 +352,7 @@
       </div>` : '';
 
     const cover = capa
-      ? `<img src="${escapeAttr(capa)}" alt="Capa" class="media-review-img"/>`
+      ? `<img src="${escapeAttr(resolveImageSrc(capa))}" alt="Capa" class="media-review-img"/>`
       : `<div class="media-review-img media-review-placeholder"></div>`;
 
     aside.hidden = false;
@@ -551,6 +553,12 @@
     const words = text ? text.split(' ').length : 0;
     $('#ed-status-words').textContent = words + ' palavras';
     $('#ed-status-reading').textContent = readingTime(md) + ' min';
+    const n = Object.keys(images).length;
+    const imgEl = $('#ed-status-images');
+    if (imgEl) {
+      imgEl.hidden = !n;
+      imgEl.textContent = n ? plural(n, 'imagem', 'imagens') : '';
+    }
   }
 
   function readingTime(md) {
@@ -774,7 +782,8 @@
       if (url === null || url === '') return;
       insertText('[', `](${url})`, 'texto');
     },
-    image:   () => {
+    image:   () => pickImages(true).then(insertImageFiles),
+    imageurl: () => {
       const url = prompt('URL da imagem:');
       if (url === null || url === '') return;
       const alt = prompt('Texto alternativo:') || '';
@@ -825,8 +834,8 @@
       insertBlock(`{% include epigraph.html ${args.join(' ')} %}`);
     },
 
-    figure: () => {
-      const src = prompt('URL da imagem:');
+    figure: async () => {
+      const src = await askImageSrc('URL da imagem:');
       if (!src) return;
       const alt = prompt('Texto alternativo:') || '';
       const caption = prompt('Legenda (opcional, vai pra margem):') || '';
@@ -843,8 +852,8 @@
     secao:   () => lineWrap('## ', 'Da alavanca'),
     incipit: () => insertText('<span class="newthought">', '</span>', 'As primeiras palavras'),
 
-    figura: () => {
-      const src = prompt('URL/caminho da imagem (SVG ou traço, fundo transparente):');
+    figura: async () => {
+      const src = await askImageSrc('URL/caminho da imagem (SVG ou traço, fundo transparente):');
       if (!src) return;
       const alt = prompt('Texto alternativo:') || '';
       const caption = prompt('Legenda (itálico, opcional):') || '';
@@ -859,8 +868,8 @@
       insertBlock(SVG_FIG_TEMPLATE(nextFigNum(), caption));
     },
 
-    prancha: () => {
-      const src = prompt('URL/caminho da imagem da prancha:');
+    prancha: async () => {
+      const src = await askImageSrc('URL/caminho da imagem da prancha:');
       if (!src) return;
       const alt = prompt('Texto alternativo:') || '';
       const num = prompt('Número da prancha (romano, ex.: II):') || '';
@@ -878,8 +887,8 @@
     tabela: () => insertBlock('| Peso | 1 | 2 | 3 |\n|:-----|--:|--:|--:|\n| 1 | 1 | 2 | 3 |\n| 2 | 2 | 4 | 6 |'),
     ornamento: () => insertBlock('{% include ornamento-artigo.html %}'),
 
-    fullwidth: () => {
-      const src = prompt('URL da imagem (full-width):');
+    fullwidth: async () => {
+      const src = await askImageSrc('URL da imagem (full-width):');
       if (!src) return;
       const alt = prompt('Texto alternativo:') || '';
       const caption = prompt('Legenda (opcional):') || '';
@@ -888,6 +897,545 @@
       insertBlock(`{% include fullwidth.html ${args.join(' ')} %}`);
     },
   };
+
+  // ===========================================================================
+  // 6b. Imagens: colar / arrastar / escolher arquivo → assets/images/AAAA/
+  // ===========================================================================
+  //
+  // Cada imagem anexada é redimensionada (lado maior ≤ IMAGE_MAX_DIM),
+  // recomprimida (JPEG, ou PNG se tiver transparência), batizada como
+  // assets/images/AAAA/AAAA-MM-DD-<slug-do-título>[-n].<ext> e guardada no
+  // IndexedDB junto do rascunho. No markdown entra só o caminho final
+  // (/assets/images/...); o preview troca o caminho por um object URL.
+  // Na hora de exportar, o .zip (ou o commit no GitHub) leva o .md e as
+  // imagens já nos lugares certos do repositório.
+
+  const IMAGE_MAX_DIM = 1600;
+  const IMAGE_JPEG_QUALITY = 0.85;
+  const IMAGE_ROOT = 'assets/images';
+  const images = {};     // path (assets/images/...) → { blob, ext, width, height, size, name }
+  const imageUrls = {};  // path → object URL usado no preview
+  let imageInput = null;
+
+  function docFolder() {
+    return state.doc === 'post' ? '_posts' : state.doc === 'artigo' ? '_artigos' : '_notas';
+  }
+
+  function metaDate() {
+    const d = state.meta.date;
+    return d instanceof Date && !isNaN(d.getTime()) ? d : new Date();
+  }
+
+  function imageBaseSlug() {
+    const m = state.meta;
+    return slugify(m.title) || (state.doc === 'media' ? slugify(m.media.titulo) : '') || 'imagem';
+  }
+
+  function suffixedPath(path, n) {
+    const dot = path.lastIndexOf('.');
+    return `${path.slice(0, dot)}-${n}${path.slice(dot)}`;
+  }
+
+  function stripExt(p) { return p.replace(/\.[^.]+$/, ''); }
+
+  // Nome já usado por outra imagem anexada (ignorando a extensão, para não
+  // conviverem foto.jpg e foto.png).
+  function imageBaseTaken(base, except) {
+    return Object.keys(images).some(p => p !== except && stripExt(p) === base);
+  }
+
+  function uniqueImagePath(ext) {
+    const d = metaDate();
+    const base = `${IMAGE_ROOT}/${d.getFullYear()}/${dateForFilename(d)}-${imageBaseSlug()}`;
+    let cand = base;
+    let n = 2;
+    while (imageBaseTaken(cand)) cand = `${base}-${n++}`;
+    return `${cand}.${ext}`;
+  }
+
+  function plural(n, um, varios) { return `${n} ${n === 1 ? um : varios}`; }
+
+  function localImagePath(src) {
+    const m = String(src || '').match(/assets\/images\/[^\s"')]+/);
+    return m && images[m[0]] ? m[0] : null;
+  }
+
+  function resolveImageSrc(src) {
+    const p = localImagePath(src);
+    return p && imageUrls[p] ? imageUrls[p] : src;
+  }
+
+  // Troca, no preview, os caminhos locais pelos object URLs das imagens anexadas.
+  function resolvePreviewImages(root) {
+    $$('img', root).forEach(img => {
+      const src = img.getAttribute('data-src') || img.getAttribute('src') || '';
+      const p = localImagePath(src);
+      if (!p || !imageUrls[p]) return;
+      img.setAttribute('data-src', src);
+      img.src = imageUrls[p];
+    });
+  }
+
+  function usedImagePaths() {
+    const text = [state.source, state.meta.image, state.meta.media && state.meta.media.capa].join('\n');
+    return Object.keys(images).filter(p => text.includes(p));
+  }
+
+  function loadBitmap(file) {
+    if (window.createImageBitmap) {
+      return createImageBitmap(file, { imageOrientation: 'from-image' })
+        .catch(() => createImageBitmap(file))
+        .catch(() => loadBitmapViaImg(file));
+    }
+    return loadBitmapViaImg(file);
+  }
+
+  function loadBitmapViaImg(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('não decodificou')); };
+      img.src = url;
+    });
+  }
+
+  function hasTransparency(ctx, w, h) {
+    const data = ctx.getImageData(0, 0, w, h).data;
+    const step = 4 * 7; // amostra 1 em cada 7 pixels
+    for (let i = 3; i < data.length; i += step) {
+      if (data[i] < 250) return true;
+    }
+    return false;
+  }
+
+  async function processImage(file) {
+    const type = file.type || '';
+    const origExt = (file.name.split('.').pop() || '').toLowerCase();
+    if (type === 'image/svg+xml' || origExt === 'svg') return { blob: file, ext: 'svg' };
+    if (type === 'image/gif' || origExt === 'gif') return { blob: file, ext: 'gif' };
+
+    let bmp;
+    try { bmp = await loadBitmap(file); }
+    catch (e) {
+      // HEIC fora do Safari, por exemplo: sobe como está e avisa.
+      return { blob: file, ext: origExt || 'jpg', undecoded: true };
+    }
+    const bw = bmp.naturalWidth || bmp.width;
+    const bh = bmp.naturalHeight || bmp.height;
+    const scale = Math.min(1, IMAGE_MAX_DIM / Math.max(bw, bh));
+    const w = Math.max(1, Math.round(bw * scale));
+    const h = Math.max(1, Math.round(bh * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(bmp, 0, 0, w, h);
+    if (bmp.close) bmp.close();
+
+    const isPng = type === 'image/png' || origExt === 'png';
+    const keepPng = isPng && hasTransparency(ctx, w, h);
+    const outType = keepPng ? 'image/png' : 'image/jpeg';
+    const blob = await new Promise(res => canvas.toBlob(res, outType, IMAGE_JPEG_QUALITY));
+    if (!blob) return { blob: file, ext: origExt || 'jpg', width: w, height: h };
+    // Original já pequeno e do mesmo tipo: não vale a pena recomprimir.
+    if (scale === 1 && type === outType && file.size <= blob.size) {
+      return { blob: file, ext: keepPng ? 'png' : 'jpg', width: w, height: h };
+    }
+    return { blob, ext: keepPng ? 'png' : 'jpg', width: w, height: h };
+  }
+
+  async function attachImage(file) {
+    const out = await processImage(file);
+    const path = uniqueImagePath(out.ext);
+    images[path] = { blob: out.blob, ext: out.ext, width: out.width, height: out.height, size: out.blob.size, name: file.name };
+    imageUrls[path] = URL.createObjectURL(out.blob);
+    if (!state.draftId) persist();
+    idbPutImage(state.draftId, path, images[path]).catch(() => {});
+    if (out.undecoded) toast(`Não consegui converter ${file.name}; vai como está`);
+    updateStatusBar();
+    return path;
+  }
+
+  function isImageFile(f) {
+    return f && (/^image\//.test(f.type) || /\.(heic|heif|jpe?g|png|gif|webp|svg|avif)$/i.test(f.name || ''));
+  }
+
+  // Insere as imagens no ponto do cursor (markdown) ou na seleção (modo Tufte).
+  async function insertImageFiles(fileList) {
+    const files = Array.from(fileList || []).filter(isImageFile);
+    if (!files.length) return;
+    toast(files.length === 1 ? 'Processando imagem…' : `Processando ${files.length} imagens…`);
+    const paths = [];
+    for (const f of files) paths.push(await attachImage(f));
+    if (state.mode === 'tufte') {
+      const html = paths.map(p => `<p><img src="${imageUrls[p]}" data-src="/${p}" alt=""></p>`).join('');
+      previewContent.focus();
+      document.execCommand('insertHTML', false, html);
+      scheduleTufteSync();
+    } else {
+      insertBlock(paths.map(p => `![](/${p})`).join('\n\n'));
+    }
+    const kb = Math.round(paths.reduce((s, p) => s + images[p].size, 0) / 1024);
+    toast(`${paths.length === 1 ? 'Imagem anexada' : plural(paths.length, 'imagem anexada', 'imagens anexadas')} (${kb} KB)`);
+  }
+
+  function pickImages(multiple) {
+    return new Promise(resolve => {
+      if (!imageInput) {
+        imageInput = document.createElement('input');
+        imageInput.type = 'file';
+        imageInput.accept = 'image/*,.heic,.heif';
+        imageInput.hidden = true;
+        document.body.appendChild(imageInput);
+      }
+      imageInput.multiple = !!multiple;
+      imageInput.value = '';
+      imageInput.onchange = () => resolve(Array.from(imageInput.files || []));
+      imageInput.click();
+    });
+  }
+
+  // prompt de URL que, deixado vazio, abre o seletor de arquivo.
+  async function askImageSrc(label) {
+    const url = prompt(`${label} (deixe vazio para escolher um arquivo do computador)`);
+    if (url === null) return null;
+    if (url.trim()) return url.trim();
+    const files = (await pickImages(false)).filter(isImageFile);
+    if (!files.length) return null;
+    return '/' + (await attachImage(files[0]));
+  }
+
+  async function pickImageForField(sel, setter) {
+    const files = (await pickImages(false)).filter(isImageFile);
+    if (!files.length) return;
+    const path = '/' + (await attachImage(files[0]));
+    $(sel).value = path;
+    setter(path);
+    render();
+    autosave();
+  }
+
+  // Renomeia uma imagem anexada (colisão com arquivo já existente no site, por ex.)
+  async function remapImagePath(from, to) {
+    if (from === to || !images[from]) return;
+    images[to] = images[from]; delete images[from];
+    imageUrls[to] = imageUrls[from]; delete imageUrls[from];
+    const swap = (s) => (s || '').split(from).join(to);
+    state.source = swap(state.source);
+    source.value = state.source;
+    state.meta.image = swap(state.meta.image);
+    if (state.meta.media) state.meta.media.capa = swap(state.meta.media.capa);
+    $('#meta-image').value = state.meta.image || '';
+    $('#meta-media-capa').value = state.meta.media.capa || '';
+    try {
+      await idbDeleteImage(state.draftId, from);
+      await idbPutImage(state.draftId, to, images[to]);
+    } catch (e) {}
+    render();
+    autosave();
+  }
+
+  function clearImages() {
+    Object.keys(imageUrls).forEach(p => { try { URL.revokeObjectURL(imageUrls[p]); } catch (e) {} });
+    Object.keys(images).forEach(p => delete images[p]);
+    Object.keys(imageUrls).forEach(p => delete imageUrls[p]);
+  }
+
+  async function loadImagesForDraft(id) {
+    clearImages();
+    if (!id) return;
+    let rows = [];
+    try { rows = await idbListImages(id); } catch (e) { return; }
+    rows.forEach(r => {
+      images[r.path] = { blob: r.blob, ext: r.ext, width: r.width, height: r.height, size: r.blob.size, name: r.name };
+      imageUrls[r.path] = URL.createObjectURL(r.blob);
+    });
+    if (rows.length) {
+      render();
+      // No modo Tufte o render não refaz o HTML; troca os caminhos no lugar.
+      resolvePreviewImages(previewContent);
+      updateStatusBar();
+    }
+  }
+
+  // ---- IndexedDB: imagens sobrevivem ao reload junto do rascunho ----
+  const IDB_NAME = 'editor-images';
+  const IDB_STORE = 'images';
+  let idbPromise = null;
+
+  function idbOpen() {
+    if (idbPromise) return idbPromise;
+    idbPromise = new Promise((resolve, reject) => {
+      if (!window.indexedDB) return reject(new Error('sem IndexedDB'));
+      const req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = () => {
+        const store = req.result.createObjectStore(IDB_STORE, { keyPath: 'key' });
+        store.createIndex('draft', 'draft', { unique: false });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    return idbPromise;
+  }
+
+  function idbRun(mode, fn) {
+    return idbOpen().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(IDB_STORE, mode);
+      const req = fn(tx.objectStore(IDB_STORE));
+      tx.oncomplete = () => resolve(req && req.result);
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    }));
+  }
+
+  function idbPutImage(draft, path, entry) {
+    return idbRun('readwrite', s => s.put({
+      key: `${draft}|${path}`, draft, path,
+      blob: entry.blob, ext: entry.ext, width: entry.width, height: entry.height, name: entry.name,
+    }));
+  }
+  function idbListImages(draft) {
+    return idbRun('readonly', s => s.index('draft').getAll(draft)).then(r => r || []);
+  }
+  function idbDeleteImage(draft, path) {
+    return idbRun('readwrite', s => s.delete(`${draft}|${path}`));
+  }
+  function idbDeleteDraftImages(draft) {
+    return idbListImages(draft).then(rows => Promise.all(rows.map(r => idbDeleteImage(draft, r.path)))).catch(() => {});
+  }
+
+  // ---- Colar / arrastar ----
+  function setupImageDropAndPaste() {
+    const onPaste = (e) => {
+      const items = Array.from((e.clipboardData && e.clipboardData.items) || []);
+      const files = items.filter(i => i.kind === 'file' && /^image\//.test(i.type)).map(i => i.getAsFile()).filter(Boolean);
+      if (!files.length) return;
+      e.preventDefault();
+      insertImageFiles(files);
+    };
+    source.addEventListener('paste', onPaste);
+    previewContent.addEventListener('paste', onPaste);
+
+    let dragDepth = 0;
+    const hasFiles = (e) => e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files');
+    document.addEventListener('dragenter', (e) => {
+      if (!hasFiles(e)) return;
+      dragDepth++;
+      document.body.classList.add('ed-dragging');
+    });
+    document.addEventListener('dragleave', (e) => {
+      if (!hasFiles(e)) return;
+      dragDepth = Math.max(0, dragDepth - 1);
+      if (!dragDepth) document.body.classList.remove('ed-dragging');
+    });
+    document.addEventListener('dragover', (e) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+    });
+    document.addEventListener('drop', (e) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth = 0;
+      document.body.classList.remove('ed-dragging');
+      insertImageFiles(e.dataTransfer.files);
+    });
+
+    $$('[data-pick-image-for]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.pickImageFor;
+        if (target === 'meta-image') pickImageForField('#meta-image', (v) => state.meta.image = v);
+        else if (target === 'meta-media-capa') pickImageForField('#meta-media-capa', (v) => state.meta.media.capa = v);
+      });
+    });
+  }
+
+  // ===========================================================================
+  // 6c. Publicação: .zip com imagens, ou commit direto no GitHub
+  // ===========================================================================
+
+  const GH_REPO = 'danilobortoli/danilobortoli.github.io';
+  const GH_BRANCH = 'main';
+  const GH_TOKEN_KEY = 'editor:github-token:v1';
+  const JSZIP_URL = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+
+  function loadScript(url) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = url; s.async = true;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('falha ao carregar ' + url));
+      document.head.appendChild(s);
+    });
+  }
+
+  function saveBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
+  }
+
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result).split(',')[1] || '');
+      r.onerror = () => reject(r.error);
+      r.readAsDataURL(blob);
+    });
+  }
+
+  function encodeGhPath(path) {
+    return path.split('/').map(encodeURIComponent).join('/');
+  }
+
+  function ghToken() {
+    try { return localStorage.getItem(GH_TOKEN_KEY) || ''; } catch (e) { return ''; }
+  }
+  function setGhToken(t) {
+    try { t ? localStorage.setItem(GH_TOKEN_KEY, t) : localStorage.removeItem(GH_TOKEN_KEY); } catch (e) {}
+  }
+
+  async function gh(method, path, body, token) {
+    const res = await fetch(`https://api.github.com/repos/${GH_REPO}${path}`, {
+      method,
+      headers: Object.assign({
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      }, body ? { 'Content-Type': 'application/json' } : {}),
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) {
+      let msg = `GitHub respondeu ${res.status}`;
+      try { msg += `: ${(await res.json()).message}`; } catch (e) {}
+      throw new Error(msg);
+    }
+    return res.status === 204 ? {} : res.json();
+  }
+
+  function ghExists(path, token) {
+    return gh('GET', `/contents/${encodeGhPath(path)}?ref=${GH_BRANCH}`, null, token).then(r => !!r);
+  }
+
+  function publishPlan() {
+    return { mdPath: `${docFolder()}/${generateFilename()}`, images: usedImagePaths() };
+  }
+
+  function defaultCommitMessage() {
+    const kind = state.doc === 'post' ? 'post' : state.doc === 'artigo' ? 'artigo' : 'nota';
+    const t = state.meta.title || (state.doc === 'media' && state.meta.media.titulo) || '';
+    return t ? `Nova ${kind}: ${t}` : `Nova ${kind}`;
+  }
+
+  function showPublishModal() {
+    const plan = publishPlan();
+    const list = $('#ed-publish-files');
+    const rows = [`<li><code>${escapeHtml(plan.mdPath)}</code></li>`]
+      .concat(plan.images.map(p => `<li><code>${escapeHtml(p)}</code> <small>${Math.round(images[p].size / 1024)} KB</small></li>`));
+    list.innerHTML = rows.join('');
+    const unused = Object.keys(images).length - plan.images.length;
+    $('#ed-publish-unused').textContent = unused
+      ? (unused === 1
+        ? '1 imagem anexada mas não usada no texto fica de fora.'
+        : `${unused} imagens anexadas mas não usadas no texto ficam de fora.`)
+      : '';
+    $('#ed-publish-message').value = defaultCommitMessage();
+    $('#ed-publish-token').value = ghToken();
+    $('#ed-publish-status').innerHTML = '';
+    $('#ed-publish-go').disabled = false;
+    $('#ed-publish').hidden = false;
+    (ghToken() ? $('#ed-publish-go') : $('#ed-publish-token')).focus();
+  }
+
+  function hidePublishModal() { $('#ed-publish').hidden = true; }
+
+  function publishStatus(html, kind) {
+    const el = $('#ed-publish-status');
+    el.innerHTML = html;
+    el.className = 'ed-publish-status' + (kind ? ` ${kind}` : '');
+  }
+
+  async function publishToGitHub() {
+    const token = $('#ed-publish-token').value.trim();
+    const message = $('#ed-publish-message').value.trim() || defaultCommitMessage();
+    if (!token) { publishStatus('Cole um token do GitHub para publicar.', 'error'); $('#ed-publish-token').focus(); return; }
+    setGhToken(token);
+    const go = $('#ed-publish-go');
+    go.disabled = true;
+    try {
+      publishStatus('Verificando acesso ao repositório…');
+      if (!(await gh('GET', '', null, token))) throw new Error('o token não tem acesso a ' + GH_REPO);
+
+      let { mdPath } = publishPlan();
+      if (await ghExists(mdPath, token)) {
+        if (!confirm(`Já existe ${mdPath} no site. Substituir pelo conteúdo deste rascunho?`)) {
+          publishStatus('Cancelado: o arquivo já existia.', 'error');
+          go.disabled = false;
+          return;
+        }
+      }
+
+      // Imagens com o mesmo nome já no site ganham sufixo -2, -3…
+      for (const p of usedImagePaths()) {
+        let cand = p, n = 2;
+        while (imageBaseTaken(stripExt(cand), p) || await ghExists(cand, token)) cand = suffixedPath(p, n++);
+        if (cand !== p) await remapImagePath(p, cand);
+      }
+      const plan = publishPlan();
+      mdPath = plan.mdPath;
+
+      publishStatus('Enviando arquivos…');
+      const ref = await gh('GET', `/git/ref/heads/${GH_BRANCH}`, null, token);
+      if (!ref) throw new Error(`branch ${GH_BRANCH} não encontrada`);
+      const headSha = ref.object.sha;
+      const headCommit = await gh('GET', `/git/commits/${headSha}`, null, token);
+
+      const tree = [];
+      for (let i = 0; i < plan.images.length; i++) {
+        const p = plan.images[i];
+        publishStatus(`Enviando imagem ${i + 1} de ${plan.images.length}…`);
+        const b64 = await blobToBase64(images[p].blob);
+        const blob = await gh('POST', '/git/blobs', { content: b64, encoding: 'base64' }, token);
+        tree.push({ path: p, mode: '100644', type: 'blob', sha: blob.sha });
+      }
+      tree.push({ path: mdPath, mode: '100644', type: 'blob', content: generateFullDocument() });
+
+      publishStatus('Criando commit…');
+      const newTree = await gh('POST', '/git/trees', { base_tree: headCommit.tree.sha, tree }, token);
+      const commit = await gh('POST', '/git/commits', { message, tree: newTree.sha, parents: [headSha] }, token);
+      await gh('PATCH', `/git/refs/heads/${GH_BRANCH}`, { sha: commit.sha, force: false }, token);
+
+      state.published = { at: new Date().toISOString(), path: mdPath, commit: commit.html_url };
+      persist();
+      publishStatus(
+        `Publicado <code>${escapeHtml(mdPath)}</code>${plan.images.length ? ` com ${plural(plan.images.length, 'imagem', 'imagens')}` : ''}. ` +
+        `<a href="${escapeAttr(commit.html_url)}" target="_blank" rel="noopener">Ver commit</a> · ` +
+        `o site atualiza em alguns minutos.`,
+        'ok'
+      );
+      toast('Publicado no GitHub');
+    } catch (e) {
+      publishStatus(`Erro: ${escapeHtml(e.message || String(e))}`, 'error');
+      go.disabled = false;
+    }
+  }
+
+  function setupPublishBindings() {
+    $('#ed-action-publish').addEventListener('click', showPublishModal);
+    $('#ed-publish-close').addEventListener('click', hidePublishModal);
+    $('#ed-publish').addEventListener('click', (e) => { if (e.target.id === 'ed-publish') hidePublishModal(); });
+    $('#ed-publish-go').addEventListener('click', publishToGitHub);
+    $('#ed-publish-forget').addEventListener('click', () => {
+      setGhToken('');
+      $('#ed-publish-token').value = '';
+      toast('Token esquecido neste navegador');
+    });
+  }
 
   // ===========================================================================
   // 7. Tufte WYSIWYG mode (contenteditable + Turndown)
@@ -975,13 +1523,23 @@
       },
     });
 
+    // Imagens anexadas: no preview o src é um object URL; o caminho real está em data-src.
+    turndown.addRule('localImage', {
+      filter: 'img',
+      replacement: (content, node) => {
+        const src = node.getAttribute('data-src') || node.getAttribute('src') || '';
+        const alt = (node.getAttribute('alt') || '').replace(/\]/g, '\\]');
+        return src ? `![${alt}](${src})` : '';
+      },
+    });
+
     turndown.addRule('fullwidthFigure', {
       filter: (n) => n.tagName === 'FIGURE' && n.classList && n.classList.contains('fullwidth'),
       replacement: (content, node) => {
         const img = node.querySelector('img');
         const cap = node.querySelector('figcaption');
         if (!img) return content;
-        const args = [`src="${img.getAttribute('src') || ''}"`, `alt="${(img.getAttribute('alt') || '').replace(/"/g, '\\"')}"`];
+        const args = [`src="${img.getAttribute('data-src') || img.getAttribute('src') || ''}"`, `alt="${(img.getAttribute('alt') || '').replace(/"/g, '\\"')}"`];
         if (cap && cap.textContent.trim()) args.push(`caption="${cap.textContent.replace(/"/g, '\\"').trim()}"`);
         return `\n\n{% include fullwidth.html ${args.join(' ')} %}\n\n`;
       },
@@ -993,7 +1551,7 @@
         const img = node.querySelector('img');
         const cap = node.querySelector('.marginnote, figcaption');
         if (!img) return content;
-        const args = [`src="${img.getAttribute('src') || ''}"`, `alt="${(img.getAttribute('alt') || '').replace(/"/g, '\\"')}"`];
+        const args = [`src="${img.getAttribute('data-src') || img.getAttribute('src') || ''}"`, `alt="${(img.getAttribute('alt') || '').replace(/"/g, '\\"')}"`];
         if (cap && cap.textContent.trim()) {
           args.push(`caption="${cap.textContent.replace(/"/g, '\\"').trim()}"`);
           args.push(`id="fig-${Math.random().toString(36).slice(2, 7)}"`);
@@ -1225,6 +1783,9 @@
 
     document.addEventListener('keydown', handleKeydown);
     source.addEventListener('keydown', handleSourceKeydown);
+
+    setupImageDropAndPaste();
+    setupPublishBindings();
   }
 
   function bindCheck(sel, setter) {
@@ -1264,12 +1825,18 @@
     else if (mod && e.shiftKey && key === 'm') { e.preventDefault(); setMode('markdown'); }
     else if (mod && e.shiftKey && key === 't') { e.preventDefault(); setMode('tufte'); }
     else if (mod && e.shiftKey && key === 'd') { e.preventDefault(); showDraftsModal(); }
+    else if (mod && e.key === 'Enter') {
+      e.preventDefault();
+      if ($('#ed-publish').hidden) showPublishModal();
+      else if (!$('#ed-publish-go').disabled) publishToGitHub();
+    }
     else if (e.key === '?' && !isTyping(e.target)) {
       e.preventDefault();
       $('#ed-help').hidden = !$('#ed-help').hidden;
     } else if (e.key === 'Escape') {
       $('#ed-help').hidden = true;
       hideDraftsModal();
+      hidePublishModal();
       hideSlashMenu();
     }
   }
@@ -1337,7 +1904,8 @@
     { label: 'Lista numerada', hint: '1.', cmd: 'ol' },
     { label: 'Bloco de código', hint: '```', cmd: 'codeblock' },
     { label: 'Régua', hint: '---', cmd: 'hr' },
-    { label: 'Imagem', hint: 'image', cmd: 'image' },
+    { label: 'Imagem (arquivo)', hint: 'colar/arrastar', cmd: 'image' },
+    { label: 'Imagem por URL', hint: 'externa', cmd: 'imageurl' },
     { label: 'Newthought', hint: 'small-caps', cmd: 'newthought' },
     { label: 'Sidenote', hint: 'numerada', cmd: 'sidenote' },
     { label: 'Marginnote', hint: 'livre', cmd: 'marginnote' },
@@ -1537,6 +2105,7 @@
         ...state.meta,
         date: state.meta.date instanceof Date ? state.meta.date.toISOString() : state.meta.date,
       },
+      published: state.published || null,
       updatedAt: new Date().toISOString(),
     };
   }
@@ -1586,7 +2155,9 @@
         ...((d.meta && d.meta.artigo) || {}),
       },
     };
+    state.published = d.published || null;
     try { localStorage.setItem(CURRENT_DRAFT_KEY, id); } catch (e) {}
+    loadImagesForDraft(id);
     return true;
   }
 
@@ -1639,6 +2210,8 @@
   function newDraft(silent) {
     if (state.draftId) persist();
     state.draftId = null;
+    state.published = null;
+    clearImages();
     state.source = '';
     state.meta = {
       title: '', subtitle: '', date: new Date(), category: '', image: '',
@@ -1658,6 +2231,7 @@
     const drafts = readDrafts();
     delete drafts[id];
     writeDrafts(drafts);
+    idbDeleteDraftImages(id);
     if (state.draftId === id) {
       state.draftId = null;
       const list = listDrafts();
@@ -1717,6 +2291,7 @@
             <p class="ed-draft-meta">
               <span class="ed-draft-date">${updated}</span>
               <span class="ed-draft-words">${words} palavra${words !== 1 ? 's' : ''}</span>
+              ${d.published ? '<span class="ed-draft-published">publicado</span>' : ''}
             </p>
           </div>
           <button type="button" class="ed-draft-delete" data-delete-id="${d.id}" title="Apagar rascunho">×</button>
@@ -1777,18 +2352,30 @@
     return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}T${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
   }
 
-  function downloadMd() {
+  // Sem imagens anexadas baixa só o .md; com imagens, um .zip já com a
+  // estrutura do repositório (_notas/… + assets/images/AAAA/…): basta
+  // descompactar na raiz e comitar.
+  async function downloadMd() {
     const filename = generateFilename();
     const content = generateFullDocument();
-    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
-    toast(`Baixado: ${filename}`);
+    const used = usedImagePaths();
+    if (!used.length) {
+      saveBlob(new Blob([content], { type: 'text/markdown;charset=utf-8' }), filename);
+      toast(`Baixado: ${filename}`);
+      return;
+    }
+    try {
+      if (!window.JSZip) await loadScript(JSZIP_URL);
+      const zip = new window.JSZip();
+      zip.file(`${docFolder()}/${filename}`, content);
+      used.forEach(p => zip.file(p, images[p].blob));
+      const blob = await zip.generateAsync({ type: 'blob' });
+      saveBlob(blob, filename.replace(/\.md$/, '') + '.zip');
+      toast(`Baixado .zip com ${plural(used.length, 'imagem', 'imagens')}: descompacte na raiz do repositório`);
+    } catch (e) {
+      saveBlob(new Blob([content], { type: 'text/markdown;charset=utf-8' }), filename);
+      toast('Não deu pra montar o .zip; baixei só o .md');
+    }
   }
 
   async function copyMd() {

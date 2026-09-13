@@ -76,6 +76,9 @@ exclude:
   - _guia-media-review.html
   - telegram-bot
   - vendor
+  - nova-nota
+  - nova-imagem
+  - gerar-paginas-notas
   - Gemfile
   - Gemfile.lock
   # Documentação interna e páginas de demonstração: não devem entrar no

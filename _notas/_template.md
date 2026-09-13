@@ -18,3 +18,9 @@ date: YYYY-MM-DD HH:MM:SS -0300
 ---
 
 Escreva sua nota aqui em Markdown...
+
+<!--
+Imagens: ![](/assets/images/AAAA/AAAA-MM-DD-slug.jpg)
+Prepare o arquivo com ./nova-imagem foto.jpg (converte, reduz e batiza),
+ou cole/arraste direto no /editor/, que faz isso sozinho.
+-->

@@ -90,8 +90,11 @@ Mande mensagens para o bot:
 - **Texto curto**: vira o corpo da nota, sem `title`.
 - **Texto multilinha**: a primeira linha (até 80 chars, sem pontuação final)
   vira `title`; o resto vira o corpo.
-- **Foto**: a imagem vai para `assets/images/notas/<data>-<slug>.<ext>`,
-  referenciada no topo da nota. A legenda segue a mesma regra de título/corpo.
+- **Foto** (ou imagem enviada como arquivo, sem compressão): a imagem vai
+  para `assets/images/<ano>/<data>-<slug>.<ext>` — a mesma convenção do
+  editor e do script `nova-imagem` — referenciada no topo da nota. A legenda
+  segue a mesma regra de título/corpo. Se já houver arquivo com esse nome,
+  ganha sufixo `-2`, `-3`…
 - **Links**: URLs viram `<url>` ou `[texto](url)` quando o Telegram entrega o
   texto formatado.
 

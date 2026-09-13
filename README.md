@@ -24,6 +24,29 @@ O design é inspirado no estilo de Edward Tufte, cuja tipografia e organização
 
 `/editor/` é um editor markdown com preview ao vivo, rascunhos no navegador e exportação do `.md` pronto com front matter. Tipos de documento: Post, Nota, Mídia e Artigo (`/editor/?doc=artigo` abre direto no papel vintage, com barra de ferramentas de gravura: seção, figura, figura em SVG, prancha, nota de rodapé, equação, tabela, ornamento).
 
+## Imagens
+
+Toda imagem do site vive em `assets/images/<ano>/` com o nome
+`AAAA-MM-DD-<slug>[-n].<ext>` (JPEG por padrão, PNG só quando há
+transparência, lado maior de 1600 px). No markdown, referencie pelo caminho
+absoluto: `![](/assets/images/2026/2026-09-13-titulo.jpg)`. Três caminhos
+levam a esse resultado sem trabalho manual:
+
+- **Editor** (`/editor/`): cole (⌘V) ou arraste a imagem para o texto, ou use
+  o botão `img`. O navegador reduz, recomprime e batiza o arquivo, insere o
+  markdown e mostra a imagem no preview. Depois, **Baixar** gera um `.zip`
+  com o `.md` e as imagens já nas pastas do repositório (descompacte na raiz
+  e comite), ou **Publicar** faz o commit direto na `main` com um token
+  fine-grained do GitHub (Contents: read and write), guardado só no
+  navegador. As imagens ficam salvas junto do rascunho, no IndexedDB.
+- **Linha de comando**: `./nova-imagem foto.HEIC "Captura de Tela.png"`
+  converte (com `sips` no macOS ou ImageMagick), reduz, move para
+  `assets/images/<ano>/` e imprime o markdown, já copiado para a área de
+  transferência. Opções: `-s slug`, `-d AAAA-MM-DD`, `-l "legenda"` (emite
+  `figure.html`), `-p` (mantém PNG), `-n` (só mostra o que faria).
+- **Telegram** (`telegram-bot/`): mandar uma foto, ou uma imagem como
+  arquivo, publica uma nota com ela já no lugar.
+
 ## Tecnologias
 
 - [Jekyll](https://jekyllrb.com/) — gerador de sites estáticos
