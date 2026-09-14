@@ -70,6 +70,7 @@ def process_message(message):
     text = message.get("text") or message.get("caption") or ""
     entities = message.get("entities") or message.get("caption_entities") or []
     photos = message.get("photo") or []
+    document = message.get("document") or {}
     sent_at = message.get("date")
 
     note_dt = (
@@ -83,12 +84,20 @@ def process_message(message):
 
     base_slug = slugify(title) if title else note_dt.strftime("%H%M%S")
 
+    # Foto comprimida pelo Telegram, ou imagem enviada "como arquivo"
+    # (sem compressão). Nos dois casos vai para assets/images/<ano>/,
+    # com o mesmo nome que o editor e o script nova-imagem usariam.
+    image_file_id = None
     if photos:
-        photo = photos[-1]  # maior resolução
-        image_bytes, ext = download_telegram_file(photo["file_id"])
-        image_path = (
-            f"assets/images/notas/"
-            f"{note_dt.strftime('%Y-%m-%d')}-{base_slug}{ext}"
+        image_file_id = photos[-1]["file_id"]  # maior resolução
+    elif document and str(document.get("mime_type", "")).startswith("image/"):
+        image_file_id = document["file_id"]
+
+    if image_file_id:
+        image_bytes, ext = download_telegram_file(image_file_id)
+        image_path = ensure_unique(
+            f"assets/images/{note_dt.strftime('%Y')}/"
+            f"{note_dt.strftime('%Y-%m-%d')}-{base_slug.lower()}{ext}"
         )
         commit_file(
             image_path,
@@ -242,7 +251,9 @@ def github_path_exists(path):
 def download_telegram_file(file_id):
     info = telegram_request("getFile", {"file_id": file_id})
     file_path = info["result"]["file_path"]
-    ext = os.path.splitext(file_path)[1] or ".jpg"
+    ext = os.path.splitext(file_path)[1].lower() or ".jpg"
+    if ext == ".jpeg":
+        ext = ".jpg"
     with urllib.request.urlopen(f"{TELEGRAM_FILE_API}/{file_path}", timeout=20) as resp:
         return resp.read(), ext
 

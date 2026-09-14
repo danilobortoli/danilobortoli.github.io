@@ -64,7 +64,8 @@ sitemap: false
         <button type="button" id="ed-action-drafts" title="Rascunhos (⌘⇧D)">Rascunhos</button>
         <button type="button" id="ed-action-new" title="Novo rascunho">Novo</button>
         <button type="button" id="ed-action-copy" title="Copiar markdown (⌘⇧C)">Copiar</button>
-        <button type="button" id="ed-action-download" class="primary" title="Baixar .md (⌘S)">Baixar .md</button>
+        <button type="button" id="ed-action-download" title="Baixar .md, ou .zip com as imagens (⌘S)">Baixar</button>
+        <button type="button" id="ed-action-publish" class="primary" title="Publicar no GitHub (⌘↵)">Publicar</button>
       </div>
     </div>
   </header>
@@ -91,8 +92,11 @@ sitemap: false
         <input type="text" id="meta-category" placeholder="Literatura, Tecnologia…"/>
       </label>
       <label class="ed-meta-grow ed-meta-grow-2">
-        <span>Imagem hero (URL)</span>
-        <input type="text" id="meta-image" placeholder="https://…"/>
+        <span>Imagem hero (URL ou arquivo)</span>
+        <span class="ed-meta-with-btn">
+          <input type="text" id="meta-image" placeholder="https://… ou escolha um arquivo"/>
+          <button type="button" class="ed-meta-btn" data-pick-image-for="meta-image" title="Escolher arquivo do computador">arquivo…</button>
+        </span>
       </label>
     </div>
 
@@ -170,8 +174,11 @@ sitemap: false
         <input type="text" id="meta-media-album"/>
       </label>
       <label class="ed-meta-grow ed-meta-grow-2">
-        <span>Capa (URL)</span>
-        <input type="text" id="meta-media-capa" placeholder="https://…"/>
+        <span>Capa (URL ou arquivo)</span>
+        <span class="ed-meta-with-btn">
+          <input type="text" id="meta-media-capa" placeholder="https://… ou escolha um arquivo"/>
+          <button type="button" class="ed-meta-btn" data-pick-image-for="meta-media-capa" title="Escolher arquivo do computador">arquivo…</button>
+        </span>
       </label>
       <label>
         <span>Nota /10</span>
@@ -194,7 +201,8 @@ sitemap: false
     </div>
     <div class="ed-toolbar-group">
       <button type="button" data-cmd="link" title="Link (⌘K)">↗</button>
-      <button type="button" data-cmd="image" title="Imagem">img</button>
+      <button type="button" data-cmd="image" title="Imagem do computador (ou cole / arraste direto no texto)">img</button>
+      <button type="button" data-cmd="imageurl" title="Imagem por URL externa">img↗</button>
       <button type="button" data-cmd="ul" title="Lista">•</button>
       <button type="button" data-cmd="ol" title="Lista numerada">1.</button>
       <button type="button" data-cmd="quote" title="Citação">”</button>
@@ -277,6 +285,7 @@ sitemap: false
     <span id="ed-status-words">0 palavras</span>
     <span id="ed-status-reading">0 min</span>
     <span id="ed-status-saved">não salvo</span>
+    <span id="ed-status-images" hidden></span>
     <span id="ed-status-filename" class="ed-mono"></span>
   </footer>
 
@@ -290,7 +299,8 @@ sitemap: false
         <dt><kbd>⌘</kbd>+<kbd>B</kbd></dt><dd>Negrito</dd>
         <dt><kbd>⌘</kbd>+<kbd>I</kbd></dt><dd>Itálico</dd>
         <dt><kbd>⌘</kbd>+<kbd>K</kbd></dt><dd>Inserir link</dd>
-        <dt><kbd>⌘</kbd>+<kbd>S</kbd></dt><dd>Baixar arquivo .md</dd>
+        <dt><kbd>⌘</kbd>+<kbd>S</kbd></dt><dd>Baixar .md (ou .zip com as imagens)</dd>
+        <dt><kbd>⌘</kbd>+<kbd>↵</kbd></dt><dd>Publicar no GitHub</dd>
         <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>C</kbd></dt><dd>Copiar markdown</dd>
         <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>P</kbd></dt><dd>Modo split (markdown + preview)</dd>
         <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>M</kbd></dt><dd>Só markdown</dd>
@@ -299,6 +309,14 @@ sitemap: false
         <dt><kbd>/</kbd></dt><dd>No início da linha, abre menu de blocos</dd>
         <dt><kbd>?</kbd></dt><dd>Mostrar/esconder este painel</dd>
       </dl>
+      <h3>Imagens</h3>
+      <ul class="ed-help-list">
+        <li><strong>Colar</strong> (⌘V) ou <strong>arrastar</strong> uma imagem para o texto já a anexa: ela é reduzida a no máximo 1600 px, recomprimida e nomeada <code>assets/images/AAAA/AAAA-MM-DD-titulo.jpg</code> (PNG só se tiver transparência).</li>
+        <li>O botão <code>img</code> abre o seletor de arquivos; <code>img↗</code> insere uma URL externa. Nos diálogos de figura, deixe a URL vazia para escolher um arquivo.</li>
+        <li><strong>Baixar</strong> gera um <code>.zip</code> com o <code>.md</code> e as imagens já nas pastas certas: descompacte na raiz do repositório e comite.</li>
+        <li><strong>Publicar</strong> faz o commit direto na <code>main</code> (arquivo + imagens de uma vez) com um token do GitHub guardado só neste navegador.</li>
+        <li>Imagens ficam salvas no navegador junto do rascunho; só as referenciadas no texto vão para o site.</li>
+      </ul>
       <h3>Convenções Tufte</h3>
       <ul class="ed-help-list">
         <li><strong>Sidenote</strong>: footnote kramdown <code>[^1]</code> + <code>[^1]: nota</code> ao final.</li>
@@ -335,6 +353,40 @@ sitemap: false
         <button type="button" id="ed-drafts-new" class="ed-drafts-new-btn">+ Novo rascunho</button>
       </div>
       <ul id="ed-drafts-list" class="ed-drafts-list"></ul>
+    </div>
+  </div>
+
+  <div id="ed-publish" class="ed-modal" hidden>
+    <div class="ed-modal-card ed-publish-card">
+      <header class="ed-modal-header">
+        <h2>Publicar no GitHub</h2>
+        <button type="button" id="ed-publish-close" class="ed-modal-close" title="Fechar">×</button>
+      </header>
+      <p class="ed-drafts-help">
+        Cria um commit na branch <code>main</code> com o arquivo e as imagens anexadas.
+        O GitHub Pages reconstrói o site em alguns minutos.
+      </p>
+      <h3>Arquivos</h3>
+      <ul id="ed-publish-files" class="ed-publish-files"></ul>
+      <p id="ed-publish-unused" class="ed-publish-unused"></p>
+      <label class="ed-publish-field">
+        <span>Mensagem do commit</span>
+        <input type="text" id="ed-publish-message"/>
+      </label>
+      <label class="ed-publish-field">
+        <span>Token do GitHub</span>
+        <input type="password" id="ed-publish-token" autocomplete="off" placeholder="github_pat_…"/>
+        <small>
+          Token <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained</a>
+          restrito a este repositório, com permissão <em>Contents: read and write</em>.
+          Fica guardado só neste navegador.
+          <button type="button" id="ed-publish-forget" class="ed-link-btn">Esquecer token</button>
+        </small>
+      </label>
+      <div class="ed-publish-actions">
+        <button type="button" id="ed-publish-go" class="ed-drafts-new-btn">Publicar</button>
+        <span id="ed-publish-status" class="ed-publish-status"></span>
+      </div>
     </div>
   </div>
 
