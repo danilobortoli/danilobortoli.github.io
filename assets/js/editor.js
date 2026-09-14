@@ -1311,9 +1311,12 @@
     });
     if (res.status === 404) return null;
     if (!res.ok) {
-      let msg = `GitHub respondeu ${res.status}`;
-      try { msg += `: ${(await res.json()).message}`; } catch (e) {}
-      throw new Error(msg);
+      let detail = '';
+      try { detail = (await res.json()).message || ''; } catch (e) {}
+      const err = new Error(`GitHub respondeu ${res.status}${detail ? `: ${detail}` : ''} em ${method} ${path || '/'}`);
+      err.status = res.status;
+      err.write = method !== 'GET';
+      throw err;
     }
     return res.status === 204 ? {} : res.json();
   }
@@ -1420,9 +1423,29 @@
       );
       toast('Publicado no GitHub');
     } catch (e) {
-      publishStatus(`Erro: ${escapeHtml(e.message || String(e))}`, 'error');
+      publishStatus(`Erro: ${escapeHtml(e.message || String(e))}${explainGhError(e)}`, 'error');
       go.disabled = false;
     }
+  }
+
+  // Traduz os erros mais comuns da API em instruções concretas.
+  function explainGhError(e) {
+    if (e.status === 401) {
+      return '<br>O token foi recusado: confira se colou inteiro e se não expirou.';
+    }
+    if (e.status === 403 && e.write) {
+      return '<br>O token lê o repositório mas não pode gravar nele. Ao criar o token fine-grained, ' +
+        'em <em>Repository access</em> marque <em>Only select repositories</em> e escolha este repositório ' +
+        '(a opção <em>Public repositories</em> é só leitura); em <em>Permissions → Repository permissions → Contents</em> ' +
+        'escolha <em>Read and write</em>. Um token clássico (<code>ghp_…</code>) precisa do escopo <code>repo</code>.';
+    }
+    if (e.status === 403) {
+      return '<br>Acesso negado. Se a mensagem falar em <em>rate limit</em>, espere alguns minutos; senão, revise as permissões do token.';
+    }
+    if (e.status === 409 || e.status === 422) {
+      return '<br>A branch mudou enquanto o commit era montado, ou o GitHub recusou o conteúdo. Tente publicar de novo.';
+    }
+    return '';
   }
 
   function setupPublishBindings() {

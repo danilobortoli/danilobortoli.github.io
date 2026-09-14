@@ -377,8 +377,10 @@ sitemap: false
         <span>Token do GitHub</span>
         <input type="password" id="ed-publish-token" autocomplete="off" placeholder="github_pat_…"/>
         <small>
-          Token <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained</a>
-          restrito a este repositório, com permissão <em>Contents: read and write</em>.
+          Crie um token <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained</a>
+          com <em>Repository access → Only select repositories</em> → este repositório
+          e <em>Permissions → Contents → Read and write</em>
+          (a opção <em>Public repositories</em> é só leitura e dá erro 403 ao publicar).
           Fica guardado só neste navegador.
           <button type="button" id="ed-publish-forget" class="ed-link-btn">Esquecer token</button>
         </small>
