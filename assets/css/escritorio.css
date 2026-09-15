@@ -411,28 +411,32 @@
 }
 
 .esc-body.esc-has-notes {
-  padding-right: 52mm;
+  padding-right: 40mm;
   display: flow-root; /* contém os floats das notas, longe do fecho/rodapé */
 }
 
+/* Calibradas para casar com as notas marginais dos posts "notas" do site
+   (site.css .sidenote): serifa itálica, tom suave, corpo menor. */
 .esc-sn-note {
   float: right;
   clear: right;
-  width: 44mm;
-  margin-right: -52mm;
-  margin-top: 0.15rem;
+  width: 32mm;
+  margin-right: -40mm;
+  margin-top: 0.2rem;
   margin-bottom: 0.7rem;
   font-family: var(--font-serif);
-  font-size: 0.74rem;
-  line-height: 1.34;
+  font-style: italic;
+  font-size: 0.8rem;
+  line-height: 1.45;
   text-align: left;
   hyphens: none;
-  color: #3a3a3a;
+  color: #666;
 }
 .esc-sn-num {
   font-family: var(--font-sans, "Fira Sans", sans-serif);
-  font-size: 0.82em;
+  font-size: 0.72em;
   font-weight: 500;
+  font-style: normal;
   color: var(--color-accent);
   vertical-align: super;
   line-height: 0;
