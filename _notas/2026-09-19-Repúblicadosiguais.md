@@ -1,0 +1,6 @@
+---
+title: República dos iguais
+date: 2026-09-19 22:58:24 -0300
+---
+{% include epigraph.html quote="Os hábitos inveterados, os antigos preconceitos, farão novamente tudo para impedir a implantação da República dos Iguais. A organização da igualdade efetiva, a única que satisfaz todas as necessidades sem provocar vítimas, sem custar sacrifícios, talvez em princípio não agrade a todos. Os egoístas, os ambiciosos, rugirão de raiva. Os que conquistaram injustamente as suas possessões dirão que está a cometer-se uma injustiça em relação a eles. Os prazeres individuais, os prazeres solitários, as comodidades pessoais, serão motivo de grande pesar para os indivíduos que sempre se caracterizaram pela sua indiferença ante os sofrimentos do próximo. Os amantes do poder absoluto, os miseráveis partidários da autoridade arbitrária, baixarão pesarosos as suas soberbas cabeças perante o nível da igualdade real. A sua visão estreita dificilmente penetrará no próximo futuro da felicidade comum. Mas que podem fazer alguns milhares de descontentes contra uma massa de homens completamente satisfeitos de terem procurado durante tanto tempo uma felicidade que sempre tiveram à mão?" author="Gracchus Babeuf" source="Manifesto dos Iguais" %}
+
