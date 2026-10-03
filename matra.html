@@ -1,0 +1,181 @@
+---
+layout: null
+permalink: /matra/
+sitemap: false
+---
+<!DOCTYPE html>
+<html lang="pt-BR" data-doc="lai" data-mode="split">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>MATRA — Documentos</title>
+
+  <!-- Fira Sans (Erik Spiekermann) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Sistema de design Tufte-Bortoli + camada institucional da MATRA -->
+  <link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/editor.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/escritorio.css' | relative_url }}"/>
+  <link rel="stylesheet" href="{{ '/assets/css/matra.css' | relative_url }}"/>
+</head>
+<body class="editor-body escritorio-body matra-body">
+
+  <header class="ed-topbar">
+    <div class="ed-topbar-left">
+      <a href="{{ '/escritorio/' | relative_url }}" class="ed-wordmark" title="Ir para o Escritório">
+        <span class="ed-wordmark-name">MATRA</span>
+        <span class="ed-wordmark-subtitle">Marília Transparente</span>
+      </a>
+    </div>
+
+    <div class="ed-topbar-center">
+      <div class="ed-segmented" data-segmented="doc" role="tablist" aria-label="Tipo de documento">
+        <button type="button" data-doc="lai" class="active">Pedido LAI</button>
+        <button type="button" data-doc="recursoLai">Recurso LAI</button>
+        <button type="button" data-doc="representacao">Representação</button>
+        <button type="button" data-doc="oficio">Ofício</button>
+        <button type="button" data-doc="ata">Ata</button>
+        <button type="button" data-doc="generico">Doc</button>
+      </div>
+    </div>
+
+    <div class="ed-topbar-right">
+      <div class="ed-segmented" data-segmented="mode" role="tablist" aria-label="Modo de visualização">
+        <button type="button" data-mode="markdown" title="Só markdown (⌘⇧M)">MD</button>
+        <button type="button" data-mode="split" class="active" title="Lado a lado (⌘⇧P)">Split</button>
+        <button type="button" data-mode="pagina" title="Só a página A4 (⌘⇧A)">Página</button>
+      </div>
+      <div class="ed-actions">
+        <button type="button" id="ed-action-help" title="Atalhos (?)">?</button>
+        <button type="button" id="ed-action-drafts" title="Rascunhos (⌘⇧D)">Rascunhos</button>
+        <button type="button" id="ed-action-new" title="Novo documento">Novo</button>
+        <button type="button" id="ed-action-copy" title="Copiar markdown (⌘⇧C)">Copiar</button>
+        <button type="button" id="ed-action-download" title="Baixar .md (⌘S)">Baixar .md</button>
+        <button type="button" id="ed-action-pdf" class="primary" title="Exportar PDF (⌘P)">Exportar PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="ed-meta" aria-label="Campos do documento">
+    <div id="esc-meta"></div>
+  </section>
+
+  <nav class="ed-toolbar" aria-label="Barra de ferramentas">
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="bold" title="Negrito (⌘B)"><b>B</b></button>
+      <button type="button" data-cmd="italic" title="Itálico (⌘I)"><i>I</i></button>
+    </div>
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="h2" title="Seção (DOS FATOS…)">H₂</button>
+      <button type="button" data-cmd="h3" title="Subseção">H₃</button>
+    </div>
+    <div class="ed-toolbar-group">
+      <button type="button" data-cmd="link" title="Link (⌘K)">↗</button>
+      <button type="button" data-cmd="ul" title="Lista">•</button>
+      <button type="button" data-cmd="ol" title="Lista numerada">1.</button>
+      <button type="button" data-cmd="quote" title="Citação longa (recuada)">”</button>
+      <button type="button" data-cmd="nota" title="Nota lateral (sidenote) — ^[texto]">N<sup>×</sup></button>
+      <button type="button" data-cmd="hr" title="Régua">―</button>
+    </div>
+    <div class="ed-toolbar-group ed-toolbar-tufte">
+      <span class="ed-toolbar-label">MATRA</span>
+      <button type="button" data-cmd="abertura" class="mt-only-abertura" title="Parágrafo de abertura com a qualificação da MATRA">Abertura</button>
+      <button type="button" data-cmd="solicitacoes" class="mt-hide-ata" title="Bloco de solicitações (i), (ii)…">Solicitações</button>
+      <button type="button" data-cmd="reportagem" class="mt-hide-ata" title="Menção a fato noticiado">Notícia</button>
+      <button type="button" data-cmd="processo" class="mt-hide-ata" title="Referência a processo judicial">Processo</button>
+      <button type="button" data-cmd="pauta" class="mt-only-ata" title="Assunto da ata: RÓTULO — prosa — Deliberações">Assunto</button>
+      <button type="button" data-cmd="jurisprudencia" title="Citação de jurisprudência com referência">§ juris</button>
+      <button type="button" data-cmd="dispositivo" title="Transcrição de dispositivo legal">Art.</button>
+    </div>
+  </nav>
+
+  <main class="ed-main">
+    <section class="ed-pane ed-pane-md" aria-label="Editor markdown">
+      <textarea
+        id="ed-source"
+        spellcheck="true"
+        autocapitalize="off"
+        autocomplete="off"
+        autocorrect="off"
+        placeholder="Corpo do documento em markdown…&#10;&#10;Timbre, destinatário, fórmulas obrigatórias e assinatura são gerados pelos campos acima.&#10;Dica: digite / no início da linha pra abrir o menu de blocos."
+      ></textarea>
+    </section>
+
+    <section class="ed-pane ed-pane-preview esc-pane-sheet" aria-label="Página A4">
+      <div class="esc-sheet-wrap">
+        <article class="esc-sheet" id="esc-sheet"></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ed-statusbar">
+    <span id="ed-status-words">0 palavras</span>
+    <span id="ed-status-saved">não salvo</span>
+    <span id="ed-status-filename" class="ed-mono"></span>
+  </footer>
+
+  <div id="ed-help" class="ed-modal" hidden>
+    <div class="ed-modal-card">
+      <header class="ed-modal-header">
+        <h2>Atalhos</h2>
+        <button type="button" id="ed-help-close" class="ed-modal-close" title="Fechar">×</button>
+      </header>
+      <dl class="ed-shortcuts">
+        <dt><kbd>⌘</kbd>+<kbd>B</kbd></dt><dd>Negrito</dd>
+        <dt><kbd>⌘</kbd>+<kbd>I</kbd></dt><dd>Itálico</dd>
+        <dt><kbd>⌘</kbd>+<kbd>K</kbd></dt><dd>Inserir link</dd>
+        <dt><kbd>⌘</kbd>+<kbd>S</kbd></dt><dd>Baixar arquivo .md</dd>
+        <dt><kbd>⌘</kbd>+<kbd>P</kbd></dt><dd>Exportar PDF (imprimir a página A4)</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>C</kbd></dt><dd>Copiar markdown</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>P</kbd></dt><dd>Modo split (markdown + página)</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>M</kbd></dt><dd>Só markdown</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>A</kbd></dt><dd>Só a página A4</dd>
+        <dt><kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>D</kbd></dt><dd>Abrir rascunhos</dd>
+        <dt><kbd>/</kbd></dt><dd>No início da linha, abre menu de blocos</dd>
+        <dt><kbd>?</kbd></dt><dd>Mostrar/esconder este painel</dd>
+      </dl>
+      <h3>Como funciona</h3>
+      <ul class="ed-help-list">
+        <li><strong>Pedido LAI.</strong> Data com dia da semana, destinatário, “Ref.”, o parágrafo de apresentação e os três parágrafos de fechamento obrigatórios saem dos campos, no padrão da MATRA. O corpo fica para a contextualização e as solicitações.</li>
+        <li><strong>Recurso LAI.</strong> Prazo de 10 dias da ciência da decisão (art. 15 da Lei nº 12.527/2011). <em>Abertura</em> monta o parágrafo inicial com protocolo, datas e motivo.</li>
+        <li><strong>Representação.</strong> O destinatário escolhe o endereçamento e o fundamento da legitimidade usado pela <em>Abertura</em>; o endereçamento personalizado substitui o automático.</li>
+        <li><strong>Ata.</strong> Cabeçalho, abertura (data, hora, sede, modalidade) e fecho com lavratura saem dos campos. Cada assunto é um parágrafo com rótulo em caixa-alta e “Deliberações: (i)…”.</li>
+        <li><strong>Assinaturas.</strong> Nome na primeira linha, cargo nas seguintes; uma linha em branco separa signatários.</li>
+        <li><strong>Logo.</strong> Salve o logo oficial em <code>assets/images/matra/logo-matra.svg</code> (ou <code>.png</code>) e o timbre passa a usá-lo; sem o arquivo, sai o logotipo tipográfico.</li>
+        <li><strong>Lacunas</strong> ainda não preenchidas aparecem destacadas em azul na tela — o destaque não vai para o PDF, o texto entre colchetes vai.</li>
+        <li><strong>PDF</strong> usa a impressão do navegador: escolha “Salvar como PDF” no diálogo.</li>
+        <li><strong>Privacidade.</strong> Nada sai deste navegador — rascunhos e o caderno de órgãos ficam só no <code>localStorage</code> desta máquina.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="ed-drafts" class="ed-modal" hidden>
+    <div class="ed-modal-card ed-drafts-card">
+      <header class="ed-modal-header">
+        <h2>Rascunhos</h2>
+        <button type="button" id="ed-drafts-close" class="ed-modal-close" title="Fechar">×</button>
+      </header>
+      <p class="ed-drafts-help">
+        Rascunhos ficam salvos automaticamente <strong>somente neste navegador</strong> — nada é enviado a servidor algum.
+        Em máquina compartilhada, apague o que for sigiloso ao terminar.
+      </p>
+      <div class="ed-drafts-actions">
+        <button type="button" id="ed-drafts-new" class="ed-drafts-new-btn">+ Novo documento</button>
+        <button type="button" id="ed-drafts-wipe" class="esc-drafts-wipe-btn">Apagar tudo</button>
+      </div>
+      <ul id="ed-drafts-list" class="ed-drafts-list"></ul>
+    </div>
+  </div>
+
+  <div id="ed-slash" class="ed-popover" hidden></div>
+  <datalist id="mt-orgaos-list"></datalist>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="{{ '/assets/js/matra.js' | relative_url }}"></script>
+</body>
+</html>

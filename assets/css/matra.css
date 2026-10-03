@@ -1,0 +1,196 @@
+/* ============================================================
+   MATRA — camada institucional sobre o Escritório.
+   Carregada depois de escritorio.css: troca o acento magenta pelo
+   azul institucional da OSCIP (#1B67B2), redesenha o timbre e dá
+   forma aos blocos próprios (pedido LAI, ofício, ata).
+   Regra Tufte-Bortoli mantida: o acento só aparece em running
+   heads, rótulos e numeração — nunca no corpo nem nos títulos.
+   ============================================================ */
+
+:root {
+  --color-matra:        #1b67b2;
+  --color-matra-soft:   #d6e4f3;
+  --color-matra-hover:  #14508c;
+
+  /* O chrome do editor herda o acento da MATRA. */
+  --color-accent:       var(--color-matra);
+  --color-accent-soft:  var(--color-matra-soft);
+  --ed-accent-hover:    var(--color-matra-hover);
+}
+
+/* ==========================================================================
+   1. Toolbar: blocos por tipo de documento
+   ========================================================================== */
+
+[data-doc="lai"] .mt-only-abertura,
+[data-doc="ata"] .mt-only-abertura,
+[data-doc="ata"] .mt-hide-ata,
+html:not([data-doc="ata"]) .mt-only-ata { display: none; }
+
+/* ==========================================================================
+   2. Timbre e rodapé
+   ========================================================================== */
+
+.mt-timbre {
+  align-items: flex-end;
+  border-bottom-color: var(--color-matra);
+}
+.mt-timbre-marca {
+  display: flex;
+  align-items: flex-end;
+  line-height: 1;
+}
+.mt-timbre-sigla {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 1.32rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--color-matra);
+  margin-right: -0.2em; /* compensa o tracking da última letra */
+}
+.mt-timbre-logo {
+  display: block;
+  height: 13mm;
+  width: auto;
+}
+.mt-timbre-id {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+.mt-timbre-nome {
+  font-style: italic;
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
+}
+
+.mt-rodape { border-top-color: #cfcfcf; }
+
+/* ==========================================================================
+   3. Blocos protocolares
+   ========================================================================== */
+
+/* Data no topo (pedido LAI, ofício): "duas linhas em branco" depois. */
+.mt-data-topo { margin: 0 0 2.6rem; }
+
+.mt-destinatario {
+  margin: 0 0 2rem;
+  line-height: 1.45;
+}
+
+.mt-ref {
+  margin: 0 0 2rem;
+  font-style: italic;
+}
+.mt-ref-label {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-matra);
+  margin-right: 0.45rem;
+}
+
+.mt-vocativo { margin: 0 0 0.9rem; }
+
+.mt-apresentacao,
+.mt-fixos p,
+.mt-ata-abertura,
+.mt-ata-fecho {
+  margin: 0 0 0.9rem;
+  text-align: justify;
+  hyphens: auto;
+}
+.mt-fixos { margin-top: 0.9rem; }
+
+/* Ofício: número à esquerda, local e data à direita. */
+.mt-oficio-cab {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0 0 2.6rem;
+}
+.mt-oficio-cab .mt-data-topo { margin: 0; text-align: right; }
+.mt-oficio-num {
+  margin: 0;
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-matra);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   4. Ata de diretoria
+   ========================================================================== */
+
+.mt-ata-titulo {
+  font-family: var(--font-sans, "Fira Sans", sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 auto 2rem;
+  max-width: 88%;
+}
+
+/* Corpo da ata: prosa contínua, rótulos em caixa-alta já vêm do texto. */
+[data-doc="ata"] .esc-body strong { font-weight: 600; }
+
+.mt-ata-closing { margin-top: 0.9rem; }
+
+/* ==========================================================================
+   5. Fecho e signatários
+   ========================================================================== */
+
+.mt-entidade {
+  margin: 1.6rem 0 0;
+  text-align: center;
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+}
+
+.mt-assinaturas {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2.4rem 4rem;
+}
+.mt-signatario {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 58mm;
+}
+.mt-signatario .esc-assin-linha { width: 64mm; }
+.mt-ata-closing .mt-assinaturas { margin-top: 4rem; }
+
+/* ==========================================================================
+   6. Lacunas pendentes — destacadas só na tela
+   ========================================================================== */
+
+.mt-pendente {
+  background: var(--color-matra-soft);
+  color: var(--color-matra-hover);
+  border-radius: 2px;
+  padding: 0 0.15em;
+}
+.pagedjs_page .mt-pendente,
+body.esc-print-root .mt-pendente {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+@media print {
+  .mt-pendente { background: none; color: inherit; padding: 0; }
+}
