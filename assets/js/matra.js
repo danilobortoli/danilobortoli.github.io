@@ -36,10 +36,9 @@
     email: '',
   };
 
-  // Logo oficial: basta salvar o arquivo num destes caminhos (o primeiro que
-  // carregar é usado). Sem arquivo, o timbre usa o logotipo tipográfico.
+  // Logo oficial (PNG transparente). Se não carregar, o timbre cai no
+  // logotipo tipográfico. Uma versão vetorial pode entrar antes na lista.
   const LOGO_CANDIDATOS = [
-    '/assets/images/matra/logo-matra.svg',
     '/assets/images/matra/logo-matra.png',
   ];
   let logoUrl = '';
