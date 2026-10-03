@@ -1,16 +1,16 @@
 /* ============================================================
    MATRA — camada institucional sobre o Escritório.
    Carregada depois de escritorio.css: troca o acento magenta pelo
-   azul institucional da OSCIP (#1B67B2), redesenha o timbre e dá
+   azul do logo da OSCIP (#22409A), redesenha o timbre e dá
    forma aos blocos próprios (pedido LAI, ofício, ata).
    Regra Tufte-Bortoli mantida: o acento só aparece em running
    heads, rótulos e numeração — nunca no corpo nem nos títulos.
    ============================================================ */
 
 :root {
-  --color-matra:        #1b67b2;
-  --color-matra-soft:   #d6e4f3;
-  --color-matra-hover:  #14508c;
+  --color-matra:        #22409a;
+  --color-matra-soft:   #d9def0;
+  --color-matra-hover:  #182e72;
 
   /* O chrome do editor herda o acento da MATRA. */
   --color-accent:       var(--color-matra);
@@ -50,7 +50,7 @@ html:not([data-doc="ata"]) .mt-only-ata { display: none; }
 }
 .mt-timbre-logo {
   display: block;
-  height: 13mm;
+  height: 15mm;
   width: auto;
 }
 .mt-timbre-id {
