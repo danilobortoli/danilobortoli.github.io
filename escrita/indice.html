@@ -1,0 +1,40 @@
+---
+layout: default
+title: Escrita — índice
+permalink: /escrita/indice/
+---
+{%- comment -%}
+  A outra vista da Escrita: tudo numa lista compacta, mês a mês — uma linha
+  por texto, sem corpo. Para ler, o fluxo; para achar, o índice.
+{%- endcomment -%}
+{%- assign todos = site.posts | concat: site.notas | concat: site.artigos | sort: 'date' | reverse -%}
+
+<section class="escrita-index">
+
+  {% include escrita-cabecalho.html ativo="indice" %}
+
+  {%- assign mes_atual = "" -%}
+  {%- for item in todos -%}
+    {%- comment -%} «mes» é usado por data-pt.html; daí o nome próprio. {%- endcomment -%}
+    {%- assign chave_mes = item.date | date: '%Y-%m' -%}
+    {%- if chave_mes != mes_atual -%}
+      {%- assign mes_atual = chave_mes -%}
+      {%- unless forloop.first %}</ol></section>{% endunless %}
+      {%- capture _mes_nome -%}{% include data-pt.html date=item.date %}{%- endcapture -%}
+      {%- assign _partes = _mes_nome | split: ' de ' -%}
+      <section class="escrita-mes">
+        <h2 class="escrita-mes-titulo">{{ _partes[1] | capitalize }} de {{ item.date | date: '%Y' }}</h2>
+        <ol class="escrita-indice">
+    {%- endif -%}
+    {%- if item.collection == 'notas' -%}{%- assign _tipo = 'Nota' -%}{%- elsif item.collection == 'artigos' -%}{%- assign _tipo = 'Matéria' -%}{%- else -%}{%- assign _tipo = 'Ensaio' -%}{%- endif -%}
+    <li class="escrita-indice-item{% unless item.collection == 'notas' %} escrita-indice-item--longo{% endunless %}">
+      <a href="{{ item.url | relative_url }}">
+        <span class="escrita-indice-data">{{ item.date | date: '%-d' }} {% include mes-abbr.html date=item.date %}</span>
+        <span class="escrita-indice-titulo">{% if item.title and item.title != "" %}{{ item.title | strip }}{% else %}Sem título{% endif %}</span>
+        <span class="escrita-indice-tipo">{{ _tipo }}</span>
+      </a>
+    </li>
+    {%- if forloop.last %}</ol></section>{% endif -%}
+  {%- endfor -%}
+
+</section>

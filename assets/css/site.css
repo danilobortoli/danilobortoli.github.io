@@ -1553,3 +1553,268 @@ figcaption {
   }
   .ornamento--parede .orn-tracejado { stroke-dasharray: 5 9; }
 }
+
+/* ============================================================
+   ESCRITA — um só caderno (fluxo, filtros, índice)
+   Ensaios, notas e matérias são formatos, não seções: a barra de
+   filtros troca o recorte; «Ver como» troca fluxo por índice.
+   ============================================================ */
+.escrita-cabecalho {
+  padding: 80px 0 32px;
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 48px;
+  align-items: end;
+}
+.escrita-cabecalho .eyebrow { margin-bottom: 14px; }
+.escrita-cabecalho .page-title { font-size: clamp(2.8rem, 6vw, 4.4rem); }
+
+/* ---- Ornamento «Bartók» ---- */
+.ornamento--bartok { width: 200px; height: 200px; }
+.ornamento--bartok svg { width: 100%; height: 100%; }
+
+.escrita-barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 24px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+  border-top: 2px solid var(--color-border-strong);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.escrita-formatos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 26px;
+}
+.escrita-formatos li { margin: 0; padding: 0; }
+.escrita-formatos a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #444444;
+}
+.escrita-formatos a span { margin-left: 7px; color: var(--color-text-subtle); font-weight: 400; }
+.escrita-formatos a:hover { color: var(--color-text-primary); text-decoration: none; }
+.escrita-formatos a[aria-current] { color: var(--color-accent); box-shadow: inset 0 -2px 0 var(--color-accent); }
+.escrita-formatos a[aria-current] span { color: inherit; }
+.escrita-vista { display: flex; align-items: center; gap: 4px; }
+.escrita-vista-rotulo { font-size: 10px; letter-spacing: 0.2em; color: var(--color-text-subtle); margin-right: 8px; }
+.escrita-vista a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  color: #444444;
+}
+.escrita-vista a:hover { color: var(--color-text-primary); text-decoration: none; }
+.escrita-vista a[aria-current] { border-color: var(--color-border-strong); color: var(--color-text-primary); }
+
+/* A barra já fecha com filete: o que vem depois dispensa o seu. */
+.escrita-barra + .notas-stats,
+.escrita-barra + .escrita-filters { border-top: 0; }
+
+/* ---- Destaques: último ensaio, última matéria ---- */
+.escrita-destaques {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 32px 0 0;
+}
+.escrita-destaque {
+  display: flex;
+  gap: 18px;
+  padding: 20px 22px 22px;
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  color: var(--color-text-body);
+}
+.escrita-destaque:hover { text-decoration: none; }
+.escrita-destaque:hover .escrita-destaque-titulo { text-decoration: underline; text-underline-offset: 0.15em; }
+.escrita-destaque--ensaio { flex-direction: column; gap: 8px; }
+.escrita-destaque--materia { border-top-color: #8a3b3b; }
+.escrita-destaque-texto { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.escrita-destaque-kicker {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.escrita-destaque-kicker strong { color: var(--color-accent); font-weight: 600; }
+.escrita-destaque--materia .escrita-destaque-kicker strong { color: #8a3b3b; }
+.escrita-destaque-titulo {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.9rem;
+  line-height: 1.1;
+  color: var(--color-text-primary);
+}
+.escrita-destaque-linha {
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+/* Miniatura da folha de papel antigo das matérias */
+.escrita-folha {
+  flex: 0 0 96px;
+  height: 120px;
+  box-sizing: border-box;
+  padding: 12px;
+  background: #f3ecda;
+  border: 1px solid #d9cdb0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.escrita-folha span { display: block; height: 3px; background: #c8bb9c; }
+.escrita-folha span:nth-child(1) { height: 2px; background: #6d6353; }
+.escrita-folha span:nth-child(2) { height: 5px; width: 70%; background: #7d7262; }
+.escrita-folha span:nth-child(4) { width: 86%; }
+.escrita-folha span:nth-child(6) { width: 60%; }
+
+/* ---- Ornamento «quadrafonia»: faixa de sangria total ---- */
+.ornamento--quadrafonia {
+  width: 100vw;
+  margin: 40px calc(50% - 50vw) 0;
+  height: 168px;
+  overflow: hidden;
+}
+.ornamento--quadrafonia svg { width: 100%; height: 100%; }
+.ornamento--quadrafonia .orn-quad-estreita { display: none; }
+
+/* ---- O fluxo ---- */
+/* Entre um post e outro, no lugar do filete, a estrela que sobra entre os
+   círculos do «Bartók»: um quadrado negro menos quatro quartos de círculo. */
+.notas-list--full .nota-card--full { border-top: 0; }
+.notas-list--full .nota-card--full:last-of-type { border-bottom: 0; }
+.notas-list--full .nota-card--full + .nota-card--full::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin: 0 auto 40px;
+  background:
+    radial-gradient(circle at 0 0, var(--color-surface) 9px, transparent 9.5px),
+    radial-gradient(circle at 100% 0, var(--color-surface) 9px, transparent 9.5px),
+    radial-gradient(circle at 0 100%, var(--color-surface) 9px, transparent 9.5px),
+    radial-gradient(circle at 100% 100%, var(--color-surface) 9px, transparent 9.5px),
+    var(--color-border-strong);
+}
+.escrita-formato { color: var(--color-text-primary); }
+.escrita-chamada-corpo {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 26px;
+}
+.escrita-chamada--materia .escrita-chamada-corpo { border-left-color: #8a3b3b; }
+.escrita-chamada .escrita-formato { color: var(--color-accent); font-weight: 600; }
+.escrita-chamada--materia .escrita-formato { color: #8a3b3b; }
+.escrita-chamada .nota-card-title { font-size: 2.3rem; }
+.escrita-chamada-resumo {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--color-text-body);
+  margin: 10px 0 0;
+}
+.escrita-chamada-ler {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.escrita-chamada--materia .escrita-chamada-ler { color: #8a3b3b; }
+
+/* ---- Índice: uma linha por texto, mês a mês ---- */
+.escrita-mes { padding: 40px 0 0; }
+.escrita-mes-titulo {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 8px;
+}
+.escrita-indice {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--color-border-strong);
+}
+.escrita-indice-item { margin: 0; padding: 0; border-bottom: 1px solid #e2e2e2; }
+.escrita-indice-item a {
+  display: grid;
+  grid-template-columns: 4.5em 1fr auto;
+  gap: 20px;
+  align-items: baseline;
+  padding: 11px 0;
+  color: var(--color-text-body);
+}
+.escrita-indice-item a:hover { text-decoration: none; }
+.escrita-indice-item a:hover .escrita-indice-titulo { text-decoration: underline; text-underline-offset: 0.15em; }
+.escrita-indice-data,
+.escrita-indice-tipo {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.escrita-indice-titulo {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--color-text-primary);
+}
+.escrita-indice-item--longo .escrita-indice-titulo { font-size: 1.55rem; }
+.escrita-indice-item--longo .escrita-indice-tipo { color: var(--color-accent); font-weight: 600; }
+
+@media (max-width: 720px) {
+  .escrita-cabecalho {
+    padding: 44px 0 24px;
+    grid-template-columns: 1fr 88px;
+    gap: 20px;
+    align-items: start;
+  }
+  .ornamento--bartok { width: 88px; height: 88px; }
+  .escrita-barra { padding: 0; }
+  .escrita-formatos {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    gap: 0 22px;
+  }
+  .escrita-vista { width: 100%; justify-content: flex-end; padding: 0 0 8px; }
+  .escrita-destaques { grid-template-columns: 1fr; gap: 16px; padding-top: 24px; }
+  .escrita-destaque--materia { display: none; }
+  .escrita-destaque-titulo { font-size: 1.6rem; }
+  .ornamento--quadrafonia { height: 96px; margin-top: 28px; }
+  .ornamento--quadrafonia .orn-quad-larga { display: none; }
+  .ornamento--quadrafonia .orn-quad-estreita { display: block; }
+  .escrita-chamada-corpo { padding-left: 18px; }
+  .escrita-chamada .nota-card-title { font-size: 1.9rem; }
+  .escrita-indice-item a { grid-template-columns: 1fr auto; gap: 4px 12px; }
+  .escrita-indice-data { grid-column: 1; grid-row: 1; }
+  .escrita-indice-tipo { grid-column: 2; grid-row: 1; text-align: right; }
+  .escrita-indice-titulo { grid-column: 1 / -1; }
+}

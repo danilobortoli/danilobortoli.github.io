@@ -24,35 +24,18 @@ layout: default
 <section class="home-index">
   <p class="eyebrow">Índice</p>
 
+  {%- assign _n_escrita = site.posts.size | plus: site.notas.size | plus: site.artigos.size -%}
   <a href="{{ '/escrita.html' | relative_url }}" class="index-entry">
     <span class="index-entry-num">I</span>
     <span class="index-entry-body">
       <span class="index-entry-title">Escrita</span>
-      <span class="index-entry-desc">Ensaios longos sobre direito, cultura e leituras.</span>
+      <span class="index-entry-desc">O caderno — notas curtas, ensaios longos e matérias ilustradas, numa só fila.</span>
     </span>
-    <span class="index-entry-tag">{{ site.posts.size }} textos</span>
-  </a>
-
-  <a href="{{ '/notas/' | relative_url }}" class="index-entry">
-    <span class="index-entry-num">II</span>
-    <span class="index-entry-body">
-      <span class="index-entry-title">Notas</span>
-      <span class="index-entry-desc">O caderno — fragmentos, links, canções e leituras.</span>
-    </span>
-    <span class="index-entry-tag">{{ site.notas.size }} notas</span>
-  </a>
-
-  <a href="{{ '/artigos/' | relative_url }}" class="index-entry">
-    <span class="index-entry-num">III</span>
-    <span class="index-entry-body">
-      <span class="index-entry-title">Artigos</span>
-      <span class="index-entry-desc">Matérias ilustradas, compostas à maneira das memórias científicas antigas.</span>
-    </span>
-    <span class="index-entry-tag">{{ site.artigos.size }} {% if site.artigos.size == 1 %}matéria{% else %}matérias{% endif %}</span>
+    <span class="index-entry-tag">{{ _n_escrita }} textos</span>
   </a>
 
   <a href="{{ '/advocacia.html' | relative_url }}" class="index-entry">
-    <span class="index-entry-num">IV</span>
+    <span class="index-entry-num">II</span>
     <span class="index-entry-body">
       <span class="index-entry-title">Advocacia</span>
       <span class="index-entry-desc">Empresarial, tributário e público — atuação e contato.</span>
@@ -61,7 +44,7 @@ layout: default
   </a>
 
   <a href="{{ '/agora.html' | relative_url }}" class="index-entry">
-    <span class="index-entry-num">V</span>
+    <span class="index-entry-num">III</span>
     <span class="index-entry-body">
       <span class="index-entry-title">Agora</span>
       <span class="index-entry-desc">O que estou fazendo, lendo e ouvindo neste momento.</span>
@@ -70,7 +53,7 @@ layout: default
   </a>
 
   <a href="{{ '/sobre.html' | relative_url }}" class="index-entry">
-    <span class="index-entry-num">VI</span>
+    <span class="index-entry-num">IV</span>
     <span class="index-entry-body">
       <span class="index-entry-title">Sobre</span>
       <span class="index-entry-desc">Prática, crítica, tecnologia — e este site.</span>

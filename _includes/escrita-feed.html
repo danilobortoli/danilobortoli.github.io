@@ -1,0 +1,120 @@
+{%- comment -%}
+  Escrita — o fluxo. Ensaios, notas e matérias numa só fila cronológica,
+  paginada como o blog das notas (página 1 em /escrita.html, as demais em
+  /escrita/page/N/, geradas por ./gerar-paginas-notas).
+
+  As notas aparecem inteiras, como sempre apareceram no caderno. Ensaios e
+  matérias entram como chamadas — título, linha fina, primeiro parágrafo —
+  para que um texto longo não engula a rolagem.
+{%- endcomment -%}
+{%- assign per_page = 15 -%}
+{%- assign current_page = page.page_num | default: 1 -%}
+{%- assign todos = site.posts | concat: site.notas | concat: site.artigos | sort: 'date' | reverse -%}
+{%- assign total = todos.size -%}
+{%- assign total_pages = total | divided_by: per_page -%}
+{%- assign remainder = total | modulo: per_page -%}
+{%- if remainder > 0 -%}{%- assign total_pages = total_pages | plus: 1 -%}{%- endif -%}
+{%- assign skip = current_page | minus: 1 | times: per_page -%}
+
+<section class="escrita-index">
+
+  {% include escrita-cabecalho.html ativo="tudo" %}
+
+  {%- if current_page == 1 -%}
+  {%- assign ultimo_ensaio = site.posts | first -%}
+  {%- assign ultima_materia = site.artigos | sort: 'date' | last -%}
+  <div class="escrita-destaques" aria-label="Textos longos recentes">
+    {%- if ultimo_ensaio -%}
+    <a class="escrita-destaque escrita-destaque--ensaio" href="{{ ultimo_ensaio.url | relative_url }}">
+      <span class="escrita-destaque-kicker"><strong>Último ensaio</strong>{% if ultimo_ensaio.category %} · {{ ultimo_ensaio.category | downcase }}{% endif %} · {{ ultimo_ensaio.date | date: '%-d' }} {% include mes-abbr.html date=ultimo_ensaio.date %}</span>
+      <span class="escrita-destaque-titulo">{{ ultimo_ensaio.title }}</span>
+      {%- if ultimo_ensaio.subtitle -%}<span class="escrita-destaque-linha">{{ ultimo_ensaio.subtitle }}</span>{%- endif -%}
+    </a>
+    {%- endif -%}
+    {%- if ultima_materia -%}
+    <a class="escrita-destaque escrita-destaque--materia" href="{{ ultima_materia.url | relative_url }}">
+      <span class="escrita-destaque-texto">
+        <span class="escrita-destaque-kicker"><strong>Última matéria</strong> · {{ ultima_materia.date | date: '%-d' }} {% include mes-abbr.html date=ultima_materia.date %}</span>
+        <span class="escrita-destaque-titulo">{{ ultima_materia.title }}</span>
+        <span class="escrita-destaque-linha">{% if ultima_materia.subtitle %}{{ ultima_materia.subtitle }}{% else %}Composta à maneira das memórias científicas antigas.{% endif %}</span>
+      </span>
+      <span class="escrita-folha" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+    </a>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+
+  {% include ornamento-quadrafonia.html %}
+
+  <div class="notas-list notas-list--full escrita-fluxo">
+    {%- for item in todos offset: skip limit: per_page -%}
+      {%- if item.collection == 'notas' -%}
+      <article class="nota-card nota-card--full{% if item.media %} has-media{% endif %}">
+        <time class="nota-card-date" datetime="{{ item.date | date_to_xmlschema }}"><a href="{{ item.url | relative_url }}">{% include data-pt.html date=item.date %}</a> · <span class="escrita-formato">Nota</span></time>
+        {%- if item.title and item.title != "" -%}
+        <h2 class="nota-card-title"><a href="{{ item.url | relative_url }}">{{ item.title }}</a></h2>
+        {%- endif -%}
+        {%- if item.subtitle and item.subtitle != "" -%}
+        <p class="nota-card-subtitle">{{ item.subtitle }}</p>
+        {%- endif -%}
+        {%- if item.media -%}
+        <div class="nota-media-layout">
+          <div class="nota-body">{{ item.content }}</div>
+          {% include media-review.html variant='nota' media=item.media %}
+        </div>
+        {%- else -%}
+        <div class="nota-body">{{ item.content }}</div>
+        {%- endif -%}
+      </article>
+      {%- else -%}
+      {%- if item.collection == 'artigos' -%}{%- assign _tipo = 'materia' -%}{%- else -%}{%- assign _tipo = 'ensaio' -%}{%- endif -%}
+      <article class="nota-card nota-card--full escrita-chamada escrita-chamada--{{ _tipo }}">
+        <div class="escrita-chamada-corpo">
+        <p class="nota-card-date"><time datetime="{{ item.date | date_to_xmlschema }}">{% include data-pt.html date=item.date %}</time> · <span class="escrita-formato">{% if _tipo == 'materia' %}Matéria{% else %}Ensaio{% endif %}</span>{% if item.category %} · {{ item.category | downcase }}{% endif %}</p>
+        <h2 class="nota-card-title"><a href="{{ item.url | relative_url }}">{{ item.title }}</a></h2>
+        {%- if item.subtitle and item.subtitle != "" -%}
+        <p class="nota-card-subtitle">{{ item.subtitle }}</p>
+        {%- endif -%}
+        {%- assign _resumo = item.excerpt | strip_html | strip -%}
+        {%- if _resumo == "" -%}{%- assign _resumo = item.content | strip_html | strip -%}{%- endif -%}
+        {%- if _resumo != "" -%}
+        <p class="escrita-chamada-resumo">{{ _resumo | truncatewords: 48 }}</p>
+        {%- endif -%}
+        <a class="escrita-chamada-ler" href="{{ item.url | relative_url }}">{% if _tipo == 'materia' %}Ler a matéria{% else %}Ler o ensaio{% endif %} →</a>
+        </div>
+      </article>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if total_pages > 1 -%}
+  <nav class="notas-paginator" aria-label="Paginação da Escrita">
+    <div class="notas-paginator-inner">
+      {%- if current_page > 1 -%}
+        {%- assign prev_page = current_page | minus: 1 -%}
+        {%- if prev_page == 1 -%}
+          {%- assign prev_url = '/escrita.html' -%}
+        {%- else -%}
+          {%- capture prev_url -%}/escrita/page/{{ prev_page }}/{%- endcapture -%}
+        {%- endif -%}
+        <a class="prev" href="{{ prev_url | relative_url }}">&larr; Mais recentes</a>
+      {%- else -%}
+        <span class="prev disabled">&nbsp;</span>
+      {%- endif -%}
+      <span class="indicator">Página {{ current_page }} de {{ total_pages }}</span>
+      {%- if current_page < total_pages -%}
+        {%- assign next_page = current_page | plus: 1 -%}
+        <a class="next" href="{{ '/escrita/page/' | append: next_page | append: '/' | relative_url }}">Mais antigos &rarr;</a>
+      {%- else -%}
+        <span class="next disabled">&nbsp;</span>
+      {%- endif -%}
+    </div>
+  </nav>
+  {%- endif -%}
+
+</section>
+
+<script>
+  window.TMDB_API_KEY = "{{ site.tmdb_api_key }}";
+</script>
+<script src="{{ '/assets/js/media-fetch.js' | relative_url }}"></script>

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Gera os arquivos /notas/page/N/index.html para a paginação da listagem.
+# Gera os arquivos /notas/page/N/index.html e /escrita/page/N/index.html
+# para a paginação das listagens.
 # Roda localmente e dentro do GitHub Action antes do build do Jekyll.
 set -euo pipefail
 
@@ -19,7 +20,6 @@ rm -rf "$OUT_DIR"
 
 if [ "$total_pages" -le 1 ]; then
   echo "ℹ️  $count notas → 1 página apenas; nenhum arquivo extra gerado."
-  exit 0
 fi
 
 for ((i = 2; i <= total_pages; i++)); do
@@ -38,3 +38,32 @@ EOF
 done
 
 echo "✅ $count notas → $total_pages páginas (1 + $(($total_pages - 1)) extras em $OUT_DIR/)."
+
+# ---------------------------------------------------------------------
+# Escrita — o fluxo unificado (ensaios + notas + matérias), mesma lógica.
+# Página 1 é /escrita.html; as demais vão para /escrita/page/N/.
+# ---------------------------------------------------------------------
+ESCRITA_OUT="escrita/page"
+total_escrita=$(( count \
+  + $(find _posts -maxdepth 1 -name '*.md' ! -name '_template.md' | wc -l | tr -d ' ') \
+  + $(find _artigos -maxdepth 1 -name '*.md' ! -name '_template.md' | wc -l | tr -d ' ') ))
+escrita_pages=$(( (total_escrita + PER_PAGE - 1) / PER_PAGE ))
+
+rm -rf "$ESCRITA_OUT"
+
+for ((i = 2; i <= escrita_pages; i++)); do
+  mkdir -p "$ESCRITA_OUT/$i"
+  cat > "$ESCRITA_OUT/$i/index.html" <<EOP
+---
+layout: default
+title: Escrita — página $i
+permalink: /escrita/page/$i/
+page_num: $i
+sitemap:
+  changefreq: weekly
+---
+{% include escrita-feed.html %}
+EOP
+done
+
+echo "✅ $total_escrita textos na Escrita → $escrita_pages páginas."

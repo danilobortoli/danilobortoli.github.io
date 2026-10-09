@@ -21,18 +21,15 @@
 
 <section class="notas-index">
 
-  <header class="notas-head">
-    <p class="eyebrow">Notas · o caderno</p>
-    <p class="notas-dingbat">&#10087;</p>
-    <h1 class="page-title">Notas</h1>
-    <p class="page-lede">Pequenos pensamentos, links interessantes e observações rápidas. Seguem o mesmo estilo tipográfico dos <a href="{{ '/escrita.html' | relative_url }}">ensaios</a>.</p>
-  </header>
+  {% include escrita-cabecalho.html ativo="notas" %}
 
   <div class="notas-stats">
     <span><strong>{{ total_notas }} notas</strong> · {{ first_abbr }} — {{ last_abbr }} {{ last_nota.date | date: '%Y' }}</span>
     <span>Fragmento {{ c_frag }}{% if c_filme > 0 %} · Filme {{ c_filme }}{% endif %}{% if c_album > 0 %} · Álbum {{ c_album }}{% endif %}{% if c_cancao > 0 %} · Canção {{ c_cancao }}{% endif %}{% if c_livro > 0 %} · Livro {{ c_livro }}{% endif %}{% if c_serie > 0 %} · Série {{ c_serie }}{% endif %}</span>
     <a href="{{ '/feed.xml' | relative_url }}">Assinar (RSS) →</a>
   </div>
+
+  {% include ornamento-quadrafonia.html %}
 
   <div class="notas-list notas-list--full">
     {%- for nota in all_notas offset: skip limit: per_page -%}

@@ -2,6 +2,9 @@
 {%- assign _n_posts = site.posts | size -%}
 {%- assign _n_notas = site.notas | size -%}
 {%- assign _n_artigos = site.artigos | size -%}
+{%- assign _n_escrita = _n_posts | plus: _n_notas | plus: _n_artigos -%}
+{%- assign _na_escrita = false -%}
+{%- if _url == '/escrita.html' or _url contains '/escrita/' or _url contains '/notas/' or _url contains '/artigos/' or page.layout == 'post' or page.layout == 'nota' or page.layout == 'artigo' -%}{%- assign _na_escrita = true -%}{%- endif -%}
 {%- assign _agora = site.data.agora.atualizada_em | split: " de " -%}
 {%- capture _agora_meta -%}{{ _agora[0] }} {{ _agora[1] | slice: 0, 3 | downcase }} {{ _agora[2] }}{%- endcapture -%}
 <header class="site-header">
@@ -21,9 +24,7 @@
       <p class="site-nav-eyebrow">Índice</p>
       <ul class="site-nav-list">
         <li><a href="{{ '/' | relative_url }}" {% if _url == '/' %}class="active" aria-current="page"{% endif %}><span class="site-nav-label">Início</span><span class="site-nav-meta">{% if _url == '/' %}Você está aqui{% else %}Capa{% endif %}</span></a></li>
-        <li><a href="{{ '/escrita.html' | relative_url }}" {% if _url == '/escrita.html' or page.layout == 'post' %}class="active" aria-current="page"{% endif %}><span class="site-nav-label">Escrita</span><span class="site-nav-meta">{{ _n_posts }} {% if _n_posts == 1 %}texto{% else %}textos{% endif %}</span></a></li>
-        <li><a href="{{ '/notas/' | relative_url }}" {% if _url contains '/notas/' or page.layout == 'nota' %}class="active" aria-current="page"{% endif %}><span class="site-nav-label">Notas</span><span class="site-nav-meta">{{ _n_notas }} {% if _n_notas == 1 %}nota{% else %}notas{% endif %}</span></a></li>
-        <li><a href="{{ '/artigos/' | relative_url }}" {% if _url contains '/artigos/' or page.layout == 'artigo' %}class="active" aria-current="page"{% endif %}><span class="site-nav-label">Artigos</span><span class="site-nav-meta">{{ _n_artigos }} {% if _n_artigos == 1 %}matéria{% else %}matérias{% endif %}</span></a></li>
+        <li><a href="{{ '/escrita.html' | relative_url }}" {% if _na_escrita %}class="active" aria-current="page"{% endif %}><span class="site-nav-label">Escrita</span><span class="site-nav-meta">{{ _n_escrita }} textos</span></a></li>
         <li><a href="{{ '/advocacia.html' | relative_url }}" {% if _url == '/advocacia.html' %}class="active" aria-current="page"{% endif %}><span class="site-nav-label">Advocacia</span><span class="site-nav-meta">OAB/SP</span></a></li>
         <li><a href="{{ '/agora.html' | relative_url }}" {% if _url == '/agora.html' %}class="active" aria-current="page"{% endif %}><span class="site-nav-label">Agora</span><span class="site-nav-meta">{{ _agora_meta }}</span></a></li>
         <li><a href="{{ '/sobre.html' | relative_url }}" {% if _url == '/sobre.html' %}class="active" aria-current="page"{% endif %}><span class="site-nav-label">Sobre</span><span class="site-nav-meta">Primeira pessoa</span></a></li>
