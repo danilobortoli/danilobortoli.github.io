@@ -1,0 +1,35 @@
+{%- comment -%}
+  Cabeçalho comum às vistas da Escrita: título, ornamento «Bartók» e a barra
+  de filtros. Ensaios, notas e matérias são formatos de um mesmo caderno —
+  aqui são filtros, não seções.
+
+  Uso: {% include escrita-cabecalho.html ativo="tudo" %}
+  ativo: tudo | notas | ensaios | materias | indice
+{%- endcomment -%}
+{%- assign _ativo = include.ativo | default: 'tudo' -%}
+{%- assign _n_posts = site.posts | size -%}
+{%- assign _n_notas = site.notas | size -%}
+{%- assign _n_artigos = site.artigos | size -%}
+{%- assign _n_total = _n_posts | plus: _n_notas | plus: _n_artigos -%}
+<header class="escrita-cabecalho">
+  <div class="escrita-cabecalho-texto">
+    <p class="eyebrow">Escrita · o caderno</p>
+    <h1 class="page-title">{% if _ativo == 'notas' %}Notas{% elsif _ativo == 'ensaios' %}Ensaios{% else %}Escrita{% endif %}</h1>
+    <p class="page-lede">{% if _ativo == 'notas' %}Pequenos pensamentos, links interessantes e observações rápidas — o lado curto do caderno.{% elsif _ativo == 'ensaios' %}Textos longos sobre direito, cultura e leituras.{% else %}Notas curtas, ensaios longos e matérias ilustradas, num só caderno — do mais recente ao mais antigo.{% endif %}</p>
+  </div>
+  {% include ornamento-bartok.html %}
+</header>
+
+<nav class="escrita-barra" aria-label="Filtrar a Escrita">
+  <ul class="escrita-formatos">
+    <li><a href="{{ '/escrita.html' | relative_url }}"{% if _ativo == 'tudo' %} aria-current="page"{% endif %}>Tudo <span>{{ _n_total }}</span></a></li>
+    <li><a href="{{ '/notas/' | relative_url }}"{% if _ativo == 'notas' %} aria-current="page"{% endif %}>Notas <span>{{ _n_notas }}</span></a></li>
+    <li><a href="{{ '/escrita/ensaios/' | relative_url }}"{% if _ativo == 'ensaios' %} aria-current="page"{% endif %}>Ensaios <span>{{ _n_posts }}</span></a></li>
+    <li><a href="{{ '/artigos/' | relative_url }}">Matérias <span>{{ _n_artigos }}</span></a></li>
+  </ul>
+  <div class="escrita-vista" role="group" aria-label="Ver como">
+    <span class="escrita-vista-rotulo">Ver como</span>
+    <a href="{{ '/escrita.html' | relative_url }}"{% if _ativo == 'tudo' or _ativo == 'notas' %} aria-current="true"{% endif %}>Fluxo</a>
+    <a href="{{ '/escrita/indice/' | relative_url }}"{% if _ativo == 'indice' %} aria-current="true"{% endif %}>Índice</a>
+  </div>
+</nav>
