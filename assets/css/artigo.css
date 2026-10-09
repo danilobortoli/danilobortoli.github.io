@@ -573,7 +573,8 @@ body.artigo-theme .site-wordmark-tag {
   font-variant-caps: small-caps;
   color: var(--art-ink-soft);
 }
-body.artigo-theme .site-nav {
+body.artigo-theme .site-nav,
+body.artigo-theme .site-nav-list {
   font-family: var(--art-font);
   font-size: 0.86rem;
   font-weight: 500;
@@ -655,6 +656,18 @@ body.artigo-theme .site-footer a:hover { color: var(--art-ink); text-decoration:
 
 @media (max-width: 720px) {
   body.artigo-theme .site-header-inner { padding: 14px 22px 10px; }
+  html.has-menu-toggle body.artigo-theme .site-header {
+    position: sticky;
+    background: var(--art-paper);
+  }
+  html.has-menu-toggle body.artigo-theme .site-header-inner { padding: 0 8px 0 20px; }
+  body.artigo-theme .site-menu-toggle { color: var(--art-ink); }
+  body.artigo-theme .is-open .site-menu-toggle { color: var(--art-accent); }
+  body.artigo-theme .site-nav { background: var(--art-paper); }
+  body.artigo-theme .site-nav-list a:hover { border-bottom: 0; }
+  body.artigo-theme .site-nav-list a.active,
+  body.artigo-theme .site-nav-list a[aria-current="page"] { color: var(--art-accent); border-bottom: 0; }
+  body.artigo-theme .site-nav-label { font-family: var(--art-font); font-variant-caps: normal; letter-spacing: normal; }
   body.artigo-theme .artigo-paper { padding: 26px 0 30px; }
 }
 @media print {
