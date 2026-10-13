@@ -1,0 +1,260 @@
+---
+layout: null
+permalink: /credito-rural/
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dívida rural com o banco · Danilo Bortoli, advogado</title>
+  <meta name="description" content="O que o produtor rural pode pedir ao banco: prorrogação nos mesmos encargos, a linha de renegociação da MP 1.376/2026 (contratação até 12/11/2026) e a defesa na execução de cédula rural. Danilo Bortoli, advogado, OAB/SP 409.024, Marília/SP.">
+  <link rel="canonical" href="{{ '/credito-rural/' | absolute_url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Dívida rural com o banco: o que pode ser pedido e até quando">
+  <meta property="og:description" content="Prorrogação, linha da MP 1.376/2026 e defesa na execução de cédula rural. Contratação da linha até 12/11/2026.">
+  <meta property="og:url" content="{{ '/credito-rural/' | absolute_url }}">
+  <link rel="preload" href="{{ '/assets/fonts/et-book-roman.woff' | relative_url }}" as="font" type="font/woff" crossorigin>
+  <style>
+    /* Tufte-Bortoli: papel creme, ET Book, vermelho Tufte só em destaques e links,
+       notas na margem direita no desktop e intercaladas no celular. */
+    @font-face{font-family:"et-book";src:url("{{ '/assets/fonts/et-book-roman.woff' | relative_url }}") format("woff");font-weight:normal;font-style:normal;font-display:swap}
+    @font-face{font-family:"et-book";src:url("{{ '/assets/fonts/et-book-italic.woff' | relative_url }}") format("woff");font-weight:normal;font-style:italic;font-display:swap}
+    @font-face{font-family:"et-book";src:url("{{ '/assets/fonts/et-book-bold.woff' | relative_url }}") format("woff");font-weight:bold;font-style:normal;font-display:swap}
+
+    :root{
+      --text-primary:#111111; --text-body:#333333; --text-muted:#666666;
+      --accent:#a00000; --surface:#fffff8; --surface-alt:#f4f4f0;
+      --success:#2d5016; --warning:#8b6914; --border:#cccccc;
+      --serif:et-book,Palatino,"Palatino Linotype","Palatino LT STD","Book Antiqua",Georgia,serif;
+      --mono:Consolas,"Liberation Mono",Menlo,Courier,monospace;
+    }
+    *{box-sizing:border-box}
+    html{font-size:15px;-webkit-text-size-adjust:100%}
+    body{margin:0;background:var(--surface);color:var(--text-body);font-family:var(--serif);font-size:1.4rem;line-height:1.55;font-variant-numeric:lining-nums}
+    a{color:var(--accent)}
+    a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+    /* Coluna de texto com margem larga à direita (proporção do Tufte CSS). */
+    article{width:87.5%;max-width:1400px;margin:0 auto;padding:4rem 0 3rem 12.5%}
+    section{padding:1rem 0}
+    p,ul,ol,dl,.table-wrap,.figure{width:55%}
+    h1{font-weight:400;font-size:3.2rem;line-height:1.08;color:var(--text-primary);margin:.6rem 0 1.2rem;width:70%}
+    h2{font-weight:400;font-style:italic;font-size:2.2rem;line-height:1.15;color:var(--text-primary);margin:3rem 0 .4rem;width:55%}
+    h3{font-weight:400;font-style:italic;font-size:1.6rem;color:var(--text-primary);margin:1.6rem 0 .2rem}
+    p{margin:.9rem 0}
+    .eyebrow{font-variant:small-caps;letter-spacing:.06em;font-size:1.15rem;color:var(--text-muted);margin:0}
+    .subtitle{font-style:italic;font-size:1.75rem;color:var(--text-muted);line-height:1.35;margin-top:0}
+    .newthought{font-variant:small-caps;letter-spacing:.03em;font-size:1.15em}
+
+    /* Notas marginais: numeradas, à direita da coluna. */
+    body{counter-reset:sn}
+        .sn-ref::after{content:counter(sn);font-size:.95rem;position:relative;top:-.5rem;left:.05rem;color:var(--accent)}
+    .sidenote{counter-increment:sn}
+    .sidenote,.marginnote{float:right;clear:right;width:38%;margin-top:.3rem;margin-bottom:1rem;font-size:1.1rem;line-height:1.35;color:var(--text-muted);position:relative}
+    .sidenote::before{content:counter(sn) " ";color:var(--accent);font-size:.95rem;position:relative;top:-.4rem}
+
+    /* Data-limite: um número grande, sem caixa colorida. */
+    .deadline{display:flex;align-items:baseline;gap:1.4rem;width:55%;border-top:1px solid var(--text-primary);border-bottom:1px solid var(--border);padding:1rem 0;margin:1.8rem 0}
+    .deadline .big{font-size:3rem;color:var(--accent);line-height:1;white-space:nowrap}
+    .deadline p{width:auto;margin:0;font-size:1.25rem;line-height:1.4}
+
+    /* Chamada para o WhatsApp: tipográfica, sem sombra nem gradiente. */
+    .cta{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--serif);font-size:1.35rem;color:var(--surface);background:var(--text-primary);text-decoration:none;padding:.7rem 1.3rem;border-radius:2px;margin-top:.4rem}
+    .cta:hover{background:var(--accent)}
+    .cta svg{width:1.2rem;height:1.2rem;flex:none}
+    .cta-note{font-size:1.1rem;color:var(--text-muted);margin-top:.4rem}
+
+    /* Linha do tempo em SVG. */
+    .figure{margin:1.6rem 0}
+    .figure svg{display:block;width:100%;height:auto;overflow:visible}
+    .figure text{font-family:var(--serif)}
+
+    /* Duas vias: tabela de comparação, só filetes horizontais. */
+    .table-wrap{overflow-x:auto;margin:1.2rem 0}
+    table{border-collapse:collapse;width:100%;font-size:1.2rem;line-height:1.4;min-width:520px}
+    th,td{text-align:left;vertical-align:top;padding:.6rem .8rem .6rem 0}
+    thead th{font-weight:400;font-style:italic;font-size:1.35rem;color:var(--text-primary);border-bottom:1px solid var(--text-primary)}
+    thead th small{display:block;font-style:normal;font-variant:small-caps;letter-spacing:.05em;font-size:1rem;color:var(--text-muted)}
+    tbody th{font-weight:400;font-variant:small-caps;letter-spacing:.04em;color:var(--text-muted);width:8.5rem}
+    tbody tr+tr th,tbody tr+tr td{border-top:1px solid var(--border)}
+
+    ol.debts,ol.how{padding-left:0;list-style:none;counter-reset:item}
+    ol.debts li,ol.how li{counter-increment:item;display:grid;grid-template-columns:2.4rem 1fr;margin:.8rem 0}
+    ol.debts li::before,ol.how li::before{content:counter(item,upper-roman) ".";color:var(--accent);font-size:1.2rem;padding-top:.1rem}
+    ol.how li::before{content:counter(item) "."}
+    .muted{color:var(--text-muted)}
+    ul.check{padding-left:1.2rem}
+    ul.check li{margin:.45rem 0}
+    ul.check li::marker{content:"□  ";color:var(--accent)}
+
+    .contact{border-top:1px solid var(--text-primary);margin-top:3rem;padding-top:1rem}
+    footer{width:55%;margin-top:3rem;padding-top:1rem;border-top:1px solid var(--border);font-size:1.1rem;color:var(--text-muted);line-height:1.45}
+    footer p{width:auto}
+    footer a{color:var(--text-muted)}
+    .site{color:var(--accent)!important;text-decoration:none}
+
+    /* Celular: coluna única, notas no fim de cada seção. */
+    @media (max-width:760px){
+      html{font-size:14px}
+      article{width:100%;padding:2rem 16px 2.5rem}
+      p,ul,ol,dl,.table-wrap,.figure,h1,h2,.deadline,footer{width:100%}
+      h1{font-size:2.5rem}
+      section{display:flex;flex-direction:column}
+      .sidenote,.marginnote{order:2;float:none;display:block;width:auto;margin:.6rem 0 1rem 1rem;padding-left:.8rem;border-left:1px solid var(--border)}
+      .deadline{flex-direction:column;gap:.5rem}
+      table{min-width:0}
+      thead{display:none}
+      table,tbody,tr,th,td{display:block;width:auto}
+      tbody th{width:auto;padding:.9rem 0 .2rem;border-top:1px solid var(--text-primary)!important}
+      tbody td{padding:.3rem 0 .5rem;border-top:0!important}
+      tbody td::before{content:attr(data-via);display:block;font-style:italic;color:var(--text-primary)}
+      .cta{width:100%;justify-content:center}
+    }
+    @media print{.cta{display:none}}
+  </style>
+</head>
+<body>
+<article>
+
+  <section>
+    <p class="eyebrow">Danilo Bortoli · advogado · OAB/SP 409.024 · Marília/SP</p>
+    <h1>Dívida rural com o banco: o que pode ser pedido e até quando</h1>
+    <p class="subtitle">Para o produtor que perdeu safra, está com custeio ou parcela de investimento atrasada, ou já recebeu uma cobrança judicial.</p>
+
+    <span class="sidenote">A MP perde a validade em 11/11/2026 se não for convertida em lei. O texto ainda pode mudar na votação do Congresso; esta página é revista quando isso acontecer.</span>
+    <div class="deadline">
+      <span class="big">12/11/2026</span>
+      <p>Último dia para contratar a linha de renegociação da Medida Provisória 1.376/2026, regulamentada pela Resolução CMN 5.330/2026.<span class="sn-ref"></span></p>
+    </div>
+    <a class="cta" href="https://wa.me/5514991875566" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.5-.3Z"/></svg>
+      Conversar pelo WhatsApp
+    </a>
+    <p class="cta-note">WhatsApp: (14) 9 9187-5566</p>
+  </section>
+
+  <section>
+    <h2>O calendário de 2026</h2>
+    <p><span class="newthought">Três datas</span> organizam o ano para quem deve ao banco em operação de crédito rural. A primeira mudou a regra da prorrogação; as outras duas fecham a janela da nova linha.</p>
+    <span class="marginnote">O traço vermelho é o prazo que resta para montar o pedido: laudo, documentos e protocolo no banco. A MP 1.376 perde a validade em 11/11, um dia antes do fim da linha.</span>
+    <div class="figure" role="img" aria-label="Linha do tempo de julho a dezembro de 2026: 1º de julho, Resolução CMN 5.314 entra em vigor; 11 de novembro, a MP 1.376 perde a validade se não for convertida; 12 de novembro, último dia para contratar a linha.">
+      <svg viewBox="0 0 600 130" aria-hidden="true">
+        <!-- eixo: 1/jul (x=20) a 31/dez (x=580); 184 dias -->
+        <line x1="20" y1="70" x2="580" y2="70" stroke="#cccccc" stroke-width="1"/>
+        <g fill="#666666" font-size="17" text-anchor="middle">
+          <line x1="20"  y1="66" x2="20"  y2="74" stroke="#cccccc"/><text x="20"  y="96">jul</text>
+          <line x1="115" y1="66" x2="115" y2="74" stroke="#cccccc"/><text x="115" y="96">ago</text>
+          <line x1="210" y1="66" x2="210" y2="74" stroke="#cccccc"/><text x="210" y="96">set</text>
+          <line x1="302" y1="66" x2="302" y2="74" stroke="#cccccc"/><text x="302" y="96">out</text>
+          <line x1="396" y1="66" x2="396" y2="74" stroke="#cccccc"/><text x="396" y="96">nov</text>
+          <line x1="488" y1="66" x2="488" y2="74" stroke="#cccccc"/><text x="488" y="96">dez</text>
+        </g>
+        <!-- janela restante da linha: hoje até 12/11 -->
+        <line id="tl-window" x1="337" y1="70" x2="431" y2="70" stroke="#a00000" stroke-width="3"/>
+        <circle cx="20" cy="70" r="4" fill="#111111"/>
+        <text x="20" y="30" font-size="19" fill="#111111">01/07</text>
+        <text x="20" y="50" font-size="17" fill="#666666" font-style="italic">Res. CMN 5.314</text>
+        <circle cx="431" cy="70" r="5" fill="#a00000"/>
+        <text x="431" y="30" font-size="19" fill="#a00000" text-anchor="middle">12/11</text>
+        <text x="431" y="50" font-size="17" fill="#666666" font-style="italic" text-anchor="middle">fim da linha</text>
+        <g id="tl-today">
+          <line x1="337" y1="62" x2="337" y2="78" stroke="#111111" stroke-width="1"/>
+          <text x="337" y="124" font-size="17" fill="#111111" text-anchor="middle" font-style="italic">hoje</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <h2>Duas vias diferentes</h2>
+    <p>Muita gente chama tudo de “renegociação”, mas são caminhos distintos, com requisitos distintos.</p>
+    <span class="sidenote">Redação dada pela Resolução CMN 5.314/2026. A Súmula 298 do STJ trata o alongamento como direito do devedor, nos termos da lei, e a mudança está sendo questionada, inclusive no STF (ADPF 1.318).</span>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th></th><th>Prorrogação da própria dívida<small>MCR, item 2-6-4</small></th><th>Nova linha para quitar dívidas antigas<small>MP 1.376/2026 · Res. CMN 5.330</small></th></tr>
+        </thead>
+        <tbody>
+          <tr><th>O que é</th><td data-via="Prorrogação (MCR 2-6-4)">Adiar o vencimento da operação, nos mesmos encargos do contrato.</td><td data-via="Linha da MP 1.376">Novo financiamento de até 8 anos (10, nos casos de perdas maiores), com 2 anos de carência pagando os juros, para quitar ou amortizar dívidas rurais.</td></tr>
+          <tr><th>Requisito</th><td data-via="Prorrogação (MCR 2-6-4)">Provar a dificuldade temporária de pagar, por frustração de safra, dificuldade de comercialização ou outro fato alheio à sua vontade.</td><td data-via="Linha da MP 1.376">Perdas em pelo menos duas safras entre 2019 e 2025, com redução mínima de 30% da renda bruta esperada, por clima ou queda de preço, comprovadas por laudo de profissional habilitado.</td></tr>
+          <tr><th>Hoje</th><td data-via="Prorrogação (MCR 2-6-4)">Desde 01/07/2026, o banco prorroga “por sua conveniência e decisão”.<span class="sn-ref"></span></td><td data-via="Linha da MP 1.376">O banco não é obrigado a contratar: ele analisa o enquadramento e o risco. Contratação até 12/11/2026.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Quais dívidas entram na linha da MP 1.376</h2>
+    <ol class="debts">
+      <li><span><b>Custeio, comercialização e industrialização já renegociados ou prorrogados</b> até 31/05/2026, desde que em dia na data da nova contratação.</span></li>
+      <li><span><b>Custeio, comercialização e industrialização em atraso</b>, contratados até 31/12/2025, inadimplentes desde 01/01/2024 e ainda em 31/05/2026.</span></li>
+      <li><span><b>Parcelas de investimento</b> com vencimento entre 01/01/2024 e 31/12/2026, de contratos até 31/12/2025, inadimplentes desde 01/01/2024 e ainda em 31/05/2026.</span></li>
+    </ol>
+    <p class="muted">Ficam de fora, entre outras, as dívidas inscritas na Dívida Ativa da União.</p>
+  </section>
+
+  <section>
+    <h2>O que reunir antes de falar com o banco</h2>
+    <span class="sidenote">A Resolução CMN 5.330 exige que o laudo relacione a perda às operações que se quer renegociar. Um laudo genérico sobre a safra da região não basta.</span>
+    <ul class="check">
+      <li>As cédulas e todos os aditivos da operação</li>
+      <li>O extrato da operação, com saldo e vencimentos</li>
+      <li>Notas de produção e de venda das safras em que houve perda</li>
+      <li>Laudo de profissional habilitado que ligue a perda a cada operação<span class="sn-ref"></span></li>
+      <li>Comunicações de sinistro, Proagro ou seguro, se houver</li>
+      <li>O pedido feito por escrito, com protocolo, e a resposta do banco também por escrito</li>
+    </ul>
+    <p>Um pedido só por telefone, sem documento, deixa pouca coisa para discutir depois.</p>
+  </section>
+
+  <section>
+    <h2>Se o banco já entrou na Justiça</h2>
+    <span class="sidenote">Código de Processo Civil, art. 915. Se você foi citado, mande a cópia da citação ou o número do processo no mesmo dia, para conferir o prazo exato.</span>
+    <p>Na execução de cédula de crédito rural, o prazo para os embargos é de <b>15 dias úteis</b>, contados da juntada da citação ao processo.<span class="sn-ref"></span> Na defesa podem ser examinados os encargos cobrados, a prescrição, o cálculo do banco, a avaliação e a penhora do imóvel, e o direito ao alongamento que não foi respeitado.</p>
+  </section>
+
+  <section>
+    <h2>Como funciona o atendimento</h2>
+    <ol class="how">
+      <li><span>Você conta a situação pelo WhatsApp: banco, tipo de operação, saldo aproximado, safras com perda e se já existe processo.</span></li>
+      <li><span>Eu leio as cédulas, os aditivos e o extrato, digo em qual via o seu caso se encaixa e o que o laudo precisa demonstrar.</span></li>
+      <li><span>O pedido ao banco é feito por escrito, com os documentos, e acompanhado até a resposta.</span></li>
+      <li><span>Se houver negativa sem fundamento, ou se já houver execução, avaliamos juntos a medida judicial.</span></li>
+    </ol>
+    <p>Os honorários de cada etapa são combinados por escrito antes de começar.</p>
+  </section>
+
+  <section class="contact" aria-labelledby="ct">
+    <h2 id="ct" style="margin-top:.4rem">Fale comigo</h2>
+    <p>Danilo Bortoli, advogado inscrito na OAB/SP sob o nº 409.024, com escritório em Marília/SP. Atuo em crédito rural, contratos bancários, execuções e direito empresarial. Atendimento presencial em Marília e por videoconferência.</p>
+    <a class="cta" href="https://wa.me/5514991875566" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.5-.3Z"/></svg>
+      Conversar pelo WhatsApp
+    </a>
+    <p class="cta-note">WhatsApp: (14) 9 9187-5566 · <a href="mailto:danilobortoli@icloud.com">danilobortoli@icloud.com</a></p>
+  </section>
+
+  <footer>
+    <p>Conteúdo informativo, atualizado em 13/10/2026, conforme o Provimento 205/2021 do Conselho Federal da OAB. Não substitui a análise do seu contrato. Esta página não usa cookies de rastreamento.</p>
+    <p>Normas citadas: <a href="https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2026/Mpv/mpv1376.htm" target="_blank" rel="noopener">Medida Provisória 1.376/2026</a> · Resolução CMN 5.330/2026 · Resolução CMN 5.314/2026 · Súmula 298 do STJ · Código de Processo Civil, art. 915.</p>
+    <p><a class="site" href="{{ '/' | relative_url }}">danilobortoli.github.io</a></p>
+  </footer>
+
+</article>
+<script>
+  // Posiciona "hoje" e o traço vermelho na linha do tempo; some depois de 12/11.
+  (function(){
+    var start=Date.UTC(2026,6,1), end=Date.UTC(2026,11,31), limit=Date.UTC(2026,10,12);
+    var now=new Date(), t=Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
+    var today=document.getElementById('tl-today'), win=document.getElementById('tl-window');
+    if(!today||!win) return;
+    if(t<start||t>limit){today.style.display='none';win.style.display='none';return;}
+    var x=20+560*(t-start)/(end-start);
+    today.setAttribute('transform','translate('+(x-337).toFixed(1)+',0)');
+    win.setAttribute('x1',x.toFixed(1));
+  })();
+</script>
+</body>
+</html>
