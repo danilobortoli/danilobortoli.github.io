@@ -1559,18 +1559,29 @@ figcaption {
    Ensaios, notas e matérias são formatos, não seções: a barra de
    filtros troca o recorte; «Ver como» troca fluxo por índice.
    ============================================================ */
+/* Versão compacta: cabeçalho numa faixa só, título e linha fina lado a
+   lado, o «Bartók» reduzido a selo de 64px. */
+.escrita-index { max-width: 760px; margin: 0 auto; }
 .escrita-cabecalho {
-  padding: 80px 0 32px;
-  display: grid;
-  grid-template-columns: 1fr 200px;
-  gap: 48px;
-  align-items: end;
+  padding: 28px 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
 }
-.escrita-cabecalho .eyebrow { margin-bottom: 14px; }
-.escrita-cabecalho .page-title { font-size: clamp(2.8rem, 6vw, 4.4rem); }
+.escrita-cabecalho-texto { min-width: 0; }
+.escrita-cabecalho .eyebrow { font-size: 11px; margin-bottom: 4px; }
+.escrita-cabecalho-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 18px;
+}
+.escrita-cabecalho .page-title { font-size: 2.5rem; line-height: 1.1; margin: 0; }
+.escrita-cabecalho .page-lede { font-size: 1rem; line-height: 1.4; max-width: none; }
 
 /* ---- Ornamento «Bartók» ---- */
-.ornamento--bartok { width: 200px; height: 200px; }
+.ornamento--bartok { flex: none; width: 64px; height: 64px; }
 .ornamento--bartok svg { width: 100%; height: 100%; }
 
 .escrita-barra {
@@ -1579,13 +1590,13 @@ figcaption {
   align-items: center;
   gap: 8px 24px;
   flex-wrap: wrap;
-  padding: 4px 0;
+  padding: 0;
   border-top: 2px solid var(--color-border-strong);
   border-bottom: 1px solid var(--color-border);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .escrita-formatos {
@@ -1594,110 +1605,111 @@ figcaption {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0 26px;
+  gap: 0 20px;
 }
 .escrita-formatos li { margin: 0; padding: 0; }
 .escrita-formatos a {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  color: #444444;
+  min-height: 38px;
+  color: #333333;
 }
 .escrita-formatos a span { margin-left: 7px; color: var(--color-text-subtle); font-weight: 400; }
 .escrita-formatos a:hover { color: var(--color-text-primary); text-decoration: none; }
 .escrita-formatos a[aria-current] { color: var(--color-accent); box-shadow: inset 0 -2px 0 var(--color-accent); }
 .escrita-formatos a[aria-current] span { color: inherit; }
-.escrita-vista { display: flex; align-items: center; gap: 4px; }
-.escrita-vista-rotulo { font-size: 10px; letter-spacing: 0.2em; color: var(--color-text-subtle); margin-right: 8px; }
+.escrita-vista { display: flex; align-items: center; gap: 12px; }
+.escrita-vista-rotulo { font-weight: 400; color: var(--color-text-subtle); }
 .escrita-vista a {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--color-border);
-  color: #444444;
+  min-height: 38px;
+  color: var(--color-text-subtle);
 }
-.escrita-vista a:hover { color: var(--color-text-primary); text-decoration: none; }
-.escrita-vista a[aria-current] { border-color: var(--color-border-strong); color: var(--color-text-primary); }
+.escrita-vista a:hover { color: var(--color-text-primary); }
+.escrita-vista a[aria-current] {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
 
 /* A barra já fecha com filete: o que vem depois dispensa o seu. */
 .escrita-barra + .notas-stats,
 .escrita-barra + .escrita-filters { border-top: 0; }
 
-/* ---- Destaques: último ensaio, última matéria ---- */
+/* ---- Destaques: último ensaio, última matéria ----
+   Dois cartões viram duas linhas: filete de cor em cima, kicker e título. */
 .escrita-destaques {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  padding: 32px 0 0;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px 28px;
+  padding: 14px 0 0;
 }
 .escrita-destaque {
   display: flex;
-  gap: 18px;
-  padding: 20px 22px 22px;
-  border: 1px solid var(--color-border);
-  border-top: 3px solid var(--color-accent);
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 8px;
+  border-top: 2px solid var(--color-accent);
   color: var(--color-text-body);
 }
 .escrita-destaque:hover { text-decoration: none; }
 .escrita-destaque:hover .escrita-destaque-titulo { text-decoration: underline; text-underline-offset: 0.15em; }
-.escrita-destaque--ensaio { flex-direction: column; gap: 8px; }
-.escrita-destaque--materia { border-top-color: #8a3b3b; }
-.escrita-destaque-texto { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.escrita-destaque--materia { border-top-color: #7a3b34; }
 .escrita-destaque-kicker {
   font-family: var(--font-sans);
   font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-text-subtle);
 }
 .escrita-destaque-kicker strong { color: var(--color-accent); font-weight: 600; }
-.escrita-destaque--materia .escrita-destaque-kicker strong { color: #8a3b3b; }
-.escrita-destaque-titulo {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.9rem;
-  line-height: 1.1;
-  color: var(--color-text-primary);
-}
+.escrita-destaque--materia .escrita-destaque-kicker strong { color: #7a3b34; }
 .escrita-destaque-linha {
   font-family: var(--font-serif);
-  font-size: 1.02rem;
-  line-height: 1.5;
+  font-size: 1.06rem;
+  line-height: 1.45;
   color: var(--color-text-muted);
 }
-/* Miniatura da folha de papel antigo das matérias */
-.escrita-folha {
-  flex: 0 0 96px;
-  height: 120px;
-  box-sizing: border-box;
-  padding: 12px;
-  background: #f3ecda;
-  border: 1px solid #d9cdb0;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.escrita-folha span { display: block; height: 3px; background: #c8bb9c; }
-.escrita-folha span:nth-child(1) { height: 2px; background: #6d6353; }
-.escrita-folha span:nth-child(2) { height: 5px; width: 70%; background: #7d7262; }
-.escrita-folha span:nth-child(4) { width: 86%; }
-.escrita-folha span:nth-child(6) { width: 60%; }
+.escrita-destaque-titulo { font-style: italic; color: var(--color-text-primary); }
 
-/* ---- Ornamento «quadrafonia»: faixa de sangria total ---- */
-.ornamento--quadrafonia {
-  width: 100vw;
-  margin: 40px calc(50% - 50vw) 0;
-  height: 168px;
-  overflow: hidden;
+/* ---- Ornamento «cesura»: transição para o fluxo ---- */
+.ornamento--cesura {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
 }
-.ornamento--quadrafonia svg { width: 100%; height: 100%; }
-.ornamento--quadrafonia .orn-quad-estreita { display: none; }
+.ornamento--cesura::before,
+.ornamento--cesura::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+.ornamento--cesura svg { flex: none; display: block; }
 
 /* ---- O fluxo ---- */
 /* Entre um post e outro, no lugar do filete, a estrela que sobra entre os
    círculos do «Bartók»: um quadrado negro menos quatro quartos de círculo. */
+.escrita-fluxo { padding-top: 32px; }
+.escrita-fluxo .nota-card--full { padding: 0; display: flow-root; }
+.escrita-fluxo .nota-card--full .nota-card-date { font-weight: 400; margin-bottom: 2px; }
+.escrita-fluxo .nota-card--full .nota-card-title { font-size: 1.75rem; line-height: 1.2; margin: 0 0 8px; }
+.escrita-fluxo .nota-body p { font-size: 1.19rem; line-height: 1.6; margin-bottom: 10px; }
+.escrita-fluxo .nota-body > :last-child { margin-bottom: 0; }
+.escrita-index .escrita-fluxo .nota-card--full + .nota-card--full::before {
+  width: 13px;
+  height: 13px;
+  margin: 26px auto;
+  background:
+    radial-gradient(circle at 0 0, var(--color-surface) 6.5px, transparent 7px),
+    radial-gradient(circle at 100% 0, var(--color-surface) 6.5px, transparent 7px),
+    radial-gradient(circle at 0 100%, var(--color-surface) 6.5px, transparent 7px),
+    radial-gradient(circle at 100% 100%, var(--color-surface) 6.5px, transparent 7px),
+    var(--color-border-strong);
+}
 .notas-list--full .nota-card--full { border-top: 0; }
 .notas-list--full .nota-card--full:last-of-type { border-bottom: 0; }
 .notas-list--full .nota-card--full + .nota-card--full::before {
@@ -1722,6 +1734,8 @@ figcaption {
 .escrita-chamada .escrita-formato { color: var(--color-accent); font-weight: 600; }
 .escrita-chamada--materia .escrita-formato { color: #8a3b3b; }
 .escrita-chamada .nota-card-title { font-size: 2.3rem; }
+.escrita-fluxo .escrita-chamada .nota-card-title { font-size: 1.9rem; }
+.escrita-fluxo .escrita-chamada-corpo { padding-left: 20px; }
 .escrita-chamada-resumo {
   font-family: var(--font-serif);
   font-size: 1.05rem;
@@ -1742,6 +1756,20 @@ figcaption {
   color: var(--color-accent);
 }
 .escrita-chamada--materia .escrita-chamada-ler { color: #8a3b3b; }
+
+/* ---- Paginação compacta ---- */
+.escrita-index .notas-paginator {
+  margin-top: 48px;
+  padding: 12px 0 8px;
+  border-top: 1px solid var(--color-border);
+}
+.escrita-index .notas-paginator a {
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 
 /* ---- Índice: uma linha por texto, mês a mês ---- */
 .escrita-mes { padding: 40px 0 0; }
@@ -1789,13 +1817,11 @@ figcaption {
 .escrita-indice-item--longo .escrita-indice-tipo { color: var(--color-accent); font-weight: 600; }
 
 @media (max-width: 720px) {
-  .escrita-cabecalho {
-    padding: 44px 0 24px;
-    grid-template-columns: 1fr 88px;
-    gap: 20px;
-    align-items: start;
-  }
-  .ornamento--bartok { width: 88px; height: 88px; }
+  .escrita-cabecalho { padding: 24px 0 14px; gap: 16px; align-items: flex-start; }
+  .escrita-cabecalho .page-title { font-size: 2.2rem; }
+  .ornamento--bartok { width: 48px; height: 48px; }
+  .escrita-formatos a,
+  .escrita-vista a { min-height: 44px; }
   .escrita-barra { padding: 0; }
   .escrita-formatos {
     flex-wrap: nowrap;
@@ -1805,12 +1831,8 @@ figcaption {
     gap: 0 22px;
   }
   .escrita-vista { width: 100%; justify-content: flex-end; padding: 0 0 8px; }
-  .escrita-destaques { grid-template-columns: 1fr; gap: 16px; padding-top: 24px; }
-  .escrita-destaque--materia { display: none; }
-  .escrita-destaque-titulo { font-size: 1.6rem; }
-  .ornamento--quadrafonia { height: 96px; margin-top: 28px; }
-  .ornamento--quadrafonia .orn-quad-larga { display: none; }
-  .ornamento--quadrafonia .orn-quad-estreita { display: block; }
+  .escrita-destaques { gap: 12px; }
+  .ornamento--cesura { margin-top: 22px; }
   .escrita-chamada-corpo { padding-left: 18px; }
   .escrita-chamada .nota-card-title { font-size: 1.9rem; }
   .escrita-indice-item a { grid-template-columns: 1fr auto; gap: 4px 12px; }

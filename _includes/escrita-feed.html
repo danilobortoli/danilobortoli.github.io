@@ -27,24 +27,19 @@
     {%- if ultimo_ensaio -%}
     <a class="escrita-destaque escrita-destaque--ensaio" href="{{ ultimo_ensaio.url | relative_url }}">
       <span class="escrita-destaque-kicker"><strong>Último ensaio</strong>{% if ultimo_ensaio.category %} · {{ ultimo_ensaio.category | downcase }}{% endif %} · {{ ultimo_ensaio.date | date: '%-d' }} {% include mes-abbr.html date=ultimo_ensaio.date %}</span>
-      <span class="escrita-destaque-titulo">{{ ultimo_ensaio.title }}</span>
-      {%- if ultimo_ensaio.subtitle -%}<span class="escrita-destaque-linha">{{ ultimo_ensaio.subtitle }}</span>{%- endif -%}
+      <span class="escrita-destaque-linha"><span class="escrita-destaque-titulo">{{ ultimo_ensaio.title }}</span>{%- if ultimo_ensaio.subtitle %} — {{ ultimo_ensaio.subtitle }}{%- endif -%}</span>
     </a>
     {%- endif -%}
     {%- if ultima_materia -%}
     <a class="escrita-destaque escrita-destaque--materia" href="{{ ultima_materia.url | relative_url }}">
-      <span class="escrita-destaque-texto">
-        <span class="escrita-destaque-kicker"><strong>Última matéria</strong> · {{ ultima_materia.date | date: '%-d' }} {% include mes-abbr.html date=ultima_materia.date %}</span>
-        <span class="escrita-destaque-titulo">{{ ultima_materia.title }}</span>
-        <span class="escrita-destaque-linha">{% if ultima_materia.subtitle %}{{ ultima_materia.subtitle }}{% else %}Composta à maneira das memórias científicas antigas.{% endif %}</span>
-      </span>
-      <span class="escrita-folha" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      <span class="escrita-destaque-kicker"><strong>Última matéria</strong> · {{ ultima_materia.date | date: '%-d' }} {% include mes-abbr.html date=ultima_materia.date %}</span>
+      <span class="escrita-destaque-linha"><span class="escrita-destaque-titulo">{{ ultima_materia.title }}</span> — {% if ultima_materia.subtitle %}{{ ultima_materia.subtitle }}{% else %}à maneira das memórias científicas antigas{% endif %}</span>
     </a>
     {%- endif -%}
   </div>
   {%- endif -%}
 
-  {% include ornamento-quadrafonia.html %}
+  {% include ornamento-cesura.html %}
 
   <div class="notas-list notas-list--full escrita-fluxo">
     {%- for item in todos offset: skip limit: per_page -%}

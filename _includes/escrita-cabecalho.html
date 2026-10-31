@@ -1,6 +1,6 @@
 {%- comment -%}
-  Cabeçalho comum às vistas da Escrita: título, ornamento «Bartók» e a barra
-  de filtros. Ensaios, notas e matérias são formatos de um mesmo caderno —
+  Cabeçalho comum às vistas da Escrita, numa faixa só: título e linha fina
+  lado a lado, o «Bartók» reduzido a selo à direita, e a barra de filtros. Ensaios, notas e matérias são formatos de um mesmo caderno —
   aqui são filtros, não seções.
 
   Uso: {% include escrita-cabecalho.html ativo="tudo" %}
@@ -14,8 +14,10 @@
 <header class="escrita-cabecalho">
   <div class="escrita-cabecalho-texto">
     <p class="eyebrow">Escrita · o caderno</p>
-    <h1 class="page-title">{% if _ativo == 'notas' %}Notas{% elsif _ativo == 'ensaios' %}Ensaios{% else %}Escrita{% endif %}</h1>
-    <p class="page-lede">{% if _ativo == 'notas' %}Pequenos pensamentos, links interessantes e observações rápidas — o lado curto do caderno.{% elsif _ativo == 'ensaios' %}Textos longos sobre direito, cultura e leituras.{% else %}Notas curtas, ensaios longos e matérias ilustradas, num só caderno — do mais recente ao mais antigo.{% endif %}</p>
+    <div class="escrita-cabecalho-linha">
+      <h1 class="page-title">{% if _ativo == 'notas' %}Notas{% elsif _ativo == 'ensaios' %}Ensaios{% else %}Escrita{% endif %}</h1>
+      <p class="page-lede">{% if _ativo == 'notas' %}Pequenos pensamentos, links interessantes e observações rápidas — o lado curto do caderno.{% elsif _ativo == 'ensaios' %}Textos longos sobre direito, cultura e leituras.{% else %}Notas curtas, ensaios longos e matérias ilustradas, num só caderno.{% endif %}</p>
+    </div>
   </div>
   {% include ornamento-bartok.html %}
 </header>
