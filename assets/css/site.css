@@ -1422,13 +1422,24 @@ figcaption {
 .nota-media-layout .nota-body { flex: 1 1 340px; max-width: 520px; }
 .nota-media-layout .media-review { flex: 1 1 220px; max-width: 300px; margin-top: 0; }
 
-/* Vertical card variant used on the single nota page (no cover) */
+/* Vertical card variant used on nota pages and feeds: cover on top, info below */
 .media-review--nota {
   flex-direction: column;
   padding: 22px 24px;
   gap: 14px;
 }
-.media-review--nota .media-review-cover { display: none; }
+.media-review--nota .media-review-cover { width: 120px; }
+.media-review--nota .media-review-img {
+  width: 120px;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+/* Square-ish covers (álbuns, canções) */
+.media-review--nota[data-media-type="álbum"] .media-review-img,
+.media-review--nota[data-media-type="canção"] .media-review-img { aspect-ratio: 1 / 1; }
+/* No cover found: hide the empty grey box instead of showing a blank slot */
+.media-review--nota .media-review-cover:has(.media-review-placeholder) { display: none; }
 .media-review--nota .media-review-title { margin-bottom: 4px; }
 
 .media-review--marginalia { float: right; clear: right; margin-right: -300px; width: 260px; }
