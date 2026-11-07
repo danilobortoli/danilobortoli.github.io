@@ -1686,6 +1686,9 @@
     if (mode === 'tufte') {
       render();
       previewContent.setAttribute('contenteditable', 'true');
+      previewContent.setAttribute('spellcheck', 'true');
+      previewContent.setAttribute('autocorrect', 'on');
+      previewContent.setAttribute('lang', 'pt-BR');
       previewContent.setAttribute('data-placeholder', state.doc === 'artigo' ? 'Comece a escrever no papel…' : 'Comece a escrever no design Tufte…');
       previewContent.addEventListener('input', scheduleTufteSync);
       previewContent.focus();
