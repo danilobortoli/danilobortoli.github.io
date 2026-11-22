@@ -1281,6 +1281,32 @@ label.margin-toggle:not(.sidenote-number) { display: none; }
   .margin-toggle:checked + .marginnote { display: block; }
 }
 
+/* Notas: a coluna tem 520px, então entre ~920px e 1180px ainda sobra margem
+   à direita. Mantém a sidenote na margem nessa faixa em vez de escondê-la
+   atrás do número (exceto em notas com ficha de mídia, que ocupa a margem). */
+@media (min-width: 920px) and (max-width: 1180px) {
+  :not(.nota-media-layout) > .nota-body .sidenote,
+  :not(.nota-media-layout) > .nota-body .marginnote {
+    display: block;
+    float: right;
+    clear: right;
+    margin: 0.3rem -45% 0 0;
+    width: 40%;
+    max-width: none;
+    padding-left: 0;
+    border-left: none;
+  }
+  :not(.nota-media-layout) > .nota-body .sidenote::before { display: inline; }
+}
+/* Dentro de citação o parágrafo recua 40px à direita; sem compensar, a
+   sidenote invade o texto que vem depois da citação. */
+@media (min-width: 920px) {
+  :not(.nota-media-layout) > .nota-body blockquote .sidenote,
+  :not(.nota-media-layout) > .nota-body blockquote .marginnote {
+    margin-right: calc(-45% - 40px);
+  }
+}
+
 /* Manual sidenote spans used in redesigned ensaio (.snref/.snote) */
 .snref {
   font-family: var(--font-sans);
